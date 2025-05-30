@@ -19,7 +19,7 @@ const YouTubeAIAIAssistant = {
     this.extractVideoInfo();
 
     if (!this.videoId) {
-      console.error("YouTube AI Assistant: Could not extract video ID");
+      console.error("YouTube AI Assistant: Could not extract video IDs");
       return;
     }
 
