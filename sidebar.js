@@ -304,13 +304,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // CRITICAL: Log current video info before sending question
     console.log(`Sending question about video: "${currentVideoTitle}" (${currentVideoId})`);
     
-    // Request current precise timestamp from content script before processing
+    // Get relevant transcript section
+    const relevantTranscript = getRelevantTranscript(question);
+    
+    // Add video title to the transcript context if it's not already included
+    let enhancedTranscript = relevantTranscript;
+    if (!enhancedTranscript.includes("VIDEO TITLE:")) {
+      enhancedTranscript = `VIDEO TITLE: ${currentVideoTitle}\n\n${enhancedTranscript}`;
+    }
+    
+    // Send message directly to content script to process question
+    // The content script will read the precise timestamp at the moment of processing
     if (window.parent) {
       window.parent.postMessage({
-        action: 'getCurrentTimestamp',
+        action: 'processQuestion',
         question: question,
+        transcript: enhancedTranscript,
         videoId: currentVideoId,
         videoTitle: currentVideoTitle,
+        currentTime: currentPlaybackTime, // This will be overridden by content script with precise time
         timestamp: Date.now()
       }, '*');
     }
@@ -746,36 +758,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Always switch to chat tab
         switchTab('chat');
-        break;
-        
-      case 'currentTimestampResponse':
-        // Process the question with the precise timestamp
-        const preciseTime = data.currentTime || currentPlaybackTime;
-        currentPlaybackTime = preciseTime; // Update our stored time
-        
-        console.log(`Received precise timestamp: ${preciseTime}s for question processing`);
-        
-        // Get relevant transcript section with precise time
-        const relevantTranscript = getRelevantTranscript(data.question);
-        
-        // Add video title to the transcript context if it's not already included
-        let enhancedTranscript = relevantTranscript;
-        if (!enhancedTranscript.includes("VIDEO TITLE:")) {
-          enhancedTranscript = `VIDEO TITLE: ${currentVideoTitle}\n\n${enhancedTranscript}`;
-        }
-        
-        // Send message to content script with precise timestamp
-        if (window.parent) {
-          window.parent.postMessage({
-            action: 'processQuestion',
-            question: data.question,
-            transcript: enhancedTranscript,
-            videoId: currentVideoId,
-            videoTitle: currentVideoTitle,
-            currentTime: preciseTime,
-            timestamp: Date.now()
-          }, '*');
-        }
         break;
     }
   });
