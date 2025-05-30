@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
             transcript: enhancedTranscript,
             videoId: currentVideoId,
             videoTitle: currentVideoTitle,
-            currentTime: data.currentTime, // Use the precise timestamp
+            currentTime: preciseTime, // Use the precise timestamp
             timestamp: Date.now()
           }, '*');
         }
