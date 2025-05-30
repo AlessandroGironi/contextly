@@ -112,7 +112,7 @@ const YouTubeAIAssistant = {
     this.sidebarContainer.innerHTML = `
       <div class="yt-sidebar-header">
         <div class="yt-sidebar-tabs">
-          <button id="chat-tab" class="yt-sidebar-tab active">AI Chat</button>
+          <button id="chat-tab" class="yt-sidebar-tab active">ChatBot</button>
           <button id="transcript-tab" class="yt-sidebar-tab">Transcript</button>
         </div>
         <div class="yt-sidebar-controls">
@@ -224,11 +224,20 @@ const YouTubeAIAssistant = {
           break;
 
         case 'getCurrentTimestamp':
-          // Get precise current timestamp from video player
+          // ALWAYS get precise current timestamp directly from video player
           const videoPlayer = document.querySelector('video');
-          const preciseCurrentTime = videoPlayer ? videoPlayer.currentTime : this.currentPlaybackTime;
+          let preciseCurrentTime = 0;
+          
+          if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
+            preciseCurrentTime = videoPlayer.currentTime;
+            console.log(`Extracted PRECISE timestamp from video player: ${preciseCurrentTime}s`);
+          } else {
+            console.warn('Video player not found or invalid currentTime, using fallback');
+            preciseCurrentTime = this.currentPlaybackTime;
+          }
 
-          console.log(`Extracted precise timestamp: ${preciseCurrentTime}s from video player`);
+          // Update our internal tracking to match the precise time
+          this.currentPlaybackTime = preciseCurrentTime;
 
           // Send back to sidebar with precise timestamp
           this.postMessageToSidebar({
@@ -388,9 +397,20 @@ const YouTubeAIAssistant = {
     const subjectPattern = /(who|what) (is|are|was|were) (the|this|these|that|those) ([a-z]+)/i;
 
     try {
-      // Get precise current timestamp from video player
+      // ALWAYS get precise current timestamp directly from video player
       const videoPlayer = document.querySelector('video');
-      const preciseCurrentTime = videoPlayer ? videoPlayer.currentTime : this.currentPlaybackTime;
+      let preciseCurrentTime = 0;
+      
+      if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
+        preciseCurrentTime = videoPlayer.currentTime;
+        console.log(`Using PRECISE timestamp from video player: ${preciseCurrentTime}s`);
+      } else {
+        console.warn('Video player not found or invalid currentTime, using fallback');
+        preciseCurrentTime = this.currentPlaybackTime;
+      }
+      
+      // Update our internal tracking to match the precise time
+      this.currentPlaybackTime = preciseCurrentTime;
 
       if (justSaidPattern.test(question)) {
         // Get 30 seconds of context before current time
