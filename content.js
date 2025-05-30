@@ -251,6 +251,34 @@ const YouTubeAIAIAssistant = {
           });
           break;
 
+        case 'getPreciseTimestampAndProcess':
+          // NEW: Get precise timestamp and immediately send back to sidebar for processing
+          const videoEl = document.querySelector('video');
+          let exactCurrentTime = 0;
+
+          if (videoEl && !isNaN(videoEl.currentTime)) {
+            exactCurrentTime = videoEl.currentTime;
+            console.log(`EXACT timestamp captured at question time: ${exactCurrentTime}s`);
+          } else {
+            console.warn('Video player not found, using fallback timestamp');
+            exactCurrentTime = this.currentPlaybackTime;
+          }
+
+          // Update our internal tracking
+          this.currentPlaybackTime = exactCurrentTime;
+
+          // Send precise timestamp back to sidebar for immediate processing
+          this.postMessageToSidebar({
+            action: 'preciseTimestampReceived',
+            data: {
+              currentTime: exactCurrentTime,
+              question: data.question,
+              videoId: data.videoId,
+              videoTitle: data.videoTitle
+            }
+          });
+          break;
+
         case 'processQuestion':
           this.processQuestion(data);
           break;
