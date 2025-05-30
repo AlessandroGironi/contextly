@@ -340,7 +340,7 @@ const YouTubeAIAIAssistant = {
   // Get current video timestamp precisely at this moment
   getCurrentVideoTimestamp: function() {
     const videoPlayer = document.querySelector('video');
-
+    
     if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
       const currentTime = videoPlayer.currentTime;
       // Aggiorna immediatamente il nostro tracking interno
@@ -364,7 +364,7 @@ const YouTubeAIAIAssistant = {
       const videoPlayer = document.querySelector('video');
       if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
         const currentTime = videoPlayer.currentTime;
-
+        
         // Aggiorna sempre il timestamp interno con il valore più recente
         if (Math.abs(currentTime - this.currentPlaybackTime) > 0.01) {
           this.currentPlaybackTime = currentTime;
@@ -385,12 +385,12 @@ const YouTubeAIAIAssistant = {
   // Send current timestamp to sidebar
   sendCurrentVideoTimestamp: function(data) {
     const preciseCurrentTime = this.getCurrentVideoTimestamp();
-
+    
     // Update our internal tracking
     this.currentPlaybackTime = preciseCurrentTime;
-
+    
     console.log(`Sending precise timestamp to sidebar: ${preciseCurrentTime}s`);
-
+    
     // Send back to sidebar with precise timestamp
     this.postMessageToSidebar({
       action: 'currentTimestampResponse',
@@ -406,12 +406,12 @@ const YouTubeAIAIAssistant = {
   // Send precise timestamp for AI processing
   sendPreciseTimestampForProcessing: function(data) {
     const exactCurrentTime = this.getCurrentVideoTimestamp();
-
+    
     // Update our internal tracking
     this.currentPlaybackTime = exactCurrentTime;
-
+    
     console.log(`Sending exact timestamp for AI processing: ${exactCurrentTime}s`);
-
+    
     // Send precise timestamp back to sidebar for immediate processing
     this.postMessageToSidebar({
       action: 'preciseTimestampReceived',
@@ -472,7 +472,7 @@ const YouTubeAIAIAssistant = {
     try {
       // Get the most current timestamp from the video player at this exact moment
       const preciseCurrentTime = this.getCurrentVideoTimestamp();
-
+      
       console.log(`Using precise timestamp for question processing: ${preciseCurrentTime}s`);
 
       if (justSaidPattern.test(question)) {
@@ -928,8 +928,7 @@ const YouTubeAIAIAssistant = {
     } else {
       // Minimize the sidebar
       this.sidebarContainer.classList.add('minimized');
-      if (ytdApp```javascript
-) {
+      if (ytdApp) {
         ytdApp.classList.remove('yt-sidebar-active');
         ytdApp.classList.add('yt-sidebar-minimized');
       }
@@ -1213,7 +1212,7 @@ const YouTubeAIAIAssistant = {
         // Update even small changes for maximum accuracy
         if (Math.abs(currentTime - this.currentPlaybackTime) > 0.05) {
           this.currentPlaybackTime = currentTime;
-
+          
           // Log major time changes for debugging
           if (Math.abs(currentTime - this.currentPlaybackTime) > 1) {
             console.log(`Major time change detected: ${this.currentPlaybackTime}s -> ${currentTime}s`);
@@ -1677,7 +1676,7 @@ const YouTubeAIAIAssistant = {
 
             // Restart tracking with the new video
             this.startPlaybackTracking();
-
+            
             // Riavvia l'aggiornamento continuo del timestamp
             this.startContinuousTimestampUpdate();
 
@@ -1698,7 +1697,7 @@ const YouTubeAIAIAssistant = {
 
     // Stop tracking the old video
     this.stopPlaybackTracking();
-
+    
     // Stop continuous timestamp updates
     this.stopContinuousTimestampUpdate();
 
@@ -1737,10 +1736,12 @@ const YouTubeAIAIAssistant = {
       newIframe.onload = () => {
         console.log("New sidebar iframe loaded");
 
-        // Reset all state
+        // Reset all state related to the old video
         this.transcript = [];
-        this.clearChatMessages();
         this.currentPlaybackTime = 0;
+
+        // Clear chat messages in our view (iframe will start fresh)
+        this.clearChatMessages();
 
         // Load transcript for the new video
         this.loadTranscript();
@@ -1762,7 +1763,7 @@ const YouTubeAIAIAssistant = {
 
       // Start tracking new video
       this.startPlaybackTracking();
-
+      
       // Riavvia l'aggiornamento continuo del timestamp
       this.startContinuousTimestampUpdate();
     }

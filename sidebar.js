@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let transcript = [];
   let currentVideoId = '';
   let currentVideoTitle = '';
+  let currentPlaybackTime = 0;
   let isApiKeyConfigured = false;
   let isProcessing = false;
   let activeTranscriptSegment = null;
@@ -149,6 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear state when video changes
         console.log("Sidebar state reset triggered for action:", action);
         transcript = [];
+        currentPlaybackTime = 0;
         
         // Clear chat messages only on full reset
         if (action === 'resetState' && chatMessages) {
@@ -189,8 +191,8 @@ document.addEventListener('DOMContentLoaded', function() {
         break;
         
       case 'updatePlaybackTime':
-        // Aggiorna solo l'interfaccia, non salvare il timestamp
-        updateActiveTranscriptSegment(data.time);
+        currentPlaybackTime = data.time;
+        updateActiveTranscriptSegment();
         break;
         
       case 'showLoading':
@@ -212,11 +214,12 @@ document.addEventListener('DOMContentLoaded', function() {
       case 'preciseTimestampReceived':
         // Process the question with the precise timestamp received from content script
         const preciseTime = data.currentTime;
+        currentPlaybackTime = preciseTime; // Update our stored time
         
         console.log(`Received precise timestamp: ${preciseTime}s, processing question: "${data.question}"`);
         
         // Get relevant transcript section using the precise timestamp
-        const relevantTranscript = getRelevantTranscript(data.question, preciseTime);
+        const relevantTranscript = getRelevantTranscript(data.question);
         
         // Add video title to the transcript context if it's not already included
         let enhancedTranscript = relevantTranscript;
@@ -412,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Get relevant transcript section based on question and current playback time
-  function getRelevantTranscript(question, currentPlaybackTime) {
+  function getRelevantTranscript(question) {
     console.log(`Getting relevant transcript for question: "${question}"`);
     console.log(`Current video ID: ${currentVideoId}, transcript segments: ${transcript ? transcript.length : 0}`);
     
@@ -545,8 +548,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Update active transcript segment based on current playback time
-  function updateActiveTranscriptSegment(currentPlaybackTime) {
-    if (!transcript || transcript.length === 0 || !currentPlaybackTime) return;
+  function updateActiveTranscriptSegment() {
+    if (!transcript || transcript.length === 0) return;
     
     // Remove active class from previous segment
     if (activeTranscriptSegment) {
@@ -734,6 +737,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Reset all state variables related to the previous video
         transcript = [];
+        currentPlaybackTime = 0;
         isProcessing = false;
         activeTranscriptSegment = null;
         
