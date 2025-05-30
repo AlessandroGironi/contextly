@@ -203,9 +203,9 @@ window.OpenAIClient = {
       throw new Error("OpenAI API key not configured");
     }
     
-    // Use the currentTime parameter directly - it should be captured precisely when the user asks the question
+    // Use the currentTime parameter directly - sempre tempo reale dal video player
     const preciseCurrentTime = currentTime;
-    console.log(`Using timestamp captured at question time: ${preciseCurrentTime}s`);
+    console.log(`Using real-time timestamp: ${preciseCurrentTime}s`);
     
     // Store current video details for reference
     this.lastVideoId = videoId;
