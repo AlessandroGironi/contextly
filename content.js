@@ -12,6 +12,7 @@ const YouTubeAIAIAssistant = {
   transcript: [],
   playbackTracker: null,
   currentPlaybackTime: 0,
+  timestampUpdateInterval: null,
 
   // Initialize the AI assistant
   init: async function() {
@@ -40,6 +41,9 @@ const YouTubeAIAIAssistant = {
 
     // Start tracking video playback
     this.startPlaybackTracking();
+
+    // Avvia l'aggiornamento continuo del timestamp
+    this.startContinuousTimestampUpdate();
 
     // Add event listeners for page navigation
     this.addEventListeners();
@@ -339,11 +343,42 @@ const YouTubeAIAIAssistant = {
     
     if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
       const currentTime = videoPlayer.currentTime;
+      // Aggiorna immediatamente il nostro tracking interno
+      this.currentPlaybackTime = currentTime;
       console.log(`Video currentTime read at ${Date.now()}: ${currentTime}s`);
       return currentTime;
     } else {
       console.warn('Video player not accessible, using tracked time:', this.currentPlaybackTime);
       return this.currentPlaybackTime;
+    }
+  },
+
+  // Nuovo metodo per aggiornamento continuo del timestamp
+  startContinuousTimestampUpdate: function() {
+    // Clear any existing interval
+    if (this.timestampUpdateInterval) {
+      clearInterval(this.timestampUpdateInterval);
+    }
+
+    this.timestampUpdateInterval = setInterval(() => {
+      const videoPlayer = document.querySelector('video');
+      if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
+        const currentTime = videoPlayer.currentTime;
+        
+        // Aggiorna sempre il timestamp interno con il valore più recente
+        if (Math.abs(currentTime - this.currentPlaybackTime) > 0.01) {
+          this.currentPlaybackTime = currentTime;
+          console.log(`Timestamp aggiornato automaticamente: ${currentTime}s`);
+        }
+      }
+    }, 100); // Aggiorna ogni 100ms per massima precisione
+  },
+
+  // Ferma l'aggiornamento continuo
+  stopContinuousTimestampUpdate: function() {
+    if (this.timestampUpdateInterval) {
+      clearInterval(this.timestampUpdateInterval);
+      this.timestampUpdateInterval = null;
     }
   },
 
@@ -1641,6 +1676,9 @@ const YouTubeAIAIAssistant = {
 
             // Restart tracking with the new video
             this.startPlaybackTracking();
+            
+            // Riavvia l'aggiornamento continuo del timestamp
+            this.startContinuousTimestampUpdate();
 
             console.log("Video change handling complete");
           }, 200);
@@ -1659,6 +1697,9 @@ const YouTubeAIAIAssistant = {
 
     // Stop tracking the old video
     this.stopPlaybackTracking();
+    
+    // Stop continuous timestamp updates
+    this.stopContinuousTimestampUpdate();
 
     const oldVideoId = this.videoId;
 
@@ -1722,6 +1763,9 @@ const YouTubeAIAIAssistant = {
 
       // Start tracking new video
       this.startPlaybackTracking();
+      
+      // Riavvia l'aggiornamento continuo del timestamp
+      this.startContinuousTimestampUpdate();
     }
 
     // Notify background script about the change
