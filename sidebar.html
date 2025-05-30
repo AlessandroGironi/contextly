@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube AI Assistant</title>
+  <link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+  <div class="yt-sidebar">
+    <div class="yt-sidebar-header">
+      <div class="yt-sidebar-tabs">
+        <button id="chat-tab" class="yt-sidebar-tab active">AI Chat</button>
+        <!-- Transcript tab hidden from user interface -->
+      </div>
+      <button id="yt-sidebar-close" title="Close sidebar">×</button>
+    </div>
+    
+    <!-- Chat Section -->
+    <div id="chat-section" class="yt-sidebar-section active">
+      <div id="chat-container" class="yt-chat-container">
+        <div class="yt-chat-messages" id="chat-messages">
+          <div class="yt-chat-message system">
+            <div class="message-content">
+              I'm your YouTube assistant. Ask me anything about this video!
+            </div>
+          </div>
+        </div>
+        
+        <div id="api-key-missing" class="yt-api-key-missing">
+          <p>Please enter your OpenAI API key to use the AI assistant:</p>
+          <div class="yt-api-key-input-container">
+            <input type="password" id="api-key-input" placeholder="sk-..." class="yt-api-key-input">
+            <button id="save-api-key" class="yt-api-key-save">Save</button>
+          </div>
+          <p class="yt-api-key-info">Your API key is stored locally and only used to communicate with OpenAI.</p>
+        </div>
+        
+        <div id="api-key-configured" class="yt-api-key-configured" style="display: none;">
+          <p>OpenAI API key configured</p>
+          <button id="change-api-key" class="yt-change-api-key">Change key</button>
+        </div>
+        
+        <div class="yt-chat-input">
+          <textarea id="question-input" placeholder="Ask about this video..."></textarea>
+          <button id="send-question">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Transcript Section -->
+    <div id="transcript-section" class="yt-sidebar-section">
+      <div id="yt-transcript-loading" class="yt-transcript-loading">
+        <div class="yt-transcript-spinner"></div>
+        <p>Loading transcript...</p>
+      </div>
+      <div id="yt-transcript-content" class="yt-transcript-text-content">
+        <!-- Transcript content will be loaded here -->
+      </div>
+    </div>
+  </div>
+  
+  <script src="openai_client.js"></script>
+  <script src="sidebar.js"></script>
+</body>
+</html>
