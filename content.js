@@ -578,7 +578,7 @@ const YouTubeAIAIAssistant = {
         transcript: relevantTranscript,
         videoId: this.videoId,
         videoTitle: this.videoTitle,
-        currentTime: preciseCurrentTime  // Use the timestamp captured at the very beginning
+        currentTime: videoPlayer.currentTime  // Use the timestamp captured at the very beginning
       });
 
     } catch (error) {
