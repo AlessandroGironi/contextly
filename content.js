@@ -224,59 +224,13 @@ const YouTubeAIAIAssistant = {
           break;
 
         case 'getCurrentTimestamp':
-          // ALWAYS get precise current timestamp directly from video player
-          const videoPlayer = document.querySelector('video');
-          let preciseCurrentTime = 0;
-
-          if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
-            preciseCurrentTime = videoPlayer.currentTime;
-            console.log(`Extracted PRECISE timestamp from video player: ${preciseCurrentTime}s`);
-          } else {
-            console.warn('Video player not found or invalid currentTime, using fallback');
-            preciseCurrentTime = this.currentPlaybackTime;
-          }
-
-          // Update our internal tracking to match the precise time
-          this.currentPlaybackTime = preciseCurrentTime;
-
-          // Send back to sidebar with precise timestamp
-          this.postMessageToSidebar({
-            action: 'currentTimestampResponse',
-            data: {
-              currentTime: preciseCurrentTime,
-              question: data.question,
-              videoId: data.videoId,
-              videoTitle: data.videoTitle
-            }
-          });
+          // ALWAYS get precise current timestamp directly from video player AT THIS EXACT MOMENT
+          this.sendCurrentVideoTimestamp(data);
           break;
 
         case 'getPreciseTimestampAndProcess':
           // CRITICAL: Get the most current timestamp from the video player RIGHT NOW
-          const videoEl = document.querySelector('video');
-          let exactCurrentTime = 0;
-
-          if (videoEl && !isNaN(videoEl.currentTime)) {
-            exactCurrentTime = videoEl.currentTime;
-            console.log(`EXACT timestamp captured at question time: ${exactCurrentTime}s`);
-          } else {
-            console.warn('Video player not found, using fallback timestamp');
-            exactCurrentTime = this.currentPlaybackTime;
-          }
-
-          // Update our internal tracking to the most current time
-          this.currentPlaybackTime = exactCurrentTime;
-
-          // Send precise timestamp back to sidebar for immediate processing
-          this.postMessageToSidebar({
-            action: 'preciseTimestampReceived',
-            data: {
-              currentTime: exactCurrentTime,
-              question: data.question,
-              videoId: data.videoId,
-              videoTitle: data.videoTitle
-            }
-          });
+          this.sendPreciseTimestampForProcessing(data);
           break;
 
         case 'processQuestion':
@@ -379,6 +333,62 @@ const YouTubeAIAIAssistant = {
     }
   },
 
+  // Get current video timestamp precisely at this moment
+  getCurrentVideoTimestamp: function() {
+    const videoPlayer = document.querySelector('video');
+    
+    if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
+      const currentTime = videoPlayer.currentTime;
+      console.log(`Video currentTime read at ${Date.now()}: ${currentTime}s`);
+      return currentTime;
+    } else {
+      console.warn('Video player not accessible, using tracked time:', this.currentPlaybackTime);
+      return this.currentPlaybackTime;
+    }
+  },
+
+  // Send current timestamp to sidebar
+  sendCurrentVideoTimestamp: function(data) {
+    const preciseCurrentTime = this.getCurrentVideoTimestamp();
+    
+    // Update our internal tracking
+    this.currentPlaybackTime = preciseCurrentTime;
+    
+    console.log(`Sending precise timestamp to sidebar: ${preciseCurrentTime}s`);
+    
+    // Send back to sidebar with precise timestamp
+    this.postMessageToSidebar({
+      action: 'currentTimestampResponse',
+      data: {
+        currentTime: preciseCurrentTime,
+        question: data.question,
+        videoId: data.videoId,
+        videoTitle: data.videoTitle
+      }
+    });
+  },
+
+  // Send precise timestamp for AI processing
+  sendPreciseTimestampForProcessing: function(data) {
+    const exactCurrentTime = this.getCurrentVideoTimestamp();
+    
+    // Update our internal tracking
+    this.currentPlaybackTime = exactCurrentTime;
+    
+    console.log(`Sending exact timestamp for AI processing: ${exactCurrentTime}s`);
+    
+    // Send precise timestamp back to sidebar for immediate processing
+    this.postMessageToSidebar({
+      action: 'preciseTimestampReceived',
+      data: {
+        currentTime: exactCurrentTime,
+        question: data.question,
+        videoId: data.videoId,
+        videoTitle: data.videoTitle
+      }
+    });
+  },
+
   // Handle question submission
   handleQuestion: function(question) {
     if (!question) return;
@@ -425,20 +435,10 @@ const YouTubeAIAIAssistant = {
     const subjectPattern = /(who|what) (is|are|was|were) (the|this|these|that|those) ([a-z]+)/i;
 
     try {
-      // ALWAYS get precise current timestamp directly from video player
-      const videoPlayer = document.querySelector('video');
-      let preciseCurrentTime = 0;
-
-      if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
-        preciseCurrentTime = videoPlayer.currentTime;
-        console.log(`Using PRECISE timestamp from video player: ${preciseCurrentTime}s`);
-      } else {
-        console.warn('Video player not found or invalid currentTime, using fallback');
-        preciseCurrentTime = this.currentPlaybackTime;
-      }
-
-      // Update our internal tracking to match the precise time
-      this.currentPlaybackTime = preciseCurrentTime;
+      // Get the most current timestamp from the video player at this exact moment
+      const preciseCurrentTime = this.getCurrentVideoTimestamp();
+      
+      console.log(`Using precise timestamp for question processing: ${preciseCurrentTime}s`);
 
       if (justSaidPattern.test(question)) {
         // Get 30 seconds of context before current time
@@ -1174,9 +1174,14 @@ const YouTubeAIAIAssistant = {
       if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
         const currentTime = videoPlayer.currentTime;
 
-        // Update more frequently for better accuracy
-        if (Math.abs(currentTime - this.currentPlaybackTime) > 0.1) {
+        // Update even small changes for maximum accuracy
+        if (Math.abs(currentTime - this.currentPlaybackTime) > 0.05) {
           this.currentPlaybackTime = currentTime;
+          
+          // Log major time changes for debugging
+          if (Math.abs(currentTime - this.currentPlaybackTime) > 1) {
+            console.log(`Major time change detected: ${this.currentPlaybackTime}s -> ${currentTime}s`);
+          }
 
           // Send current playback time to sidebar
           this.postMessageToSidebar({
@@ -1184,8 +1189,10 @@ const YouTubeAIAIAssistant = {
             data: { time: currentTime }
           });
         }
+      } else {
+        console.warn('Video player not accessible in playback tracker');
       }
-    }, 500); // Check every 500ms for better precision
+    }, 250); // Check every 250ms for maximum precision
   },
 
   // Stop playback tracking

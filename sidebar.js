@@ -333,16 +333,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // CRITICAL: Log current video info before sending question
     console.log(`Sending question about video: "${currentVideoTitle}" (${currentVideoId})`);
+    console.log(`Question submitted at: ${new Date().toISOString()}`);
     
     // IMPORTANT: Request precise timestamp from content script FIRST
-    // Then process the question with that exact timestamp
+    // Force the content script to read currentTime at this exact moment
     if (window.parent) {
+      console.log('Requesting real-time timestamp from content script...');
       window.parent.postMessage({
         action: 'getPreciseTimestampAndProcess',
         question: question,
         videoId: currentVideoId,
         videoTitle: currentVideoTitle,
-        timestamp: Date.now()
+        requestTime: Date.now() // Add timestamp of when we made the request
       }, '*');
     }
   }
