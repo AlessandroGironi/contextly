@@ -130,7 +130,7 @@ const YouTubeAIAIAssistant = {
           <div class="yt-chat-messages" id="chat-messages">
             <div class="yt-chat-message system">
               <div class="message-content">
-                I'm your YouTube assistant. Ask me anything about this video!
+                I'm your YouTube assistant. Ask me anything about this video!!!
               </div>
             </div>
           </div>
