@@ -203,22 +203,9 @@ window.OpenAIClient = {
       throw new Error("OpenAI API key not configured");
     }
     
-    // CRITICAL FIX: Get the EXACT current timestamp from the video player at this precise moment
-    // This ensures we use the most accurate timestamp possible when generating the AI response
-    let preciseCurrentTime = currentTime; // Start with the passed value as fallback
-    
-    try {
-      const videoPlayer = document.querySelector('video');
-      if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
-        preciseCurrentTime = videoPlayer.currentTime;
-        console.log(`PRECISE timestamp captured at AI processing time: ${preciseCurrentTime}s (was ${currentTime}s)`);
-      } else {
-        console.warn('Could not access video player for precise timestamp, using fallback:', currentTime);
-      }
-    } catch (error) {
-      console.warn('Error getting precise timestamp from video player:', error);
-      // Keep using the fallback currentTime value
-    }
+    // Use the currentTime parameter directly - it should be captured precisely when the user asks the question
+    const preciseCurrentTime = currentTime;
+    console.log(`Using timestamp captured at question time: ${preciseCurrentTime}s`);
     
     // Store current video details for reference
     this.lastVideoId = videoId;

@@ -252,7 +252,7 @@ const YouTubeAIAIAssistant = {
           break;
 
         case 'getPreciseTimestampAndProcess':
-          // NEW: Get precise timestamp and immediately send back to sidebar for processing
+          // CRITICAL: Get the most current timestamp from the video player RIGHT NOW
           const videoEl = document.querySelector('video');
           let exactCurrentTime = 0;
 
@@ -264,7 +264,7 @@ const YouTubeAIAIAssistant = {
             exactCurrentTime = this.currentPlaybackTime;
           }
 
-          // Update our internal tracking
+          // Update our internal tracking to the most current time
           this.currentPlaybackTime = exactCurrentTime;
 
           // Send precise timestamp back to sidebar for immediate processing
@@ -1171,11 +1171,11 @@ const YouTubeAIAIAssistant = {
 
     this.playbackTracker = setInterval(() => {
       const videoPlayer = document.querySelector('video');
-      if (videoPlayer) {
+      if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
         const currentTime = videoPlayer.currentTime;
 
-        // Only update if the time has changed significantly
-        if (Math.abs(currentTime - this.currentPlaybackTime) > 0.5) {
+        // Update more frequently for better accuracy
+        if (Math.abs(currentTime - this.currentPlaybackTime) > 0.1) {
           this.currentPlaybackTime = currentTime;
 
           // Send current playback time to sidebar
@@ -1185,7 +1185,7 @@ const YouTubeAIAIAssistant = {
           });
         }
       }
-    }, 1000); // Check every second
+    }, 500); // Check every 500ms for better precision
   },
 
   // Stop playback tracking
