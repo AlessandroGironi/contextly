@@ -223,6 +223,25 @@ const YouTubeAIAssistant = {
           if (apiKeyConfigured) apiKeyConfigured.style.display = 'none';
           break;
           
+        case 'getCurrentTimestamp':
+          // Get precise current timestamp from video player
+          const videoPlayer = document.querySelector('video');
+          const preciseCurrentTime = videoPlayer ? videoPlayer.currentTime : this.currentPlaybackTime;
+          
+          console.log(`Extracted precise timestamp: ${preciseCurrentTime}s from video player`);
+          
+          // Send back to sidebar with precise timestamp
+          this.postMessageToSidebar({
+            action: 'currentTimestampResponse',
+            data: {
+              currentTime: preciseCurrentTime,
+              question: data.question,
+              videoId: data.videoId,
+              videoTitle: data.videoTitle
+            }
+          });
+          break;
+          
         case 'processQuestion':
           this.processQuestion(data);
           break;
@@ -1423,6 +1442,17 @@ const YouTubeAIAssistant = {
     const videoPlayer = document.querySelector('video');
     if (videoPlayer) {
       videoPlayer.currentTime = seconds;
+    }
+  },
+  
+  // Send message to sidebar iframe
+  postMessageToSidebar: function(message) {
+    const sidebarFrame = document.getElementById('yt-ai-assistant-sidebar');
+    if (sidebarFrame && sidebarFrame.contentWindow) {
+      sidebarFrame.contentWindow.postMessage({
+        source: 'yt-ai-assistant',
+        ...message
+      }, '*');
     }
   },
   
