@@ -203,6 +203,23 @@ window.OpenAIClient = {
       throw new Error("OpenAI API key not configured");
     }
     
+    // CRITICAL FIX: Get the EXACT current timestamp from the video player at this precise moment
+    // This ensures we use the most accurate timestamp possible when generating the AI response
+    let preciseCurrentTime = currentTime; // Start with the passed value as fallback
+    
+    try {
+      const videoPlayer = document.querySelector('video');
+      if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
+        preciseCurrentTime = videoPlayer.currentTime;
+        console.log(`PRECISE timestamp captured at AI processing time: ${preciseCurrentTime}s (was ${currentTime}s)`);
+      } else {
+        console.warn('Could not access video player for precise timestamp, using fallback:', currentTime);
+      }
+    } catch (error) {
+      console.warn('Error getting precise timestamp from video player:', error);
+      // Keep using the fallback currentTime value
+    }
+    
     // Store current video details for reference
     this.lastVideoId = videoId;
     this.lastVideoTitle = videoTitle;
@@ -235,7 +252,7 @@ window.OpenAIClient = {
     // Prepare system message with context about the video
     const systemMessage = `You are an AI assistant that helps users understand YouTube videos. You speak in a conversational, direct manner and avoid phrases like "the transcript indicates" or "based on the transcript" in your responses.
 You have access to the transcript from a video titled "${videoTitle}".
-The user is currently at timestamp ${this.formatTime(currentTime)}.
+The user is currently at timestamp ${this.formatTime(preciseCurrentTime)}.
 
 IMPORTANT: Your responses should ONLY be about the current video titled "${videoTitle}". Do not include information from other videos.
 
@@ -250,13 +267,13 @@ Instructions:
 8. Try to understand the context of the video from both the transcript content and video title.
 9. For questions about the video's topic or theme, provide a comprehensive answer that incorporates relevant title information.
 10. Be helpful and insightful - give users the feeling you really understand the video's content.
-11. For questions about what just happened or what was just said, refer to the content near the current timestamp: ${this.formatTime(currentTime)}.`;
+11. For questions about what just happened or what was just said, refer to the content near the current timestamp: ${this.formatTime(preciseCurrentTime)}.`;
     
     // Prepare user message with question and transcript
     const userMessage = `VIDEO INFORMATION:
 TITLE: "${videoTitle}"
 ${videoDescription ? `DESCRIPTION/BEGINNING: ${videoDescription}\n` : ''}
-CURRENT TIMESTAMP: ${this.formatTime(currentTime)}
+CURRENT TIMESTAMP: ${this.formatTime(preciseCurrentTime)}
 
 CONTEXT FROM VIDEO TRANSCRIPT:
 ---
