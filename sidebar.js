@@ -700,23 +700,6 @@ document.addEventListener('DOMContentLoaded', function() {
           currentVideoId = data.videoId;
           currentVideoTitle = data.videoTitle;
 
-          // Update "Now Playing" UI element if it exists
-          const titleEl = document.getElementById('now-playing-title');
-          if (titleEl) {
-            titleEl.textContent = data.videoTitle;
-          } else {
-            // Create the Now Playing element if it doesn't exist
-            const chatContainer = document.getElementById('chat-container');
-            if (chatContainer) {
-              const nowPlayingBar = document.createElement('div');
-              nowPlayingBar.className = 'now-playing-bar';
-              nowPlayingBar.innerHTML = `<span>Now playing:</span> <span id="now-playing-title">${data.videoTitle}</span>`;
-
-              // Insert at the top of chat container, right after the header
-              chatContainer.insertBefore(nowPlayingBar, chatContainer.firstChild);
-            }
-          }
-
           // Update current video title in sidebar header if it exists
           const currentVideoTitleEl = document.getElementById('current-video-title');
           if (currentVideoTitleEl) {

@@ -91,7 +91,7 @@ const YouTubeAIAssistant = {
     if (this.sidebarContainer) {
       const titleElement = this.sidebarContainer.querySelector('#current-video-title');
       if (titleElement) {
-        titleElement.textContent = this.videoTitle;
+        titleElement.textContent = this.videoTitle || 'Loading video...';
       }
 
       // Also notify sidebar frame about the title update
@@ -189,8 +189,8 @@ const YouTubeAIAssistant = {
       cardWrapper.style.position = 'relative';
       cardWrapper.style.display = 'flex';
       cardWrapper.style.flexDirection = 'column';
-      cardWrapper.style.justifyContent = 'flex-end';
-      cardWrapper.style.minHeight = '50vh';
+      cardWrapper.style.alignItems = 'flex-start';
+      cardWrapper.style.justifyContent = 'flex-start';
 
       // Insert the card container into the wrapper
       cardWrapper.appendChild(this.sidebarContainer);
@@ -976,7 +976,7 @@ const YouTubeAIAssistant = {
   updateVideoInfo: function() {
     const titleElement = document.getElementById('current-video-title');
     if (titleElement) {
-      titleElement.textContent = `Now playing: ${this.videoTitle}`;
+      titleElement.textContent = this.videoTitle || 'Loading video...';
     }
   },
 
