@@ -1,20 +1,22 @@
-/* YouTube AI Assistant Sidebar Styles */
+
+/* YouTube AI Assistant Sidebar Styles - Enhanced Design */
 
 /* Main sidebar container */
 .yt-sidebar {
   position: fixed;
   top: 56px; /* YouTube header height */
   right: 0;
-  width: 380px;
+  width: 400px;
   height: calc(100vh - 56px);
-  background-color: #fff;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12), -4px 0 16px rgba(0, 0, 0, 0.08);
   z-index: 2000;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transform: translateX(100%);
-  font-family: 'Roboto', Arial, sans-serif;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  border-left: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 /* When sidebar is visible */
@@ -24,7 +26,8 @@
 
 /* Adjust YouTube app when sidebar is active */
 ytd-app.yt-sidebar-active #primary {
-  width: calc(100% - 380px) !important;
+  width: calc(100% - 400px) !important;
+  transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* Sidebar header with tabs */
@@ -32,99 +35,129 @@ ytd-app.yt-sidebar-active #primary {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 12px 0 0;
-  border-bottom: 1px solid #e0e0e0;
-  background-color: #f9f9f9;
+  padding: 0 16px 0 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.yt-sidebar-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+  backdrop-filter: blur(10px);
 }
 
 .yt-sidebar-tabs {
   display: flex;
   flex: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .yt-sidebar-tab {
   background: none;
   border: none;
-  padding: 16px 24px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #606060;
+  padding: 20px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   position: relative;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  letter-spacing: 0.2px;
 }
 
 .yt-sidebar-tab:after {
   content: '';
   position: absolute;
   bottom: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
   height: 3px;
-  background-color: transparent;
-  transition: background-color 0.2s;
+  background: linear-gradient(90deg, #ff6b6b, #feca57);
+  border-radius: 2px;
+  transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .yt-sidebar-tab.active {
-  color: #065fd4;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px 12px 0 0;
 }
 
 .yt-sidebar-tab.active:after {
-  background-color: #065fd4;
+  width: 40px;
 }
 
 .yt-sidebar-tab:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-radius: 12px 12px 0 0;
 }
 
 /* Sidebar controls (minimize/close buttons) */
 .yt-sidebar-controls {
   display: flex;
   align-items: center;
+  position: relative;
+  z-index: 1;
 }
 
 /* Sidebar buttons */
 #yt-sidebar-close,
 #yt-sidebar-minimize {
-  background: none;
+  background: rgba(255, 255, 255, 0.1);
   border: none;
-  font-size: 22px;
+  font-size: 18px;
   cursor: pointer;
-  color: #606060;
-  width: 32px;
-  height: 32px;
+  color: rgba(255, 255, 255, 0.8);
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  margin-left: 4px;
+  margin-left: 8px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  backdrop-filter: blur(10px);
 }
 
 #yt-sidebar-close:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: #cc0000;
+  background: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+  transform: scale(1.1);
 }
 
 #yt-sidebar-minimize:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: #065fd4;
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  transform: scale(1.1);
 }
 
 /* Current video info display */
 .yt-video-info {
-  padding: 8px 12px;
-  background-color: #f9f9f9;
-  border-bottom: 1px solid #e0e0e0;
-  font-size: 12px;
-  color: #606060;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.9) 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 13px;
+  color: #64748b;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
 }
 
 /* Minimized sidebar state */
 .yt-sidebar.minimized {
-  width: 40px;
+  width: 60px;
   overflow: hidden;
 }
 
@@ -137,13 +170,13 @@ ytd-app.yt-sidebar-active #primary {
 
 .yt-sidebar.minimized .yt-sidebar-header {
   height: auto;
-  padding: 10px 0;
+  padding: 15px 0;
   border-bottom: none;
 }
 
 /* Adjust YouTube app when minimized sidebar is active */
 ytd-app.yt-sidebar-minimized #primary {
-  width: calc(100% - 40px) !important;
+  width: calc(100% - 60px) !important;
 }
 
 /* Sections container */
@@ -163,165 +196,255 @@ ytd-app.yt-sidebar-minimized #primary {
   display: flex;
   flex-direction: column;
   height: 100%;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
 }
 
 .yt-chat-messages {
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
+  padding: 24px 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+.yt-chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.yt-chat-messages::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.yt-chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.3);
+  border-radius: 3px;
+}
+
+.yt-chat-messages::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 126, 234, 0.5);
 }
 
 .yt-chat-message {
   display: flex;
   flex-direction: column;
-  max-width: 90%;
-  padding: 10px 14px;
-  border-radius: 10px;
+  max-width: 85%;
+  padding: 14px 18px;
+  border-radius: 18px;
   font-size: 14px;
-  line-height: 1.5;
-  animation: message-appear 0.3s ease-out;
+  line-height: 1.6;
+  animation: message-appear 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 @keyframes message-appear {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { 
+    opacity: 0; 
+    transform: translateY(20px) scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
 }
 
 .yt-chat-message.user {
   align-self: flex-end;
-  background-color: #e6f2ff;
-  color: #0f0f0f;
-  border-bottom-right-radius: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  border-bottom-right-radius: 6px;
+  margin-left: 40px;
+}
+
+.yt-chat-message.user::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  right: -6px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid #667eea;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
 }
 
 .yt-chat-message.assistant {
   align-self: flex-start;
-  background-color: #f5f5f5;
-  color: #0f0f0f;
-  border-bottom-left-radius: 4px;
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+  color: #334155;
+  border-bottom-left-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-right: 40px;
+}
+
+.yt-chat-message.assistant::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: -6px;
+  width: 0;
+  height: 0;
+  border-right: 6px solid #ffffff;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
 }
 
 .yt-chat-message.system {
   align-self: center;
-  background-color: #f2f2f2;
-  color: #606060;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  color: #64748b;
   font-style: italic;
-  max-width: 100%;
+  max-width: 90%;
   text-align: center;
+  border-radius: 20px;
+  font-size: 13px;
+  padding: 12px 16px;
+  box-shadow: none;
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .yt-chat-message.loading {
   align-self: flex-start;
-  background-color: #f5f5f5;
-  color: #0f0f0f;
-  border-bottom-left-radius: 4px;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: #64748b;
+  border-bottom-left-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .message-content {
   word-break: break-word;
+  font-weight: 500;
 }
 
 .loading-dots {
   display: inline-flex;
   align-items: center;
-  column-gap: 4px;
-  height: 18px;
+  column-gap: 6px;
+  height: 20px;
 }
 
 .loading-dots span {
-  width: 6px;
-  height: 6px;
-  background-color: #606060;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
   border-radius: 50%;
-  animation: dot-pulse 1.5s infinite;
+  animation: dot-pulse 1.8s infinite ease-in-out;
 }
 
 .loading-dots span:nth-child(2) {
-  animation-delay: 0.2s;
+  animation-delay: 0.3s;
 }
 
 .loading-dots span:nth-child(3) {
-  animation-delay: 0.4s;
+  animation-delay: 0.6s;
 }
 
 @keyframes dot-pulse {
-  0%, 100% { transform: scale(0.8); opacity: 0.6; }
-  50% { transform: scale(1.2); opacity: 1; }
+  0%, 100% { 
+    transform: scale(0.6); 
+    opacity: 0.4; 
+  }
+  50% { 
+    transform: scale(1.2); 
+    opacity: 1; 
+  }
 }
 
 /* Chat input section */
 .yt-chat-input {
   display: flex;
-  padding: 10px 16px;
-  border-top: 1px solid #e0e0e0;
-  background-color: #fff;
+  padding: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  backdrop-filter: blur(10px);
 }
 
 .yt-chat-input textarea {
   flex: 1;
-  border: 1px solid #e0e0e0;
-  border-radius: 18px;
-  padding: 10px 16px;
+  border: 2px solid rgba(102, 126, 234, 0.1);
+  border-radius: 24px;
+  padding: 14px 20px;
   resize: none;
   font-family: inherit;
   font-size: 14px;
-  min-height: 40px;
+  font-weight: 500;
+  min-height: 48px;
   max-height: 120px;
   outline: none;
-  transition: border 0.2s;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  color: #334155;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .yt-chat-input textarea:focus {
-  border-color: #065fd4;
+  border-color: rgba(102, 126, 234, 0.4);
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
 }
 
 .yt-chat-input textarea::placeholder {
-  color: #909090;
+  color: #94a3b8;
 }
 
 .yt-chat-input button {
-  background: none;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
-  width: 40px;
-  height: 40px;
-  margin-left: 8px;
+  width: 48px;
+  height: 48px;
+  margin-left: 12px;
   border-radius: 50%;
-  color: #065fd4;
+  color: #ffffff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .yt-chat-input button:hover {
-  background-color: rgba(6, 95, 212, 0.1);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.yt-chat-input button:active {
+  transform: translateY(0) scale(0.95);
 }
 
 .yt-chat-input button:disabled {
-  color: #909090;
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  color: #94a3b8;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Now playing bar */
 .now-playing-bar {
-  background-color: #f5f5f5;
-  padding: 10px 16px;
-  border-left: 3px solid #cc0000;
-  margin: 8px 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 14px 20px;
+  border-left: 4px solid #ff6b6b;
+  margin: 0;
   font-size: 14px;
-  color: #0f0f0f;
+  color: #ffffff;
   display: flex;
   align-items: center;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 .now-playing-bar span:first-child {
-  font-weight: bold;
-  margin-right: 6px;
-  color: #606060;
+  font-weight: 700;
+  margin-right: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
 }
 
 #now-playing-title {
@@ -329,70 +452,94 @@ ytd-app.yt-sidebar-minimized #primary {
   text-overflow: ellipsis;
   white-space: nowrap;
   flex: 1;
+  font-weight: 600;
 }
 
 /* API key configuration */
 .yt-api-key-missing {
-  padding: 16px;
-  background-color: #f9f9f9;
-  border-top: 1px solid #e0e0e0;
+  padding: 24px 20px;
+  background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  margin: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .yt-api-key-configured {
-  padding: 16px;
-  background-color: #f0f8ff;
-  border-top: 1px solid #e0e0e0;
+  padding: 20px;
+  background: linear-gradient(135deg, #ecfdf5 0%, #a7f3d0 100%);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-radius: 16px;
+  margin: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .yt-api-key-input-container {
   display: flex;
-  margin: 10px 0;
+  margin: 16px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .yt-api-key-input {
   flex: 1;
-  padding: 8px 12px;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px 0 0 4px;
+  padding: 14px 16px;
+  border: 2px solid rgba(251, 146, 60, 0.2);
+  border-radius: 12px 0 0 12px;
   font-family: inherit;
   font-size: 14px;
+  font-weight: 500;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.yt-api-key-input:focus {
+  border-color: rgba(251, 146, 60, 0.5);
 }
 
 .yt-api-key-save {
-  padding: 8px 16px;
-  background-color: #065fd4;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
   color: white;
   border: none;
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 12px 12px 0;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
+  transition: all 0.3s;
 }
 
 .yt-api-key-save:hover {
-  background-color: #0056c1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
 }
 
 .yt-api-key-info {
   font-size: 12px;
-  color: #606060;
-  margin-top: 8px;
+  color: #92400e;
+  margin-top: 12px;
+  line-height: 1.5;
 }
 
 .yt-change-api-key {
-  padding: 6px 12px;
-  background-color: #f2f2f2;
-  color: #606060;
-  border: none;
-  border-radius: 4px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #059669;
+  border: 1px solid rgba(5, 150, 105, 0.2);
+  border-radius: 8px;
   cursor: pointer;
   font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s;
 }
 
 .yt-change-api-key:hover {
-  background-color: #e0e0e0;
+  background: rgba(5, 150, 105, 0.1);
+  transform: translateY(-1px);
 }
 
 /* Loading indicator */
@@ -402,17 +549,17 @@ ytd-app.yt-sidebar-minimized #primary {
   align-items: center;
   justify-content: center;
   height: 200px;
-  color: #606060;
+  color: #64748b;
 }
 
 .yt-transcript-spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid rgba(0, 0, 0, 0.1);
-  border-top-color: #606060;
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(102, 126, 234, 0.1);
+  border-top-color: #667eea;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 16px;
+  animation: spin 1.2s linear infinite;
+  margin-bottom: 20px;
 }
 
 @keyframes spin {
@@ -422,207 +569,178 @@ ytd-app.yt-sidebar-minimized #primary {
 /* Transcript content */
 .yt-transcript-text-content {
   font-size: 14px;
-  line-height: 1.5;
-  color: #0f0f0f;
-  padding: 16px;
+  line-height: 1.6;
+  color: #334155;
+  padding: 20px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
 }
 
 /* Transcript segments */
 .yt-transcript-segments {
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
 .yt-transcript-segment {
   display: flex;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  padding: 12px 16px;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1px solid transparent;
 }
 
 .yt-transcript-segment:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  border-color: rgba(102, 126, 234, 0.1);
+  transform: translateX(4px);
 }
 
 .yt-transcript-segment.active {
-  background-color: rgba(6, 95, 212, 0.1);
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-color: rgba(102, 126, 234, 0.3);
+  transform: translateX(8px);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
 }
 
 .yt-transcript-time {
-  color: #606060;
-  margin-right: 12px;
-  min-width: 40px;
-  font-weight: 500;
+  color: #667eea;
+  margin-right: 16px;
+  min-width: 50px;
+  font-weight: 700;
+  font-size: 12px;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-align: center;
 }
 
 .yt-transcript-text {
   flex: 1;
+  font-weight: 500;
 }
 
 /* Error message */
 .yt-transcript-error {
-  color: #cc0000;
+  color: #dc2626;
   text-align: center;
-  padding: 24px 16px;
-  background-color: rgba(204, 0, 0, 0.05);
-  border-radius: 8px;
-  margin-top: 16px;
+  padding: 32px 20px;
+  background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+  border-radius: 16px;
+  margin: 20px;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  font-weight: 600;
 }
 
 /* Toggle button in YouTube player */
 .yt-assistant-toggle-btn svg {
   width: 24px;
   height: 24px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .yt-sidebar {
-    width: 320px;
+    width: 100vw;
   }
   
   ytd-app.yt-sidebar-active #primary {
-    width: calc(100% - 320px) !important;
+    width: 0 !important;
   }
 }
 
 /* Dark mode support */
 html[dark] .yt-sidebar {
-  background-color: #212121;
-  color: #fff;
+  background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+  border-left-color: rgba(255, 255, 255, 0.1);
 }
 
 html[dark] .yt-sidebar-header {
-  background-color: #181818;
-  border-bottom-color: #333;
+  background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+html[dark] .yt-sidebar-header::before {
+  background: linear-gradient(135deg, rgba(51, 65, 85, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
 }
 
 html[dark] .yt-sidebar-tab {
-  color: #aaa;
+  color: rgba(255, 255, 255, 0.7);
 }
 
-html[dark] .yt-sidebar-tab.active {
-  color: #3ea6ff;
-}
-
-html[dark] .yt-sidebar-tab.active:after {
-  background-color: #3ea6ff;
-}
-
+html[dark] .yt-sidebar-tab.active,
 html[dark] .yt-sidebar-tab:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-html[dark] #yt-sidebar-close {
-  color: #aaa;
-}
-
-html[dark] #yt-sidebar-close:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ff4e45;
+html[dark] .yt-chat-container {
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
 }
 
 html[dark] .yt-chat-message.user {
-  background-color: #263850;
-  color: #fff;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
 }
 
 html[dark] .yt-chat-message.assistant {
-  background-color: #2a2a2a;
-  color: #fff;
+  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+  color: #e5e7eb;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+html[dark] .yt-chat-message.assistant::before {
+  border-right-color: #374151;
 }
 
 html[dark] .yt-chat-message.system {
-  background-color: #1f1f1f;
-  color: #aaa;
+  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+  color: #9ca3af;
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 html[dark] .yt-chat-input {
-  background-color: #212121;
-  border-top-color: #333;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-top-color: rgba(255, 255, 255, 0.1);
 }
 
 html[dark] .yt-chat-input textarea {
-  background-color: #2a2a2a;
-  border-color: #333;
-  color: #fff;
+  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #e5e7eb;
 }
 
 html[dark] .yt-chat-input textarea:focus {
-  border-color: #3ea6ff;
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 html[dark] .yt-chat-input textarea::placeholder {
-  color: #aaa;
+  color: #6b7280;
 }
 
-html[dark] .yt-chat-input button {
-  color: #3ea6ff;
-}
-
-html[dark] .yt-chat-input button:hover {
-  background-color: rgba(62, 166, 255, 0.1);
-}
-
-html[dark] .yt-chat-input button:disabled {
-  color: #666;
-}
-
-html[dark] .yt-api-key-missing {
-  background-color: #181818;
-  border-top-color: #333;
-}
-
-html[dark] .yt-api-key-configured {
-  background-color: #1a2733;
-  border-top-color: #333;
-}
-
-html[dark] .yt-api-key-input {
-  background-color: #2a2a2a;
-  border-color: #333;
-  color: #fff;
-}
-
-html[dark] .yt-api-key-save {
-  background-color: #3ea6ff;
-}
-
-html[dark] .yt-api-key-save:hover {
-  background-color: #2196f3;
-}
-
-html[dark] .yt-api-key-info {
-  color: #aaa;
-}
-
-html[dark] .yt-change-api-key {
-  background-color: #2a2a2a;
-  color: #aaa;
-}
-
-html[dark] .yt-change-api-key:hover {
-  background-color: #333;
+html[dark] .now-playing-bar {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
 }
 
 html[dark] .yt-transcript-text-content {
-  color: #fff;
-}
-
-html[dark] .yt-transcript-time {
-  color: #aaa;
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  color: #e5e7eb;
 }
 
 html[dark] .yt-transcript-segment:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+  border-color: rgba(59, 130, 246, 0.2);
 }
 
 html[dark] .yt-transcript-segment.active {
-  background-color: rgba(62, 166, 255, 0.2);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(29, 78, 216, 0.2) 100%);
+  border-color: rgba(59, 130, 246, 0.4);
 }
 
-html[dark] .yt-transcript-error {
-  background-color: rgba(255, 77, 77, 0.1);
+html[dark] .yt-transcript-time {
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.2);
 }
