@@ -477,6 +477,11 @@ const YouTubeAIAIAssistant = {
     const savedSmartPauseSetting = localStorage.getItem('yt-ai-smart-pause-enabled');
     if (savedSmartPauseSetting !== null) {
       isSmartPauseEnabled = savedSmartPauseSetting === 'true';
+      console.log(`Loaded Smart Pause setting from localStorage: ${isSmartPauseEnabled}`);
+    } else {
+      // First time usage - save the default value
+      localStorage.setItem('yt-ai-smart-pause-enabled', 'true');
+      console.log('First time usage - saved default Smart Pause setting: true');
     }
 
     // Update checkbox to reflect saved setting

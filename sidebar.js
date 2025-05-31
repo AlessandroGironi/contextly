@@ -105,13 +105,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (smartPauseCheckbox) {
       // Set checkbox to reflect saved setting
       smartPauseCheckbox.checked = isSmartPauseEnabled;
+      console.log(`Sidebar checkbox set to: ${isSmartPauseEnabled}`);
       
       smartPauseCheckbox.addEventListener('change', (e) => {
         isSmartPauseEnabled = e.target.checked;
         // Save setting to localStorage
         localStorage.setItem('yt-ai-smart-pause-enabled', isSmartPauseEnabled.toString());
-        console.log(`Smart Pause Mode ${isSmartPauseEnabled ? 'enabled' : 'disabled'} and saved to localStorage`);
+        console.log(`Sidebar Smart Pause Mode ${isSmartPauseEnabled ? 'enabled' : 'disabled'} and saved to localStorage`);
       });
+    } else {
+      console.warn('Smart Pause checkbox not found in sidebar');
     }
   }
 
@@ -712,6 +715,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const savedSmartPauseSetting = localStorage.getItem('yt-ai-smart-pause-enabled');
   if (savedSmartPauseSetting !== null) {
     isSmartPauseEnabled = savedSmartPauseSetting === 'true';
+    console.log(`Sidebar loaded Smart Pause setting from localStorage: ${isSmartPauseEnabled}`);
+  } else {
+    // First time usage - save the default value
+    localStorage.setItem('yt-ai-smart-pause-enabled', 'true');
+    console.log('Sidebar first time usage - saved default Smart Pause setting: true');
   }
 
   function handleTypingStart() {
