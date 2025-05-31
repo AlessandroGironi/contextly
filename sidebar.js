@@ -23,8 +23,10 @@ document.addEventListener('DOMContentLoaded', function() {
   // Elements
   const chatTab = document.getElementById('chat-tab');
   const transcriptTab = document.getElementById('transcript-tab');
+  const settingsTab = document.getElementById('settings-tab');
   const chatSection = document.getElementById('chat-section');
   const transcriptSection = document.getElementById('transcript-section');
+  const settingsSection = document.getElementById('settings-section');
   const questionInput = document.getElementById('question-input');
   const sendQuestionBtn = document.getElementById('send-question');
   const chatMessages = document.getElementById('chat-messages');
@@ -44,10 +46,15 @@ document.addEventListener('DOMContentLoaded', function() {
       window.LocalizationManager.translatePage();
     }
 
-    // Tab switching - only chat tab is visible to users
+    // Tab switching
     if (chatTab) {
       chatTab.addEventListener('click', () => switchTab('chat'));
-      // We've hidden the transcript tab, but the code stays for backend functionality
+    }
+    if (transcriptTab) {
+      transcriptTab.addEventListener('click', () => switchTab('transcript'));
+    }
+    if (settingsTab) {
+      settingsTab.addEventListener('click', () => switchTab('settings'));
     }
 
     // Chat input handling
@@ -99,6 +106,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Check if API key is already configured
     checkApiKeyStatus();
+
+    // Initialize Smart Pause functionality
+    const smartPauseCheckbox = document.getElementById('smart-pause-checkbox');
+    if (smartPauseCheckbox) {
+      smartPauseCheckbox.addEventListener('change', (e) => {
+        isSmartPauseEnabled = e.target.checked;
+        console.log(`Smart Pause Mode ${isSmartPauseEnabled ? 'enabled' : 'disabled'}`);
+      });
+    }
   }
 
   // Handle messages from content script
@@ -258,12 +274,35 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Switch between tabs (now simplified as we only show chat tab)
+  // Switch between tabs
   function switchTab(tab) {
-    // Always default to chat tab since transcript tab is hidden
-    chatTab.classList.add('active');
-    chatSection.classList.add('active');
+    // Remove active class from all tabs and sections
+    chatTab.classList.remove('active');
+    transcriptTab.classList.remove('active');
+    settingsTab.classList.remove('active');
+    chatSection.classList.remove('active');
     transcriptSection.classList.remove('active');
+    settingsSection.classList.remove('active');
+
+    // Add active class to selected tab and section
+    switch(tab) {
+      case 'chat':
+        chatTab.classList.add('active');
+        chatSection.classList.add('active');
+        break;
+      case 'transcript':
+        transcriptTab.classList.add('active');
+        transcriptSection.classList.add('active');
+        break;
+      case 'settings':
+        settingsTab.classList.add('active');
+        settingsSection.classList.add('active');
+        break;
+      default:
+        // Default to chat tab
+        chatTab.classList.add('active');
+        chatSection.classList.add('active');
+    }
   }
 
   // Check API key status - simplified for built-in key
