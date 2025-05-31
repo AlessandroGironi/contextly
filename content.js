@@ -483,16 +483,16 @@ const YouTubeAIAIAssistant = {
     // Smart Pause helper functions
     const handleTypingStart = () => {
       if (!isSmartPauseEnabled || isTyping) return;
-      
+
       isTyping = true;
       console.log('User started typing - pausing video');
       this.pauseVideo('smartPause');
-      
+
       // Clear any existing timeout
       if (typingTimeout) {
         clearTimeout(typingTimeout);
       }
-      
+
       // Set timeout to detect end of typing
       typingTimeout = setTimeout(() => {
         handleTypingEnd();
@@ -501,11 +501,11 @@ const YouTubeAIAIAssistant = {
 
     const handleTypingEnd = () => {
       if (!isTyping) return;
-      
+
       isTyping = false;
       console.log('User stopped typing - resuming video');
       this.resumeVideo('smartPause');
-      
+
       // Clear timeout
       if (typingTimeout) {
         clearTimeout(typingTimeout);
@@ -534,42 +534,7 @@ const YouTubeAIAIAssistant = {
       // Add focus and blur events for Smart Pause
       questionInput.addEventListener('focus', handleTypingStart);
       questionInput.addEventListener('blur', handleTypingEnd);
-      
-      // Add additional keyup event to reset timeout
-      questionInput.addEventListener('keyup', () => {
-        if (isSmartPauseEnabled && isTyping) {
-          // Reset the typing timeout on each keyup
-          if (typingTimeout) {
-            clearTimeout(typingTimeout);
-          }
-          typingTimeout = setTimeout(handleTypingEnd, 2000);
-        }
-      });
 
-      sendQuestionBtn.addEventListener('click', () => {
-        if (questionInput.value.trim() !== '' && !questionInput.disabled) {
-          this.handleQuestion(questionInput.value.trim());
-          questionInput.value = '';
-        }
-      });
-    }</old_str></old_str>
-      questionInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          if (questionInput.value.trim() !== '' && !questionInput.disabled) {
-            this.handleQuestion(questionInput.value.trim());
-            questionInput.value = '';
-          }
-        } else {
-          // Handle Smart Pause typing detection
-          handleTypingStart();
-        }
-      });
-
-      // Add focus and blur events for Smart Pause
-      questionInput.addEventListener('focus', handleTypingStart);
-      questionInput.addEventListener('blur', handleTypingEnd);
-      
       // Add additional keyup event to reset timeout
       questionInput.addEventListener('keyup', () => {
         if (isSmartPauseEnabled && isTyping) {
@@ -1181,7 +1146,7 @@ const YouTubeAIAIAssistant = {
   updateVideoInfo: function() {
     // Extract latest video info first
     this.extractVideoInfo();
-    
+
     // Update the title element in the sidebar container
     const titleElement = this.sidebarContainer ? this.sidebarContainer.querySelector('#current-video-title') : null;
     if (titleElement && this.videoTitle) {
@@ -1812,7 +1777,7 @@ const YouTubeAIAIAssistant = {
     }
   },
 
-  // Initialize localization system
+  //  // Initialize localization system
   initializeLocalization: function() {
     try {
       // Create and load localization script
