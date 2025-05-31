@@ -1811,7 +1811,7 @@ window.addEventListener('load', () => {
         const assistantButton = document.createElement('button');
         assistantButton.id = 'yt-assistant-btn';
         assistantButton.className = 'ytp-button yt-assistant-toggle-btn';
-        assistantButton.title = AI Assistant Card';
+        assistantButton.title = 'AI Assistant Card';
         assistantButton.innerHTML = '<svg width="100%" height="100%" viewBox="0 0 36 36"><path fill="white" d="M18,4C9.16,4,2,11.16,2,20c0,3.21,0.95,6.2,2.58,8.7C4.04,30.07,3,31.89,3,34h2c0-2.14,1.23-3.98,3.03-4.87 C10.92,31.51,14.32,33,18,33c8.84,0,16-7.16,16-16C34,11.16,26.84,4,18,4z M18,31c-3.23,0-6.17-1.3-8.32-3.4 c1.36-0.65,2.86-1.1,4.47-1.1c1.61,0,3.11,0.45,4.47,1.1C20.17,29.7,21.27,31,18,31z M18,6c7.73,0,14,6.27,14,14 c0,7.73-6.27,14-14,14c-7.73,0-14-6.27-14-14C4,12.27,10.27,6,18,6z M13,15c0-1.1,0.9-2,2-2s2,0.9,2,2s-0.9,2-2,2S13,16.1,13,15z M21,15c0-1.1,0.9-2,2-2s2,0.9,2,2s-0.9,2-2,2S21,16.1,21,15z M18,24c-3.31,0-6-2.69-6-6h2c0,2.21,1.79,4,4,4s4-1.79,4-4h2 C24,21.31,21.31,24,18,24z"></path></svg>';
 
         assistantButton.addEventListener('click', () => {
