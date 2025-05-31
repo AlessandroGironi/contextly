@@ -106,7 +106,12 @@ const YouTubeAIAIAssistant = {
     };
 
     // Try immediate extraction
-    attemptTitleExtraction();
+    const immediateSuccess = attemptTitleExtraction();
+
+    // Always try to update the sidebar title after immediate extraction
+    if (immediateSuccess) {
+      this.updateVideoTitleInSidebar();
+    }
 
     // If title not found, try again after a short delay for YouTube's dynamic loading
     if (!titleFound) {
@@ -126,7 +131,7 @@ const YouTubeAIAIAssistant = {
 
     console.log(`Video ID: ${this.videoId}, Title: ${this.videoTitle}`);
 
-    // Update video title in the sidebar if it exists
+    // Update video title in the sidebar if it exists (final update)
     this.updateVideoTitleInSidebar();
   },
 
@@ -138,8 +143,10 @@ const YouTubeAIAIAssistant = {
         titleElement.textContent = this.videoTitle;
         console.log(`Updated sidebar title to: ${this.videoTitle}`);
       }
+    }
 
-      // Also notify sidebar frame about the title update
+    // Also notify sidebar frame about the title update
+    if (this.videoTitle) {
       this.postMessageToSidebar({
         action: 'updateVideoTitle',
         data: { 
@@ -1022,9 +1029,14 @@ const YouTubeAIAIAssistant = {
 
   // Update video info in the sidebar
   updateVideoInfo: function() {
-    const titleElement = document.getElementById('current-video-title');
+    // Extract latest video info first
+    this.extractVideoInfo();
+    
+    // Update the title element in the sidebar container
+    const titleElement = this.sidebarContainer ? this.sidebarContainer.querySelector('#current-video-title') : null;
     if (titleElement && this.videoTitle) {
       titleElement.textContent = this.videoTitle;
+      console.log(`Updated video info display: ${this.videoTitle}`);
     }
   },
 
