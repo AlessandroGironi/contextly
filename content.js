@@ -517,7 +517,42 @@ const YouTubeAIAIAssistant = {
     const questionInput = document.getElementById('question-input');
     const sendQuestionBtn = document.getElementById('send-question');
 
-    if (questionInput && sendQuestionBtn) {</old_str>
+    if (questionInput && sendQuestionBtn) {
+      questionInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          if (questionInput.value.trim() !== '' && !questionInput.disabled) {
+            this.handleQuestion(questionInput.value.trim());
+            questionInput.value = '';
+          }
+        } else {
+          // Handle Smart Pause typing detection
+          handleTypingStart();
+        }
+      });
+
+      // Add focus and blur events for Smart Pause
+      questionInput.addEventListener('focus', handleTypingStart);
+      questionInput.addEventListener('blur', handleTypingEnd);
+      
+      // Add additional keyup event to reset timeout
+      questionInput.addEventListener('keyup', () => {
+        if (isSmartPauseEnabled && isTyping) {
+          // Reset the typing timeout on each keyup
+          if (typingTimeout) {
+            clearTimeout(typingTimeout);
+          }
+          typingTimeout = setTimeout(handleTypingEnd, 2000);
+        }
+      });
+
+      sendQuestionBtn.addEventListener('click', () => {
+        if (questionInput.value.trim() !== '' && !questionInput.disabled) {
+          this.handleQuestion(questionInput.value.trim());
+          questionInput.value = '';
+        }
+      });
+    }</old_str></old_str>
       questionInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
