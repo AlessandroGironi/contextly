@@ -1,34 +1,34 @@
 
-/* YouTube AI Assistant Sidebar Styles - Enhanced Design */
+/* YouTube AI Assistant Card Styles - Enhanced Design */
 
-/* Main sidebar container */
+/* Main card container */
 .yt-sidebar {
-  position: fixed;
-  top: 56px; /* YouTube header height */
-  right: 0;
-  width: 400px;
-  height: calc(100vh - 56px);
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 380px;
+  max-height: 600px;
   background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12), -4px 0 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 8px 25px rgba(0, 0, 0, 0.1);
   z-index: 2000;
   display: flex;
   flex-direction: column;
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transform: translateX(100%);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateY(-20px) scale(0.95);
+  opacity: 0;
   font-family: 'Inter', 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
-  border-left: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  overflow: hidden;
 }
 
-/* When sidebar is visible */
+/* When card is visible */
 .yt-sidebar.visible {
-  transform: translateX(0);
+  transform: translateY(0) scale(1);
+  opacity: 1;
 }
 
-/* Adjust YouTube app when sidebar is active */
-ytd-app.yt-sidebar-active #primary {
-  width: calc(100% - 400px) !important;
-  transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
+/* YouTube layout adjustments are no longer needed */
 
 /* Sidebar header with tabs */
 .yt-sidebar-header {
@@ -155,9 +155,12 @@ ytd-app.yt-sidebar-active #primary {
   backdrop-filter: blur(10px);
 }
 
-/* Minimized sidebar state */
+/* Minimized card state */
 .yt-sidebar.minimized {
-  width: 60px;
+  width: 80px;
+  height: 80px;
+  max-height: 80px;
+  border-radius: 50%;
   overflow: hidden;
 }
 
@@ -169,14 +172,18 @@ ytd-app.yt-sidebar-active #primary {
 }
 
 .yt-sidebar.minimized .yt-sidebar-header {
-  height: auto;
-  padding: 15px 0;
+  height: 80px;
+  padding: 0;
   border-bottom: none;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Adjust YouTube app when minimized sidebar is active */
-ytd-app.yt-sidebar-minimized #primary {
-  width: calc(100% - 60px) !important;
+.yt-sidebar.minimized #yt-sidebar-minimize {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
 }
 
 /* Sections container */
@@ -644,11 +651,20 @@ ytd-app.yt-sidebar-minimized #primary {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .yt-sidebar {
-    width: 100vw;
+    width: calc(100vw - 40px);
+    right: 20px;
+    left: 20px;
+    max-height: 70vh;
   }
-  
-  ytd-app.yt-sidebar-active #primary {
-    width: 0 !important;
+}
+
+@media (max-width: 480px) {
+  .yt-sidebar {
+    width: calc(100vw - 20px);
+    right: 10px;
+    left: 10px;
+    top: 10px;
+    max-height: 80vh;
   }
 }
 
