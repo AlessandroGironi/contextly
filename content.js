@@ -477,11 +477,11 @@ const YouTubeAIAIAssistant = {
     const savedSmartPauseSetting = localStorage.getItem('yt-ai-smart-pause-enabled');
     if (savedSmartPauseSetting !== null) {
       isSmartPauseEnabled = savedSmartPauseSetting === 'true';
-      console.log(`Loaded Smart Pause setting from localStorage: ${isSmartPauseEnabled}`);
+      console.log(`Content script loaded Smart Pause setting: ${isSmartPauseEnabled}`);
     } else {
       // First time usage - save the default value
       localStorage.setItem('yt-ai-smart-pause-enabled', 'true');
-      console.log('First time usage - saved default Smart Pause setting: true');
+      console.log('Content script first time - saved default Smart Pause: true');
     }
 
     // Update checkbox to reflect saved setting
@@ -1290,38 +1290,34 @@ const YouTubeAIAIAssistant = {
           console.log("Transcript displayed successfully in sidebar");
         }
 
-        // CRITICAL: Directly send transcript to sidebar iframe to ensure delivery
-        const sidebarFrame = document.getElementById('yt-ai-assistant-sidebar');
-        if (sidebarFrame && sidebarFrame.contentWindow) {
-          console.log(`Sending transcript directly to sidebar: ${this.transcript.length} segments`);
-          sidebarFrame.contentWindow.postMessage({
-            source: 'yt-ai-assistant',
-            action: 'transcriptUpdated',
-            data: {
-              videoId: this.videoId,
-              videoTitle: this.videoTitle,
-              transcript: this.transcript
-            }
-          }, '*');
-        } else {
-          console.error("Cannot find sidebar iframe to send transcript");
-        }
-
-        // Also use the regular method as a backup
-        try {
-          if (typeof this.postMessageToSidebar === 'function') {
-            this.postMessageToSidebar({
-              action: 'transcriptUpdated',
-              data: {
-                videoId: this.videoId,
-                videoTitle: this.videoTitle,
-                transcript: this.transcript
-              }
-            });
+        // Send transcript update message to the sidebar (direct HTML implementation)
+        console.log(`Sending transcript update: ${this.transcript.length} segments`);
+        
+        // Dispatch a custom event that the sidebar can listen to
+        const transcriptEvent = new CustomEvent('yt-ai-transcript-updated', {
+          detail: {
+            videoId: this.videoId,
+            videoTitle: this.videoTitle,
+            transcript: this.transcript
           }
-        } catch (postErr) {
-          console.warn("Error with postMessageToSidebar method:", postErr);
+        });
+        
+        // Dispatch to the sidebar container
+        if (this.sidebarContainer) {
+          this.sidebarContainer.dispatchEvent(transcriptEvent);
+          console.log("Dispatched transcript event to sidebar container");
         }
+        
+        // Also send via window message for sidebar.js to handle
+        window.postMessage({
+          source: 'yt-ai-assistant',
+          action: 'transcriptUpdated',
+          data: {
+            videoId: this.videoId,
+            videoTitle: this.videoTitle,
+            transcript: this.transcript
+          }
+        }, '*');
 
         // Send message to background script
         try {
@@ -1339,35 +1335,32 @@ const YouTubeAIAIAssistant = {
         }
         console.warn("No transcript available for video:", this.videoId);
 
-        // Clear the transcript in the sidebar as well - use direct iframe communication
-        const sidebarFrame = document.getElementById('yt-ai-assistant-sidebar');
-        if (sidebarFrame && sidebarFrame.contentWindow) {
-          sidebarFrame.contentWindow.postMessage({
-            source: 'yt-ai-assistant',
-            action: 'transcriptUpdated',
-            data: {
-              videoId: this.videoId,
-              videoTitle: this.videoTitle,
-              transcript: []
-            }
-          }, '*');
-        }
-
-        // Also use regular method as backup
-        try {
-          if (typeof this.postMessageToSidebar === 'function') {
-            this.postMessageToSidebar({
-              action: 'transcriptUpdated',
-              data: {
-                videoId: this.videoId,
-                videoTitle: this.videoTitle,
-                transcript: []
-              }
-            });
+        // Clear the transcript in the sidebar as well
+        console.log("Clearing transcript in sidebar");
+        
+        // Dispatch a custom event for empty transcript
+        const transcriptEvent = new CustomEvent('yt-ai-transcript-updated', {
+          detail: {
+            videoId: this.videoId,
+            videoTitle: this.videoTitle,
+            transcript: []
           }
-        } catch (postErr) {
-          console.warn("Error with postMessageToSidebar method:", postErr);
+        });
+        
+        if (this.sidebarContainer) {
+          this.sidebarContainer.dispatchEvent(transcriptEvent);
         }
+        
+        // Also send via window message
+        window.postMessage({
+          source: 'yt-ai-assistant',
+          action: 'transcriptUpdated',
+          data: {
+            videoId: this.videoId,
+            videoTitle: this.videoTitle,
+            transcript: []
+          }
+        }, '*');
       }
     } catch (error) {
       // Hide loading
@@ -1814,14 +1807,20 @@ const YouTubeAIAIAssistant = {
     return key; // Fallback to key if localization not available
   },
 
-  // Send message to sidebar iframe
+  // Send message to sidebar (direct HTML implementation)
   postMessageToSidebar: function(message) {
-    const sidebarFrame = document.getElementById('yt-ai-assistant-sidebar');
-    if (sidebarFrame && sidebarFrame.contentWindow) {
-      sidebarFrame.contentWindow.postMessage({
-        source: 'yt-ai-assistant',
-        ...message
-      }, '*');
+    // Send via window message for sidebar.js to handle
+    window.postMessage({
+      source: 'yt-ai-assistant',
+      ...message
+    }, '*');
+    
+    // Also dispatch custom event if sidebar container exists
+    if (this.sidebarContainer && message.action) {
+      const customEvent = new CustomEvent(`yt-ai-${message.action}`, {
+        detail: message.data || {}
+      });
+      this.sidebarContainer.dispatchEvent(customEvent);
     }
   },
 

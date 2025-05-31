@@ -715,11 +715,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const savedSmartPauseSetting = localStorage.getItem('yt-ai-smart-pause-enabled');
   if (savedSmartPauseSetting !== null) {
     isSmartPauseEnabled = savedSmartPauseSetting === 'true';
-    console.log(`Sidebar loaded Smart Pause setting from localStorage: ${isSmartPauseEnabled}`);
+    console.log(`Sidebar loaded Smart Pause setting: ${isSmartPauseEnabled}`);
   } else {
     // First time usage - save the default value
+    isSmartPauseEnabled = true;
     localStorage.setItem('yt-ai-smart-pause-enabled', 'true');
-    console.log('Sidebar first time usage - saved default Smart Pause setting: true');
+    console.log('Sidebar first time - saved default Smart Pause: true');
   }
 
   function handleTypingStart() {
