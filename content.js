@@ -521,9 +521,6 @@ const YouTubeAIAIAssistant = {
       questionInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
-      questionInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
           if (questionInput.value.trim() !== '' && !questionInput.disabled) {
             this.handleQuestion(questionInput.value.trim());
             questionInput.value = '';
