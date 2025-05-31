@@ -103,9 +103,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize Smart Pause functionality
     const smartPauseCheckbox = document.getElementById('smart-pause-checkbox');
     if (smartPauseCheckbox) {
+      // Set checkbox to reflect saved setting
+      smartPauseCheckbox.checked = isSmartPauseEnabled;
+      
       smartPauseCheckbox.addEventListener('change', (e) => {
         isSmartPauseEnabled = e.target.checked;
-        console.log(`Smart Pause Mode ${isSmartPauseEnabled ? 'enabled' : 'disabled'}`);
+        // Save setting to localStorage
+        localStorage.setItem('yt-ai-smart-pause-enabled', isSmartPauseEnabled.toString());
+        console.log(`Smart Pause Mode ${isSmartPauseEnabled ? 'enabled' : 'disabled'} and saved to localStorage`);
       });
     }
   }
@@ -702,6 +707,12 @@ document.addEventListener('DOMContentLoaded', function() {
   let isSmartPauseEnabled = true; // Enabled by default
   let isTyping = false;
   let typingTimeout = null;
+
+  // Load Smart Pause setting from localStorage
+  const savedSmartPauseSetting = localStorage.getItem('yt-ai-smart-pause-enabled');
+  if (savedSmartPauseSetting !== null) {
+    isSmartPauseEnabled = savedSmartPauseSetting === 'true';
+  }
 
   function handleTypingStart() {
     if (!isSmartPauseEnabled) return;
