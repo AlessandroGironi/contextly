@@ -137,6 +137,7 @@ const YouTubeAIAIAssistant = {
 
   // Helper method to update video title in sidebar
   updateVideoTitleInSidebar: function() {
+    // Update the title element in the sidebar container
     if (this.sidebarContainer && this.videoTitle) {
       const titleElement = this.sidebarContainer.querySelector('#current-video-title');
       if (titleElement) {
@@ -283,6 +284,9 @@ const YouTubeAIAIAssistant = {
 
     // Initialize localization after creating sidebar
     this.initializeLocalization();
+
+    // Update video title after sidebar is created
+    this.updateVideoTitleInSidebar();
   },
 
   // Set up event listeners and message handlers
@@ -292,6 +296,11 @@ const YouTubeAIAIAssistant = {
 
     // Update video title in the sidebar
     this.updateVideoInfo();
+
+    // Force video title update after a short delay to ensure DOM is ready
+    setTimeout(() => {
+      this.updateVideoTitleInSidebar();
+    }, 500);
 
     // Global message handler
     window.addEventListener('message', event => {
