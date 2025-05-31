@@ -1,26 +1,13 @@
 /**
- * YouTube AI Assistant - Sidebar Component
- * Handles sidebar UI interactions and AI chat functionality
+ * YouTube AI Assistant - Sidebar Component (Optimized)
+ * Handles sidebar UI and AI interactions efficiently
  */
-
 document.addEventListener('DOMContentLoaded', function() {
-  // State
-  let transcript = [];
   let currentVideoId = '';
   let currentVideoTitle = '';
-  let currentPlaybackTime = 0;
-  let isApiKeyConfigured = false;
   let isProcessing = false;
-  let activeTranscriptSegment = null;
-  
-  // Extract video ID from URL if present (for direct communication)
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.has('v')) {
-    currentVideoId = urlParams.get('v');
-    console.log("Sidebar initialized with video ID from URL:", currentVideoId);
-  }
-  
-  // Elements
+
+  // Elements (Retained from original code)
   const chatTab = document.getElementById('chat-tab');
   const transcriptTab = document.getElementById('transcript-tab');
   const chatSection = document.getElementById('chat-section');
@@ -33,12 +20,17 @@ document.addEventListener('DOMContentLoaded', function() {
   const apiKeyInput = document.getElementById('api-key-input');
   const saveApiKeyBtn = document.getElementById('save-api-key');
   const changeApiKeyBtn = document.getElementById('change-api-key');
-  
+  let transcript = [];
+  let currentPlaybackTime = 0;
+  let activeTranscriptSegment = null;
+
   // Initialize UI
   initUI();
-  
-  // Initialize functions
+
   function initUI() {
+    // Simple initialization - content script handles most UI creation
+    console.log("Sidebar initialized");
+
     // Tab switching - only chat tab is visible to users
     if (chatTab) {
       chatTab.addEventListener('click', () => switchTab('chat'));
@@ -71,197 +63,52 @@ document.addEventListener('DOMContentLoaded', function() {
     if (changeApiKeyBtn) {
       changeApiKeyBtn.addEventListener('click', showApiKeyInput);
     }
-    
-    // Check if API key is already configured
+
+    // Check for API key
     checkApiKeyStatus();
   }
-  
-  // Handle messages from content script
-  window.addEventListener('message', function(event) {
-    // First, check if we're receiving a YouTube AI Assistant message
-    if (!event.data || (event.data.source !== 'yt-ai-assistant' && !event.data.action)) {
-      return; // Ignore messages from other sources
-    }
-    
-    const { action, data } = event.data;
-    console.log("Sidebar received message:", action, data);
-    
-    switch (action) {
-      case 'updateTranscript':
-      case 'transcriptUpdated': // Handle both action names for compatibility
-        // Log what we're receiving for debugging
-        console.log(`Sidebar received transcript update for action ${action}`, 
-          data ? `videoId: ${data.videoId}, segments: ${data.transcript ? data.transcript.length : 0}` : 'No data');
-        
-        // CRITICAL FIX: Only update if we're getting data for the current video or a new video
-        // This prevents old transcript data from overwriting new data
-        if (data && data.videoId) {
-          const isNewVideo = data.videoId !== currentVideoId;
-          
-          // Clear previous transcript first before setting the new one
-          transcript = [];
-          
-          // Update video ID and title
-          currentVideoId = data.videoId || '';
-          currentVideoTitle = data.videoTitle || '';
-          
-          // Only update transcript if we received proper data
-          if (data.transcript && Array.isArray(data.transcript)) {
-            transcript = data.transcript;
-            console.log(`Updated transcript for video ${currentVideoId} with ${transcript.length} segments`);
-            
-            // Update UI with the new transcript
-            updateTranscriptContent(transcript);
-            
-            // Always switch to chat tab when new transcript is loaded for a new video
-            // This ensures we stay in chat mode when navigating between videos
-            if (isNewVideo) {
-              switchTab('chat');
-              // If it's a new video, add a system message
-              addChatMessage('system', `Transcript loaded for: "${currentVideoTitle}"`);
-            }
-          } else {
-            console.warn("Received invalid transcript data:", data.transcript);
-            // Show error in transcript content
-            updateTranscriptContent([]);
-          }
-        } else {
-          console.warn("Received empty or invalid transcript update");
-          // Show error in transcript content but don't reset current transcript
-          const contentEl = document.getElementById('yt-transcript-content');
-          if (contentEl && (!transcript || transcript.length === 0)) {
-            contentEl.innerHTML = '<div class="yt-transcript-error">No transcript available for this video.</div>';
-          }
-        }
-        break;
-        
-      case 'resetState':
-      case 'resetTranscript':
-        // Clear state when video changes
-        console.log("Sidebar state reset triggered for action:", action);
-        transcript = [];
-        currentPlaybackTime = 0;
-        
-        // Clear chat messages only on full reset
-        if (action === 'resetState' && chatMessages) {
-          chatMessages.innerHTML = '';
-        }
-        
-        // Clear transcript content
-        const contentEl = document.getElementById('yt-transcript-content');
-        if (contentEl) {
-          contentEl.innerHTML = '<div class="yt-transcript-message">Loading transcript...</div>';
-        }
-        
-        // Update videoId and title if provided in the message
-        if (event.data.videoId) {
-          currentVideoId = event.data.videoId;
-          console.log("Updated currentVideoId to:", currentVideoId);
-        }
-        
-        if (event.data.videoTitle) {
-          currentVideoTitle = event.data.videoTitle;
-          console.log("Updated currentVideoTitle to:", currentVideoTitle);
-        }
-        break;
-        
-      case 'newVideo':
-        // Update video info for new video
-        if (data) {
-          currentVideoId = data.videoId || '';
-          currentVideoTitle = data.videoTitle || '';
-          console.log(`Sidebar received new video: ${currentVideoTitle} (${currentVideoId})`);
-          
-          // Clear chat if requested
-          if (data.clearChat && chatMessages) {
-            chatMessages.innerHTML = '';
-            addChatMessage('system', `New video detected: "${currentVideoTitle}"`);
-          }
-        }
-        break;
-        
-      case 'updatePlaybackTime':
-        currentPlaybackTime = data.time;
-        updateActiveTranscriptSegment();
-        break;
-        
-      case 'showLoading':
-        showLoadingIndicator();
-        break;
-        
-      case 'hideLoading':
-        hideLoadingIndicator();
-        break;
-        
-      case 'showError':
-        showErrorMessage(data.message);
-        break;
-        
-      case 'apiKeyStatus':
-        updateApiKeyStatus(data.configured);
-        break;
-        
-      case 'preciseTimestampReceived':
-        // Process the question with the precise timestamp received from content script
-        const preciseTime = data.currentTime;
-        currentPlaybackTime = preciseTime; // Update our stored time
-        
-        console.log(`Received precise timestamp: ${preciseTime}s, processing question: "${data.question}"`);
-        
-        // Get relevant transcript section using the precise timestamp
-        const relevantTranscript = getRelevantTranscript(data.question);
-        
-        // Add video title to the transcript context if it's not already included
-        let enhancedTranscript = relevantTranscript;
-        if (!enhancedTranscript.includes("VIDEO TITLE:")) {
-          enhancedTranscript = `VIDEO TITLE: ${currentVideoTitle}\n\n${enhancedTranscript}`;
-        }
-        
-        // Now send the question with the precise timestamp
-        if (window.parent) {
-          window.parent.postMessage({
-            action: 'processQuestion',
-            question: data.question,
-            transcript: enhancedTranscript,
-            videoId: currentVideoId,
-            videoTitle: currentVideoTitle,
-            currentTime: preciseTime, // Use the precise timestamp
-            timestamp: Date.now()
-          }, '*');
-        }
-        break;
-    }
-  });
-  
+
   // Switch between tabs (now simplified as we only show chat tab)
   function switchTab(tab) {
     // Always default to chat tab since transcript tab is hidden
+    const chatTab = document.getElementById('chat-tab');
+    const chatSection = document.getElementById('chat-section');
+    const transcriptSection = document.getElementById('transcript-section');
+
     chatTab.classList.add('active');
     chatSection.classList.add('active');
     transcriptSection.classList.remove('active');
   }
-  
-  // Check API key status - simplified for built-in key
+
+  // Check API key status
   async function checkApiKeyStatus() {
-    console.log("Using built-in API key - no need to check storage");
-    
-    // Set status to configured
-    updateApiKeyStatus(true);
-    
-    // Notify parent window that API key is available
-    if (window.parent) {
-      window.parent.postMessage({ 
-        action: 'apiKeyReady'
-      }, '*');
+    try {
+      const data = await new Promise((resolve) => {
+        chrome.storage.sync.get('openai_api_key', resolve);
+      });
+
+      const isConfigured = !!(data?.openai_api_key);
+      updateApiKeyStatus(isConfigured);
+
+      if (isConfigured && window.OpenAIClient) {
+        window.OpenAIClient.apiKey = data.openai_api_key;
+        window.OpenAIClient.isConfigured = true;
+      }
+
+      return isConfigured;
+    } catch (error) {
+      console.error('Error checking API key:', error);
+      return false;
     }
-    
-    return true;
   }
-  
+
   // Update API key status UI
   function updateApiKeyStatus(configured) {
-    isApiKeyConfigured = configured;
-    
+    const apiKeyMissing = document.getElementById('api-key-missing');
+    const apiKeyConfiguredEl = document.getElementById('api-key-configured');
+    const questionInput = document.getElementById('question-input');
+    const sendQuestionBtn = document.getElementById('send-question');
+
     if (configured) {
       apiKeyMissing.style.display = 'none';
       apiKeyConfiguredEl.style.display = 'flex';
@@ -273,8 +120,16 @@ document.addEventListener('DOMContentLoaded', function() {
       questionInput.disabled = true;
       sendQuestionBtn.disabled = true;
     }
+
+    // Notify parent window
+    if (window.parent) {
+      window.parent.postMessage({
+        action: 'apiKeyStatus',
+        data: { configured }
+      }, '*');
+    }
   }
-  
+
   // Save API key - simplified for built-in key
   async function saveApiKey() {
     // Nothing to save as we're using a built-in key
@@ -299,10 +154,13 @@ document.addEventListener('DOMContentLoaded', function() {
     addChatMessage('system', 'This extension uses a built-in API key. No configuration needed!');
     
     // Make sure UI shows configured state
+    const apiKeyMissing = document.getElementById('api-key-missing');
+    const apiKeyConfiguredEl = document.getElementById('api-key-configured');
+
     apiKeyMissing.style.display = 'none';
     apiKeyConfiguredEl.style.display = 'flex';
   }
-  
+
   // Send question to OpenAI
   function sendQuestion() {
     const question = questionInput.value.trim();
@@ -338,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }, '*');
     }
   }
-  
+
   // Add user or assistant message to chat
   function addChatMessage(role, content) {
     const messageEl = document.createElement('div');
@@ -633,24 +491,93 @@ document.addEventListener('DOMContentLoaded', function() {
     removeLoadingMessage();
     isProcessing = false;
   }
-  
-  // Register message handler for AI responses and other actions
+
+  // Handle messages from parent window (Consolidated from original and edited)
   window.addEventListener('message', function(event) {
-    if (!event.data || !event.data.action) return;
-    
+    if (!event.data?.action) return;
+
     const { action, data } = event.data;
-    
-    console.log(`Received message in sidebar: ${action}`);
-    
+
     switch (action) {
-      case 'aiResponse':
-        handleAIResponse(data);
+      case 'updateVideoTitle':
+        currentVideoId = data?.videoId || '';
+        currentVideoTitle = data?.videoTitle || '';
+        
+        // Update "Now Playing" UI element if it exists
+        const titleEl = document.getElementById('now-playing-title');
+        if (titleEl) {
+          titleEl.textContent = data.videoTitle;
+        } else {
+          // Create the Now Playing element if it doesn't exist
+          const chatContainer = document.getElementById('chat-container');
+          if (chatContainer) {
+            const nowPlayingBar = document.createElement('div');
+            nowPlayingBar.className = 'now-playing-bar';
+            nowPlayingBar.innerHTML = `<span>Now playing:</span> <span id="now-playing-title">${data.videoTitle}</span>`;
+            
+            // Insert at the top of chat container, right after the header
+            chatContainer.insertBefore(nowPlayingBar, chatContainer.firstChild);
+          }
+        }
+        
+        // Update current video title in sidebar header if it exists
+        const currentVideoTitleEl = document.getElementById('current-video-title');
+        if (currentVideoTitleEl) {
+          currentVideoTitleEl.textContent = data.videoTitle;
+        }
         break;
+
+      case 'newVideo':
+        currentVideoId = data?.videoId || '';
+        currentVideoTitle = data?.videoTitle || '';
+        isProcessing = false;
+
+        // Reset all state variables related to the previous video
+        transcript = [];
+        currentPlaybackTime = 0;
+        activeTranscriptSegment = null;
+
+        // Update "Now Playing" UI element if it exists
+        const nowPlayingEl = document.getElementById('now-playing-title');
+        if (nowPlayingEl) {
+          nowPlayingEl.textContent = data.videoTitle;
+        } else {
+          // Create the Now Playing element if it doesn't exist
+          const chatContainer = document.getElementById('chat-container');
+          if (chatContainer) {
+            const nowPlayingBar = document.createElement('div');
+            nowPlayingBar.className = 'now-playing-bar';
+            nowPlayingBar.innerHTML = `<span>Now playing:</span> <span id="now-playing-title">${data.videoTitle}</span>`;
+            
+            // Insert at the top of chat container, right after the header
+            chatContainer.insertBefore(nowPlayingBar, chatContainer.firstChild);
+          }
+        }
         
+        // Update current video title in sidebar header if it exists
+        const currentVideoTitleEl = document.getElementById('current-video-title');
+        if (currentVideoTitleEl) {
+          currentVideoTitleEl.textContent = data.videoTitle;
+        }
+
+        // Always clear chat history when switching videos to prevent context contamination
+        clearChatHistory();
+        
+        // Add a more informative welcome message for new video
+        addChatMessage('system', `Now watching: "${data.videoTitle}" - Ask me any questions about this video!`);
+        
+        // Reset loading indicator if it's active
+        removeLoadingMessage();
+        
+        // Always switch to chat tab
+        switchTab('chat');
+        break;
+
       case 'apiKeyStatus':
-        console.log(`API key status update: configured=${data.configured}`);
-        updateApiKeyStatus(data.configured);
-        
+        if (data?.configured !== undefined) {
+          updateApiKeyStatus(data.configured);
+        }
+
         // Show success or error message if provided
         if (data.message) {
           addChatMessage('system', data.message);
@@ -660,7 +587,11 @@ document.addEventListener('DOMContentLoaded', function() {
           showErrorMessage(`Error: ${data.error}`);
         }
         break;
-        
+
+      case 'aiResponse':
+        handleAIResponse(data);
+        break;
+
       case 'transcriptUpdated':
         console.log(`Sidebar received transcript update for video: ${data.videoId}`);
         
@@ -689,86 +620,51 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         break;
         
-      case 'updateVideoTitle':
-        // Update current video title
-        if (data && data.videoTitle) {
-          currentVideoId = data.videoId;
-          currentVideoTitle = data.videoTitle;
-          
-          // Update "Now Playing" UI element if it exists
-          const titleEl = document.getElementById('now-playing-title');
-          if (titleEl) {
-            titleEl.textContent = data.videoTitle;
-          } else {
-            // Create the Now Playing element if it doesn't exist
-            const chatContainer = document.getElementById('chat-container');
-            if (chatContainer) {
-              const nowPlayingBar = document.createElement('div');
-              nowPlayingBar.className = 'now-playing-bar';
-              nowPlayingBar.innerHTML = `<span>Now playing:</span> <span id="now-playing-title">${data.videoTitle}</span>`;
-              
-              // Insert at the top of chat container, right after the header
-              chatContainer.insertBefore(nowPlayingBar, chatContainer.firstChild);
-            }
-          }
-          
-          // Update current video title in sidebar header if it exists
-          const currentVideoTitleEl = document.getElementById('current-video-title');
-          if (currentVideoTitleEl) {
-            currentVideoTitleEl.textContent = data.videoTitle;
-          }
-          
-          console.log(`Video title updated to: ${data.videoTitle}`);
-        }
+      case 'updatePlaybackTime':
+        currentPlaybackTime = data.time;
+        updateActiveTranscriptSegment();
+        break;
+
+      case 'showLoading':
+        showLoadingIndicator();
         break;
         
-      case 'newVideo':
-        console.log(`New video detected in sidebar: ${data.videoId} - "${data.videoTitle}"`);
+      case 'hideLoading':
+        hideLoadingIndicator();
+        break;
         
-        // Reset all state variables related to the previous video
-        transcript = [];
-        currentPlaybackTime = 0;
-        isProcessing = false;
-        activeTranscriptSegment = null;
+      case 'showError':
+        showErrorMessage(data.message);
+        break;
+
+      case 'preciseTimestampReceived':
+        // Process the question with the precise timestamp received from content script
+        const preciseTime = data.currentTime;
+        currentPlaybackTime = preciseTime; // Update our stored time
         
-        // Update current video info
-        currentVideoId = data.videoId;
-        currentVideoTitle = data.videoTitle;
+        console.log(`Received precise timestamp: ${preciseTime}s, processing question: "${data.question}"`);
         
-        // Update "Now Playing" UI element if it exists
-        const nowPlayingEl = document.getElementById('now-playing-title');
-        if (nowPlayingEl) {
-          nowPlayingEl.textContent = data.videoTitle;
-        } else {
-          // Create the Now Playing element if it doesn't exist
-          const chatContainer = document.getElementById('chat-container');
-          if (chatContainer) {
-            const nowPlayingBar = document.createElement('div');
-            nowPlayingBar.className = 'now-playing-bar';
-            nowPlayingBar.innerHTML = `<span>Now playing:</span> <span id="now-playing-title">${data.videoTitle}</span>`;
-            
-            // Insert at the top of chat container, right after the header
-            chatContainer.insertBefore(nowPlayingBar, chatContainer.firstChild);
-          }
+        // Get relevant transcript section using the precise timestamp
+        const relevantTranscript = getRelevantTranscript(data.question);
+        
+        // Add video title to the transcript context if it's not already included
+        let enhancedTranscript = relevantTranscript;
+        if (!enhancedTranscript.includes("VIDEO TITLE:")) {
+          enhancedTranscript = `VIDEO TITLE: ${currentVideoTitle}\n\n${enhancedTranscript}`;
         }
         
-        // Update current video title in sidebar header if it exists
-        const currentVideoTitleEl = document.getElementById('current-video-title');
-        if (currentVideoTitleEl) {
-          currentVideoTitleEl.textContent = data.videoTitle;
+        // Now send the question with the precise timestamp
+        if (window.parent) {
+          window.parent.postMessage({
+            action: 'processQuestion',
+            question: data.question,
+            transcript: enhancedTranscript,
+            videoId: currentVideoId,
+            videoTitle: currentVideoTitle,
+            currentTime: preciseTime, // Use the precise timestamp
+            timestamp: Date.now()
+          }, '*');
         }
-        
-        // Always clear chat history when switching videos to prevent context contamination
-        clearChatHistory();
-        
-        // Add a more informative welcome message for new video
-        addChatMessage('system', `Now watching: "${data.videoTitle}" - Ask me any questions about this video!`);
-        
-        // Reset loading indicator if it's active
-        removeLoadingMessage();
-        
-        // Always switch to chat tab
-        switchTab('chat');
         break;
     }
   });
