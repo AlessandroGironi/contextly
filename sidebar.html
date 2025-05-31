@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    
+
 
     <!-- Chat Section -->
     <div id="chat-section" class="yt-sidebar-section active">
@@ -44,14 +44,14 @@
                 <p class="yt-api-key-info" data-i18n="api_key_info">Your API key is stored locally and only used to communicate with OpenAI.</p>
             </div>
 
-            <div id="api-key-configured" class="yt-api-key-configured">
-                <p data-i18n="api_ready">Ready to answer questions about this video!</p>
-                <button id="change-api-key" class="yt-change-api-key" style="display: none;" data-i18n="change_key">Change key</button>
+            <div id="api-key-configured" class="yt-api-key-configured" style="display: none;">
+                <p data-i18n="api_ready">OpenAI API key configured</p>
+                <button id="change-api-key" class="yt-change-api-key" data-i18n="change_key">Change key</button>
             </div>
 
             <div class="yt-chat-input">
-                <textarea id="question-input" data-i18n="question_placeholder" placeholder="Ask about this video..."></textarea>
-                <button id="send-question">
+                <textarea id="question-input" data-i18n="question_placeholder" placeholder="Ask about this video..." disabled></textarea>
+                <button id="send-question" disabled>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"/>
                     </svg>
@@ -84,8 +84,7 @@
             </div>
         </div>
     </div>
-
-    </div>
+</body></html></div>
     <script src="localization.js"></script>
     <script src="sidebar.js"></script>
 </body>

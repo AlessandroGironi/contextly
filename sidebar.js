@@ -276,32 +276,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Switch between tabs
   function switchTab(tab) {
+    console.log(`Switching to tab: ${tab}`);
+    
     // Remove active class from all tabs and sections
-    chatTab.classList.remove('active');
-    transcriptTab.classList.remove('active');
-    settingsTab.classList.remove('active');
-    chatSection.classList.remove('active');
-    transcriptSection.classList.remove('active');
-    settingsSection.classList.remove('active');
+    if (chatTab) chatTab.classList.remove('active');
+    if (transcriptTab) transcriptTab.classList.remove('active');
+    if (settingsTab) settingsTab.classList.remove('active');
+    if (chatSection) chatSection.classList.remove('active');
+    if (transcriptSection) transcriptSection.classList.remove('active');
+    if (settingsSection) settingsSection.classList.remove('active');
 
     // Add active class to selected tab and section
     switch(tab) {
       case 'chat':
-        chatTab.classList.add('active');
-        chatSection.classList.add('active');
+        if (chatTab) chatTab.classList.add('active');
+        if (chatSection) chatSection.classList.add('active');
         break;
       case 'transcript':
-        transcriptTab.classList.add('active');
-        transcriptSection.classList.add('active');
+        if (transcriptTab) transcriptTab.classList.add('active');
+        if (transcriptSection) transcriptSection.classList.add('active');
         break;
       case 'settings':
-        settingsTab.classList.add('active');
-        settingsSection.classList.add('active');
+        if (settingsTab) settingsTab.classList.add('active');
+        if (settingsSection) settingsSection.classList.add('active');
         break;
       default:
         // Default to chat tab
-        chatTab.classList.add('active');
-        chatSection.classList.add('active');
+        if (chatTab) chatTab.classList.add('active');
+        if (chatSection) chatSection.classList.add('active');
     }
   }
 
