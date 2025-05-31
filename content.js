@@ -105,7 +105,7 @@ const YouTubeAIAIAssistant = {
     }
   },
 
-  // Create card container and inject HTML
+  // Create integrated card container and inject HTML
   createSidebar: function() {
     // Create container
     this.sidebarContainer = document.createElement('div');
@@ -183,21 +183,41 @@ const YouTubeAIAIAssistant = {
                             document.querySelector('[data-content="secondary"]');
     
     if (secondaryContent) {
-      // Create a wrapper to position the card relative to the secondary content
+      // Create a seamless wrapper that integrates with YouTube's layout
       const cardWrapper = document.createElement('div');
-      cardWrapper.style.position = 'relative';
       cardWrapper.style.width = '100%';
-      cardWrapper.style.height = '0';
-      cardWrapper.style.zIndex = '2000';
+      cardWrapper.style.marginBottom = '16px';
+      cardWrapper.style.position = 'relative';
       
       // Insert the card container into the wrapper
       cardWrapper.appendChild(this.sidebarContainer);
       
-      // Insert wrapper at the beginning of secondary content
+      // Insert wrapper at the beginning of secondary content to appear above suggested videos
       secondaryContent.insertBefore(cardWrapper, secondaryContent.firstChild);
+      
+      console.log('AI Assistant card integrated into YouTube secondary content area');
     } else {
-      // Fallback: inject into body if secondary content not found
-      document.body.appendChild(this.sidebarContainer);
+      // Enhanced fallback: try to find other suitable containers
+      const watchNextSecondary = document.querySelector('#watch-next-content') ||
+                                 document.querySelector('.watch-sidebar') ||
+                                 document.querySelector('#right-tabs');
+      
+      if (watchNextSecondary) {
+        const fallbackWrapper = document.createElement('div');
+        fallbackWrapper.style.width = '100%';
+        fallbackWrapper.style.marginBottom = '16px';
+        fallbackWrapper.appendChild(this.sidebarContainer);
+        watchNextSecondary.insertBefore(fallbackWrapper, watchNextSecondary.firstChild);
+        console.log('AI Assistant card integrated using fallback container');
+      } else {
+        // Last resort: inject into body with adjusted styling
+        this.sidebarContainer.style.position = 'fixed';
+        this.sidebarContainer.style.top = '20px';
+        this.sidebarContainer.style.right = '20px';
+        this.sidebarContainer.style.zIndex = '2000';
+        document.body.appendChild(this.sidebarContainer);
+        console.log('AI Assistant card injected as fallback overlay');
+      }
     }
 
     // Set up event listeners and message handlers
@@ -934,7 +954,7 @@ const YouTubeAIAIAssistant = {
       // Make minimize button show the expand icon
       const minimizeButton = document.getElementById('yt-sidebar-minimize');
       if (minimizeButton) {
-        minimizeButton.textContent = '💬';
+        minimizeButton.textContent = '▲';
         minimizeButton.title = 'Expand card';
       }
     }
