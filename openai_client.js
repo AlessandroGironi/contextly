@@ -400,7 +400,7 @@ Your answer should ONLY be about THIS video, not any other videos.`;
             completion: data.usage.completion_tokens,
             total: data.usage.total_tokens
           },
-          model: "gpt-4o" // Note the model used
+          model: "gpt-3.5-turbo" // Note the model used
         };
       } catch (error) {
         // Only retry for network errors and rate limits

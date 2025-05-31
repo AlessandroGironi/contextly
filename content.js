@@ -1723,8 +1723,8 @@ const YouTubeAIAIAssistant = {
           }
 
           // Note if a different model was used
-          if (result.model && result.model !== 'gpt-4o') {
-            console.log(`Note: Used ${result.model} instead of gpt-4o`);
+          if (result.model && result.model !== 'gpt-3.5-turbo') {
+            console.log(`Note: Used ${result.model} instead of gpt-3.5-turbo`);
           }
         } else {
           throw new Error('No response generated from OpenAI');
