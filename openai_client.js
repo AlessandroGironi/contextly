@@ -283,7 +283,7 @@ Your answer should ONLY be about THIS video, not any other videos.`;
         console.log(`Attempt ${retryCount + 1}: Sending request to OpenAI API...`);
         
         const requestBody = {
-          model: "gpt-4o", // Using gpt-4o for better performance and accuracy
+          model: "gpt-3.5-turbo", // Using gpt-3.5-turbo for better compatibility and lower rate limits
           messages: [
             { role: "system", content: systemMessage },
             { role: "user", content: userMessage }
@@ -400,7 +400,7 @@ Your answer should ONLY be about THIS video, not any other videos.`;
             completion: data.usage.completion_tokens,
             total: data.usage.total_tokens
           },
-          model: requestBody.model // Use the actual model that was requested
+          model: "gpt-4o" // Note the model used
         };
       } catch (error) {
         // Only retry for network errors and rate limits
