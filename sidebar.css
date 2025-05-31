@@ -130,6 +130,82 @@ body {
   width: 40px;
 }
 
+/* Settings Section */
+.yt-settings-container {
+  padding: var(--spacing-md);
+  background: var(--bg-primary);
+  border-radius: var(--radius-medium);
+  margin: var(--spacing-sm);
+}
+
+.yt-settings-option {
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-small);
+  border: 1px solid var(--border-color);
+}
+
+.yt-settings-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  gap: var(--spacing-sm);
+}
+
+.yt-settings-label input[type="checkbox"] {
+  display: none;
+}
+
+.yt-settings-checkmark {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.yt-settings-checkmark::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.yt-settings-label input[type="checkbox"]:checked + .yt-settings-checkmark {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+}
+
+.yt-settings-label input[type="checkbox"]:checked + .yt-settings-checkmark::after {
+  opacity: 1;
+}
+
+.yt-settings-text {
+  flex: 1;
+}
+
+.yt-settings-description {
+  margin: var(--spacing-xs) 0 0 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  line-height: 1.4;
+}
+
 /* Controls */
 .yt-sidebar-controls {
   display: flex;

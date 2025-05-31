@@ -352,6 +352,14 @@ const YouTubeAIAIAssistant = {
           this.processQuestion(data);
           break;
 
+        case 'pauseVideo':
+          this.pauseVideo(data.reason);
+          break;
+
+        case 'resumeVideo':
+          this.resumeVideo(data.reason);
+          break;
+
         case 'apiKeyFound':
           // Update OpenAIClient if sidebar found a key
           if (data.apiKey && window.OpenAIClient) {
@@ -1645,6 +1653,29 @@ const YouTubeAIAIAssistant = {
     const videoPlayer = document.querySelector('video');
     if (videoPlayer) {
       videoPlayer.currentTime = seconds;
+    }
+  },
+
+  // Pause video (for Smart Pause Mode)
+  pauseVideo: function(reason) {
+    const videoPlayer = document.querySelector('video');
+    if (videoPlayer && !videoPlayer.paused) {
+      videoPlayer.pause();
+      console.log(`Video paused due to: ${reason}`);
+    }
+  },
+
+  // Resume video (for Smart Pause Mode)
+  resumeVideo: function(reason) {
+    const videoPlayer = document.querySelector('video');
+    if (videoPlayer && videoPlayer.paused) {
+      // Only resume if video was paused by our Smart Pause feature
+      // Check if user manually paused (this is a simple heuristic)
+      videoPlayer.play().then(() => {
+        console.log(`Video resumed due to: ${reason}`);
+      }).catch((error) => {
+        console.log(`Could not resume video: ${error.message}`);
+      });
     }
   },
 

@@ -125,6 +125,7 @@ class LocalizationManager {
         // Header and tabs
         'chat_tab': 'ChatBot',
         'transcript_tab': 'Transcript',
+        'settings_tab': 'Settings',
         'minimize_sidebar': 'Minimize sidebar',
         'expand_sidebar': 'Expand sidebar',
         
@@ -178,6 +179,10 @@ class LocalizationManager {
         // Time format
         'timestamp_at': 'Timestamp at {{time}}',
         
+        // Settings
+        'smart_pause_mode': 'Smart Pause Mode',
+        'smart_pause_description': 'Automatically pauses video when typing in chat',
+        
         // General
         'unknown_video': 'Unknown video',
         'youtube_video': 'YouTube Video'
@@ -187,6 +192,7 @@ class LocalizationManager {
         // Header and tabs
         'chat_tab': 'ChatBot',
         'transcript_tab': 'Transcripción',
+        'settings_tab': 'Configuración',
         'minimize_sidebar': 'Minimizar barra lateral',
         'expand_sidebar': 'Expandir barra lateral',
         
@@ -240,6 +246,10 @@ class LocalizationManager {
         // Time format
         'timestamp_at': 'Marca de tiempo en {{time}}',
         
+        // Settings
+        'smart_pause_mode': 'Modo Pausa Inteligente',
+        'smart_pause_description': 'Pausa automáticamente el video al escribir en el chat',
+        
         // General
         'unknown_video': 'Video desconocido',
         'youtube_video': 'Video de YouTube'
@@ -249,6 +259,7 @@ class LocalizationManager {
         // Header and tabs
         'chat_tab': 'ChatBot',
         'transcript_tab': 'Transcription',
+        'settings_tab': 'Paramètres',
         'minimize_sidebar': 'Réduire la barre latérale',
         'expand_sidebar': 'Agrandir la barre latérale',
         
@@ -302,6 +313,10 @@ class LocalizationManager {
         // Time format
         'timestamp_at': 'Horodatage à {{time}}',
         
+        // Settings
+        'smart_pause_mode': 'Mode Pause Intelligente',
+        'smart_pause_description': 'Met automatiquement en pause la vidéo lors de la saisie dans le chat',
+        
         // General
         'unknown_video': 'Vidéo inconnue',
         'youtube_video': 'Vidéo YouTube'
@@ -311,6 +326,7 @@ class LocalizationManager {
         // Header and tabs
         'chat_tab': 'ChatBot',
         'transcript_tab': 'Transkript',
+        'settings_tab': 'Einstellungen',
         'minimize_sidebar': 'Seitenleiste minimieren',
         'expand_sidebar': 'Seitenleiste erweitern',
         
@@ -364,6 +380,10 @@ class LocalizationManager {
         // Time format
         'timestamp_at': 'Zeitstempel bei {{time}}',
         
+        // Settings
+        'smart_pause_mode': 'Intelligenter Pausenmodus',
+        'smart_pause_description': 'Pausiert automatisch das Video beim Tippen im Chat',
+        
         // General
         'unknown_video': 'Unbekanntes Video',
         'youtube_video': 'YouTube-Video'
@@ -373,6 +393,7 @@ class LocalizationManager {
         // Header and tabs
         'chat_tab': 'ChatBot',
         'transcript_tab': 'Trascrizione',
+        'settings_tab': 'Impostazioni',
         'minimize_sidebar': 'Riduci barra laterale',
         'expand_sidebar': 'Espandi barra laterale',
         
@@ -426,6 +447,10 @@ class LocalizationManager {
         // Time format
         'timestamp_at': 'Timestamp a {{time}}',
         
+        // Settings
+        'smart_pause_mode': 'Modalità Pausa Intelligente',
+        'smart_pause_description': 'Mette automaticamente in pausa il video quando si digita nella chat',
+        
         // General
         'unknown_video': 'Video sconosciuto',
         'youtube_video': 'Video YouTube'
@@ -435,6 +460,7 @@ class LocalizationManager {
         // Header and tabs
         'chat_tab': 'ChatBot',
         'transcript_tab': 'Transcrição',
+        'settings_tab': 'Configurações',
         'minimize_sidebar': 'Minimizar barra lateral',
         'expand_sidebar': 'Expandir barra lateral',
         
@@ -488,6 +514,10 @@ class LocalizationManager {
         // Time format
         'timestamp_at': 'Timestamp em {{time}}',
         
+        // Settings
+        'smart_pause_mode': 'Modo Pausa Inteligente',
+        'smart_pause_description': 'Pausa automaticamente o vídeo ao digitar no chat',
+        
         // General
         'unknown_video': 'Vídeo desconhecido',
         'youtube_video': 'Vídeo do YouTube'
@@ -497,6 +527,7 @@ class LocalizationManager {
         // Header and tabs
         'chat_tab': 'Чат-бот',
         'transcript_tab': 'Транскрипция',
+        'settings_tab': 'Настройки',
         'minimize_sidebar': 'Свернуть боковую панель',
         'expand_sidebar': 'Развернуть боковую панель',
         
@@ -550,6 +581,10 @@ class LocalizationManager {
         // Time format
         'timestamp_at': 'Временная метка в {{time}}',
         
+        // Settings
+        'smart_pause_mode': 'Умная пауза',
+        'smart_pause_description': 'Автоматически ставит видео на паузу при наборе текста в чате',
+        
         // General
         'unknown_video': 'Неизвестное видео',
         'youtube_video': 'Видео YouTube'
@@ -559,6 +594,7 @@ class LocalizationManager {
         // Header and tabs
         'chat_tab': '聊天机器人',
         'transcript_tab': '转录',
+        'settings_tab': '设置',
         'minimize_sidebar': '最小化侧边栏',
         'expand_sidebar': '展开侧边栏',
         
@@ -612,6 +648,10 @@ class LocalizationManager {
         // Time format
         'timestamp_at': '时间戳在{{time}}',
         
+        // Settings
+        'smart_pause_mode': '智能暂停模式',
+        'smart_pause_description': '在聊天中输入时自动暂停视频',
+        
         // General
         'unknown_video': '未知视频',
         'youtube_video': 'YouTube视频'
@@ -621,6 +661,7 @@ class LocalizationManager {
         // Header and tabs
         'chat_tab': 'チャットボット',
         'transcript_tab': '転写',
+        'settings_tab': '設定',
         'minimize_sidebar': 'サイドバーを最小化',
         'expand_sidebar': 'サイドバーを展開',
         
@@ -674,6 +715,10 @@ class LocalizationManager {
         // Time format
         'timestamp_at': '{{time}}のタイムスタンプ',
         
+        // Settings
+        'smart_pause_mode': 'スマートポーズモード',
+        'smart_pause_description': 'チャットで入力中に動画を自動的に一時停止',
+        
         // General
         'unknown_video': '不明な動画',
         'youtube_video': 'YouTube動画'
@@ -683,6 +728,7 @@ class LocalizationManager {
         // Header and tabs
         'chat_tab': '챗봇',
         'transcript_tab': '전사',
+        'settings_tab': '설정',
         'minimize_sidebar': '사이드바 최소화',
         'expand_sidebar': '사이드바 확장',
         
@@ -736,6 +782,10 @@ class LocalizationManager {
         // Time format
         'timestamp_at': '{{time}}의 타임스탬프',
         
+        // Settings
+        'smart_pause_mode': '스마트 일시정지 모드',
+        'smart_pause_description': '채팅 입력 시 비디오를 자동으로 일시정지',
+        
         // General
         'unknown_video': '알 수 없는 비디오',
         'youtube_video': 'YouTube 비디오'
@@ -745,6 +795,7 @@ class LocalizationManager {
         // Header and tabs
         'chat_tab': 'الشات بوت',
         'transcript_tab': 'النسخة المكتوبة',
+        'settings_tab': 'الإعدادات',
         'minimize_sidebar': 'تصغير الشريط الجانبي',
         'expand_sidebar': 'توسيع الشريط الجانبي',
         
@@ -798,6 +849,10 @@ class LocalizationManager {
         // Time format
         'timestamp_at': 'الطابع الزمني في {{time}}',
         
+        // Settings
+        'smart_pause_mode': 'وضع الإيقاف الذكي',
+        'smart_pause_description': 'يوقف الفيديو تلقائياً عند الكتابة في الدردشة',
+        
         // General
         'unknown_video': 'فيديو غير معروف',
         'youtube_video': 'فيديو يوتيوب'
@@ -807,6 +862,7 @@ class LocalizationManager {
         // Header and tabs
         'chat_tab': 'चैटबॉट',
         'transcript_tab': 'ट्रांसक्रिप्ट',
+        'settings_tab': 'सेटिंग्स',
         'minimize_sidebar': 'साइडबार छोटा करें',
         'expand_sidebar': 'साइडबार बड़ा करें',
         
@@ -859,6 +915,10 @@ class LocalizationManager {
         
         // Time format
         'timestamp_at': '{{time}} पर टाइमस्टैम्प',
+        
+        // Settings
+        'smart_pause_mode': 'स्मार्ट पॉज़ मोड',
+        'smart_pause_description': 'चैट में टाइप करते समय वीडियो को स्वचालित रूप से रोक देता है',
         
         // General
         'unknown_video': 'अज्ञात वीडियो',

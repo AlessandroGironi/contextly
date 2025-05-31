@@ -66,6 +66,26 @@ document.addEventListener('DOMContentLoaded', function() {
           sendQuestion();
         }
       });
+
+      questionInput.addEventListener('focus', handleTypingStart);
+      questionInput.addEventListener('blur', handleTypingEnd);
+
+      // Alternative approach using keydown and keyup
+      questionInput.addEventListener('keydown', () => {
+        if (!isTyping) {
+          handleTypingStart();
+        }
+        // Reset the typing timeout on each keydown
+        if (typingTimeout) {
+            clearTimeout(typingTimeout);
+        }
+        typingTimeout = setTimeout(handleTypingEnd, 2000);
+      });
+
+      questionInput.addEventListener('keyup', () => {
+        // This event might be redundant with the keydown approach's timeout
+        // Consider removing if the keydown approach works reliably
+      });
     }
 
     // API Key handling
@@ -639,6 +659,67 @@ document.addEventListener('DOMContentLoaded', function() {
     isProcessing = false;
   }
 
+  // Smart Pause Mode functions
+  let isSmartPauseEnabled = true; // Enabled by default
+  let isTyping = false;
+  let typingTimeout = null;
+
+  function handleTypingStart() {
+    if (!isSmartPauseEnabled) return;
+
+    if (!isTyping) {
+      isTyping = true;
+      console.log('User started typing - pausing video');
+
+      // Send message to parent window to pause video
+      if (window.parent) {
+        window.parent.postMessage({
+          action: 'pauseVideo',
+          reason: 'smartPause'
+        }, '*');
+      }
+    }
+
+    // Clear any existing timeout
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+
+    // Set new timeout to detect end of typing
+    typingTimeout = setTimeout(() => {
+      handleTypingEnd();
+    }, 2000); // 2 seconds of inactivity
+  }
+
+  function handleTypingEnd() {
+    if (!isTyping) return;
+
+    isTyping = false;
+    console.log('User stopped typing - resuming video');
+
+    // Clear timeout
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+      typingTimeout = null;
+    }
+
+    // Send message to parent window to resume video
+    if (window.parent) {
+      window.parent.postMessage({
+        action: 'resumeVideo',
+        reason: 'smartPause'
+      }, '*');
+    }
+  }
+
+  // Get localized text
+  function t(key, params = {}) {
+    if (window.LocalizationManager) {
+      return window.LocalizationManager.t(key, params);
+    }
+    return key; // Fallback to key if localization not available
+  }
+
   // Register message handler for AI responses and other actions
   window.addEventListener('message', function(event) {
     if (!event.data || !event.data.action) return;
@@ -700,7 +781,7 @@ document.addEventListener('DOMContentLoaded', function() {
           currentVideoId = data.videoId;
           currentVideoTitle = data.videoTitle;
 
-          
+
 
           console.log(`Video title updated to: ${data.videoTitle}`);
         }
@@ -736,7 +817,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         }
 
-        
+
 
         // Always clear chat history when switching videos to prevent context contamination
         clearChatHistory();
