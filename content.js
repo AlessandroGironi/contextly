@@ -398,25 +398,30 @@ const YouTubeAIAssistant = {
     }
   },
 
-  // Nuovo metodo per aggiornamento continuo del timestamp
+  // Continuous timestamp update method
   startContinuousTimestampUpdate: function() {
-    // Clear any existing interval
+    // Clear any existing interval to prevent conflicts
     if (this.timestampUpdateInterval) {
       clearInterval(this.timestampUpdateInterval);
+      this.timestampUpdateInterval = null;
     }
 
     this.timestampUpdateInterval = setInterval(() => {
-      const videoPlayer = document.querySelector('video');
-      if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
-        const currentTime = videoPlayer.currentTime;
+      try {
+        const videoPlayer = document.querySelector('video');
+        if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
+          const currentTime = videoPlayer.currentTime;
 
-        // Aggiorna sempre il timestamp interno con il valore più recente
-        if (Math.abs(currentTime - this.currentPlaybackTime) > 0.01) {
-          this.currentPlaybackTime = currentTime;
-          console.log(`Timestamp aggiornato automaticamente: ${currentTime}s`);
+          // Update internal timestamp with the most recent value
+          if (Math.abs(currentTime - this.currentPlaybackTime) > 0.01) {
+            this.currentPlaybackTime = currentTime;
+            console.log(`Timestamp updated automatically: ${currentTime}s`);
+          }
         }
+      } catch (error) {
+        console.error('Error in continuous timestamp update:', error);
       }
-    }, 100); // Aggiorna ogni 100ms per massima precisione
+    }, 100); // Update every 100ms for maximum precision
   },
 
   // Ferma l'aggiornamento continuo
@@ -1221,33 +1226,43 @@ const YouTubeAIAssistant = {
 
   // Start tracking video playback time
   startPlaybackTracking: function() {
-    // Clear any existing tracker
+    // Clear any existing tracker to prevent conflicts
     if (this.playbackTracker) {
       clearInterval(this.playbackTracker);
+      this.playbackTracker = null;
     }
 
     this.playbackTracker = setInterval(() => {
-      const videoPlayer = document.querySelector('video');
-      if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
-        const currentTime = videoPlayer.currentTime;
+      try {
+        const videoPlayer = document.querySelector('video');
+        if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
+          const currentTime = videoPlayer.currentTime;
+          const previousTime = this.currentPlaybackTime;
 
-        // Update even small changes for maximum accuracy
-        if (Math.abs(currentTime - this.currentPlaybackTime) > 0.05) {
-          this.currentPlaybackTime = currentTime;
+          // Update even small changes for maximum accuracy
+          if (Math.abs(currentTime - previousTime) > 0.05) {
+            this.currentPlaybackTime = currentTime;
 
-          // Log major time changes for debugging
-          if (Math.abs(currentTime - this.currentPlaybackTime) > 1) {
-            console.log(`Major time change detected: ${this.currentPlaybackTime}s -> ${currentTime}s`);
+            // Log major time changes for debugging
+            if (Math.abs(currentTime - previousTime) > 1) {
+              console.log(`Major time change detected: ${previousTime}s -> ${currentTime}s`);
+            }
+
+            // Send current playback time to sidebar
+            try {
+              this.postMessageToSidebar({
+                action: 'updatePlaybackTime',
+                data: { time: currentTime }
+              });
+            } catch (msgError) {
+              console.warn('Error sending playback time to sidebar:', msgError);
+            }
           }
-
-          // Send current playback time to sidebar
-          this.postMessageToSidebar({
-            action: 'updatePlaybackTime',
-            data: { time: currentTime }
-          });
+        } else {
+          console.warn('Video player not accessible in playback tracker');
         }
-      } else {
-        console.warn('Video player not accessible in playback tracker');
+      } catch (error) {
+        console.error('Error in playback tracking:', error);
       }
     }, 250); // Check every 250ms for maximum precision
   },

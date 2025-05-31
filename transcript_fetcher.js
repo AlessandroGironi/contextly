@@ -103,6 +103,11 @@ const TranscriptFetcher = {
       // First, get the list of available transcripts
       const listUrl = `https://video.google.com/timedtext?type=list&v=${videoId}`;
       const listResponse = await fetch(listUrl);
+      
+      if (!listResponse.ok) {
+        throw new Error(`HTTP ${listResponse.status}: ${listResponse.statusText}`);
+      }
+      
       const listText = await listResponse.text();
       
       // Parse XML response

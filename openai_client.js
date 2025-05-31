@@ -21,7 +21,7 @@ window.OpenAIClient = {
       console.log("Initializing OpenAI client...");
       
       // If using central key, use that directly
-      if (this.useCentralKey) {
+      if (this.useCentralKey && this.centralApiKey !== "OPENAI_API_KEY_PLACEHOLDER") {
         console.log("Using centralized API key");
         this.apiKey = this.centralApiKey;
         this.isConfigured = true;
