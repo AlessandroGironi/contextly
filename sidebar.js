@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Elements
-  const closeButton = document.getElementById('yt-sidebar-close');
   const chatTab = document.getElementById('chat-tab');
   const transcriptTab = document.getElementById('transcript-tab');
   const chatSection = document.getElementById('chat-section');
@@ -40,15 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Initialize functions
   function initUI() {
-    // Close button functionality
-    if (closeButton) {
-      closeButton.addEventListener('click', function() {
-        if (window.parent) {
-          window.parent.postMessage({ action: 'closeSidebar' }, '*');
-        }
-      });
-    }
-    
     // Tab switching - only chat tab is visible to users
     if (chatTab) {
       chatTab.addEventListener('click', () => switchTab('chat'));

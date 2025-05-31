@@ -4,7 +4,7 @@
  */
 
 // Main object to handle AI assistant functionality
-const YouTubeAIAIAssistant = {
+const YouTubeAIAIAIAssistant = {
   sidebarContainer: null,
   sidebarVisible: false,
   videoId: null,
@@ -121,7 +121,6 @@ const YouTubeAIAIAssistant = {
         </div>
         <div class="yt-sidebar-controls">
           <button id="yt-sidebar-minimize" class="yt-sidebar-button" title="Minimize sidebar">−</button>
-          <button id="yt-sidebar-close" class="yt-sidebar-button" title="Close sidebar">×</button>
         </div>
       </div>
       <div id="current-video-info" class="yt-video-info">
@@ -181,27 +180,27 @@ const YouTubeAIAIAssistant = {
                             document.querySelector('#secondary-inner') || 
                             document.querySelector('ytd-watch-next-secondary-results-renderer') ||
                             document.querySelector('[data-content="secondary"]');
-    
+
     if (secondaryContent) {
       // Create a seamless wrapper that integrates with YouTube's layout
       const cardWrapper = document.createElement('div');
       cardWrapper.style.width = '100%';
       cardWrapper.style.marginBottom = '16px';
       cardWrapper.style.position = 'relative';
-      
+
       // Insert the card container into the wrapper
       cardWrapper.appendChild(this.sidebarContainer);
-      
+
       // Insert wrapper at the beginning of secondary content to appear above suggested videos
       secondaryContent.insertBefore(cardWrapper, secondaryContent.firstChild);
-      
+
       console.log('AI Assistant card integrated into YouTube secondary content area');
     } else {
       // Enhanced fallback: try to find other suitable containers
       const watchNextSecondary = document.querySelector('#watch-next-content') ||
                                  document.querySelector('.watch-sidebar') ||
                                  document.querySelector('#right-tabs');
-      
+
       if (watchNextSecondary) {
         const fallbackWrapper = document.createElement('div');
         fallbackWrapper.style.width = '100%';
@@ -295,12 +294,13 @@ const YouTubeAIAIAssistant = {
     });
 
     // Close button
-    const closeButton = document.getElementById('yt-sidebar-close');
+    // Remove the close button event listener
+    /*const closeButton = document.getElementById('yt-sidebar-close');
     if (closeButton) {
       closeButton.addEventListener('click', () => {
         this.hideSidebar();
       });
-    }
+    }*/
 
     // Minimize button
     const minimizeButton = document.getElementById('yt-sidebar-minimize');
@@ -381,7 +381,7 @@ const YouTubeAIAIAssistant = {
   // Get current video timestamp precisely at this moment
   getCurrentVideoTimestamp: function() {
     const videoPlayer = document.querySelector('video');
-    
+
     if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
       const currentTime = videoPlayer.currentTime;
       // Aggiorna immediatamente il nostro tracking interno
@@ -405,7 +405,7 @@ const YouTubeAIAIAssistant = {
       const videoPlayer = document.querySelector('video');
       if (videoPlayer && !isNaN(videoPlayer.currentTime)) {
         const currentTime = videoPlayer.currentTime;
-        
+
         // Aggiorna sempre il timestamp interno con il valore più recente
         if (Math.abs(currentTime - this.currentPlaybackTime) > 0.01) {
           this.currentPlaybackTime = currentTime;
@@ -426,12 +426,12 @@ const YouTubeAIAIAssistant = {
   // Send current timestamp to sidebar
   sendCurrentVideoTimestamp: function(data) {
     const preciseCurrentTime = this.getCurrentVideoTimestamp();
-    
+
     // Update our internal tracking
     this.currentPlaybackTime = preciseCurrentTime;
-    
+
     console.log(`Sending precise timestamp to sidebar: ${preciseCurrentTime}s`);
-    
+
     // Send back to sidebar with precise timestamp
     this.postMessageToSidebar({
       action: 'currentTimestampResponse',
@@ -447,12 +447,12 @@ const YouTubeAIAIAssistant = {
   // Send precise timestamp for AI processing
   sendPreciseTimestampForProcessing: function(data) {
     const exactCurrentTime = this.getCurrentVideoTimestamp();
-    
+
     // Update our internal tracking
     this.currentPlaybackTime = exactCurrentTime;
-    
+
     console.log(`Sending exact timestamp for AI processing: ${exactCurrentTime}s`);
-    
+
     // Send precise timestamp back to sidebar for immediate processing
     this.postMessageToSidebar({
       action: 'preciseTimestampReceived',
@@ -513,7 +513,7 @@ const YouTubeAIAIAssistant = {
     try {
       // Get the most current timestamp from the video player at this exact moment
       const preciseCurrentTime = this.getCurrentVideoTimestamp();
-      
+
       console.log(`Using precise timestamp for question processing: ${preciseCurrentTime}s`);
 
       if (justSaidPattern.test(question)) {
@@ -1230,7 +1230,7 @@ const YouTubeAIAIAssistant = {
         // Update even small changes for maximum accuracy
         if (Math.abs(currentTime - this.currentPlaybackTime) > 0.05) {
           this.currentPlaybackTime = currentTime;
-          
+
           // Log major time changes for debugging
           if (Math.abs(currentTime - this.currentPlaybackTime) > 1) {
             console.log(`Major time change detected: ${this.currentPlaybackTime}s -> ${currentTime}s`);
@@ -1694,7 +1694,7 @@ const YouTubeAIAIAssistant = {
 
             // Restart tracking with the new video
             this.startPlaybackTracking();
-            
+
             // Riavvia l'aggiornamento continuo del timestamp
             this.startContinuousTimestampUpdate();
 
@@ -1715,7 +1715,7 @@ const YouTubeAIAIAssistant = {
 
     // Stop tracking the old video
     this.stopPlaybackTracking();
-    
+
     // Stop continuous timestamp updates
     this.stopContinuousTimestampUpdate();
 
@@ -1781,7 +1781,7 @@ const YouTubeAIAIAssistant = {
 
       // Start tracking new video
       this.startPlaybackTracking();
-      
+
       // Riavvia l'aggiornamento continuo del timestamp
       this.startContinuousTimestampUpdate();
     }
@@ -1811,7 +1811,7 @@ window.addEventListener('load', () => {
         const assistantButton = document.createElement('button');
         assistantButton.id = 'yt-assistant-btn';
         assistantButton.className = 'ytp-button yt-assistant-toggle-btn';
-        assistantButton.title = 'AI Assistant Card';
+        assistantButton.title = AI Assistant Card';
         assistantButton.innerHTML = '<svg width="100%" height="100%" viewBox="0 0 36 36"><path fill="white" d="M18,4C9.16,4,2,11.16,2,20c0,3.21,0.95,6.2,2.58,8.7C4.04,30.07,3,31.89,3,34h2c0-2.14,1.23-3.98,3.03-4.87 C10.92,31.51,14.32,33,18,33c8.84,0,16-7.16,16-16C34,11.16,26.84,4,18,4z M18,31c-3.23,0-6.17-1.3-8.32-3.4 c1.36-0.65,2.86-1.1,4.47-1.1c1.61,0,3.11,0.45,4.47,1.1C20.17,29.7,21.27,31,18,31z M18,6c7.73,0,14,6.27,14,14 c0,7.73-6.27,14-14,14c-7.73,0-14-6.27-14-14C4,12.27,10.27,6,18,6z M13,15c0-1.1,0.9-2,2-2s2,0.9,2,2s-0.9,2-2,2S13,16.1,13,15z M21,15c0-1.1,0.9-2,2-2s2,0.9,2,2s-0.9,2-2,2S21,16.1,21,15z M18,24c-3.31,0-6-2.69-6-6h2c0,2.21,1.79,4,4,4s4-1.79,4-4h2 C24,21.31,21.31,24,18,24z"></path></svg>';
 
         assistantButton.addEventListener('click', () => {

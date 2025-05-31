@@ -19,7 +19,9 @@
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   overflow: hidden;
-  max-height: 500px;
+  min-height: 600px;
+  max-height: 800px;
+  resize: vertical;
 }
 
 /* When card is visible */
@@ -110,8 +112,12 @@
   z-index: 1;
 }
 
-/* Sidebar buttons */
-#yt-sidebar-close,
+/* Hide close button */
+#yt-sidebar-close {
+  display: none;
+}
+
+/* Sidebar minimize button */
 #yt-sidebar-minimize {
   background: rgba(255, 255, 255, 0.1);
   border: none;
@@ -127,12 +133,6 @@
   margin-left: 8px;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   backdrop-filter: blur(10px);
-}
-
-#yt-sidebar-close:hover {
-  background: rgba(255, 107, 107, 0.2);
-  color: #ff6b6b;
-  transform: scale(1.1);
 }
 
 #yt-sidebar-minimize:hover {
@@ -161,9 +161,11 @@
   max-width: 420px;
   height: 60px;
   max-height: 60px;
+  min-height: 60px;
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 16px;
+  resize: none;
 }
 
 .yt-sidebar.minimized .yt-sidebar-tabs,
@@ -671,17 +673,39 @@
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
+/* Resize handle for bottom edge */
+.yt-sidebar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px 2px 0 0;
+  cursor: ns-resize;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.yt-sidebar:hover::after {
+  opacity: 1;
+}
+
 /* Responsive adjustments for integrated layout */
 @media (max-width: 1024px) {
   .yt-sidebar {
     max-width: 100%;
-    max-height: 400px;
+    min-height: 500px;
+    max-height: 700px;
   }
 }
 
 @media (max-width: 768px) {
   .yt-sidebar {
-    max-height: 350px;
+    min-height: 450px;
+    max-height: 600px;
     margin-bottom: 16px;
   }
   
@@ -697,7 +721,8 @@
 
 @media (max-width: 480px) {
   .yt-sidebar {
-    max-height: 300px;
+    min-height: 400px;
+    max-height: 500px;
     border-radius: 8px;
   }
   
