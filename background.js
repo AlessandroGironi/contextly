@@ -1,46 +1,45 @@
+
 /**
  * YouTube AI Assistant - Background Script
- * Handles communication between extension components and manages API access
+ * Gestisce la comunicazione tra i componenti dell'estensione e gestisce l'accesso alle API
  */
 
-// Listen for messages from content scripts
+// Ascolta i messaggi dai content script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'transcriptFetched') {
-    // Log successful transcript fetch
-    console.log(`Transcript fetched for video ${message.videoId} using method: ${message.method}`);
+    // Log del successo del fetch della trascrizione
   }
   
   if (message.action === 'transcriptError') {
-    // Log transcript fetch errors
-    console.error(`Error fetching transcript for ${message.videoId}:`, message.error);
+    // Log degli errori del fetch della trascrizione
   }
 
-  // Allow async response
+  // Permetti risposta asincrona
   return true;
 });
 
-// Listen for tab changes to re-inject content script if needed
+// Ascolta i cambiamenti di tab per re-iniettare il content script se necessario
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.url && tab.url.includes('youtube.com/watch')) {
-    // YouTube video page loaded/changed, might need to re-initialize
+    // Pagina video YouTube caricata/cambiata, potrebbe essere necessario re-inizializzare
     chrome.tabs.sendMessage(tabId, { action: 'checkInit' }, (response) => {
-      // If no response, the content script may not be loaded yet
+      // Se non c'è risposta, il content script potrebbe non essere ancora caricato
       if (chrome.runtime.lastError) {
-        // No need to handle this error - content script will be loaded
-        // by manifest match patterns if needed
+        // Non c'è bisogno di gestire questo errore - il content script sarà caricato
+        // dai pattern di corrispondenza del manifest se necessario
       }
     });
   }
 });
 
-// Handle CORS for OpenAI API requests
+// Gestisci CORS per le richieste API OpenAI
 chrome.webRequest.onHeadersReceived.addListener(
   (details) => {
     const responseHeaders = details.responseHeaders || [];
     
-    // Check if this is an API response from OpenAI
+    // Controlla se questa è una risposta API da OpenAI
     if (details.url.startsWith('https://api.openai.com/')) {
-      // Add CORS headers to allow access from our extension
+      // Aggiungi header CORS per permettere l'accesso dalla nostra estensione
       const corsHeaders = [
         { name: 'Access-Control-Allow-Origin', value: '*' },
         { name: 'Access-Control-Allow-Methods', value: 'GET, POST, OPTIONS' },
@@ -48,7 +47,7 @@ chrome.webRequest.onHeadersReceived.addListener(
       ];
       
       corsHeaders.forEach(header => {
-        // Add the header if it doesn't exist
+        // Aggiungi l'header se non esiste
         if (!responseHeaders.some(h => h.name.toLowerCase() === header.name.toLowerCase())) {
           responseHeaders.push(header);
         }
