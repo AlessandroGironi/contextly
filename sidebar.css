@@ -1,3 +1,77 @@
+/* Main card container */
+.yt-sidebar {
+  background: rgba(18, 18, 18, 0.9);
+  /* Dark transparent background */
+  color: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+/* Main card container */
+.yt-sidebar {
+  background: rgba(18, 18, 18, 0.9); /* Dark transparent background */
+  color: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Button styles */
+.yt-sidebar-button {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.yt-sidebar-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Tab styles */
+.yt-sidebar-tab {
+  border: none;
+  background: transparent;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.yt-sidebar-tab.active {
+  background: rgba(255, 255, 255, 0.1);
+}
+/* Button styles */
+.yt-sidebar-button {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.yt-sidebar-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Tab styles */
+.yt-sidebar-tab {
+  border: none;
+  background: transparent;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.yt-sidebar-tab.active {
+  background: rgba(255, 255, 255, 0.1);
+}
 
 /* YouTube AI Assistant Card Styles - Enhanced Design */
 
@@ -8,7 +82,8 @@
   max-width: 420px;
   margin-bottom: 24px;
   margin-top: auto;
-  background: rgba(31, 41, 55, 0.8); /* Dark transparent background */
+  background: rgba(31, 41, 55, 0.8);
+  /* Dark transparent background */
   box-shadow: 0 2px 16px rgba(255, 255, 255, 0.15), 0 1px 4px rgba(255, 255, 255, 0.1);
   z-index: 1;
   display: flex;
@@ -217,13 +292,15 @@
   flex: 1;
   overflow: hidden;
   display: none;
-  min-height: 0; /* Allows flex child to shrink */
+  min-height: 0;
+  /* Allows flex child to shrink */
 }
 
 .yt-sidebar-section.active {
   display: flex;
   flex-direction: column;
-  min-height: 0; /* Ensures proper flex behavior */
+  min-height: 0;
+  /* Ensures proper flex behavior */
 }
 
 /* Chat section */
@@ -281,13 +358,14 @@
 }
 
 @keyframes message-appear {
-  from { 
-    opacity: 0; 
-    transform: translateY(20px) scale(0.95); 
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
   }
-  to { 
-    opacity: 1; 
-    transform: translateY(0) scale(1); 
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -383,13 +461,16 @@
 }
 
 @keyframes dot-pulse {
-  0%, 100% { 
-    transform: scale(0.6); 
-    opacity: 0.4; 
+
+  0%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.4;
   }
-  50% { 
-    transform: scale(1.2); 
-    opacity: 1; 
+
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
   }
 }
 
@@ -400,8 +481,10 @@
   border-top: 1px solid rgba(0, 0, 0, 0.06);
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   backdrop-filter: blur(10px);
-  flex-shrink: 0; /* Prevent input area from shrinking */
-  margin-top: auto; /* Push to bottom of container */
+  flex-shrink: 0;
+  /* Prevent input area from shrinking */
+  margin-top: auto;
+  /* Push to bottom of container */
 }
 
 .yt-chat-input textarea {
@@ -477,7 +560,8 @@
   align-items: center;
   box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
   backdrop-filter: blur(10px);
-  flex-shrink: 0; /* Prevent shrinking */
+  flex-shrink: 0;
+  /* Prevent shrinking */
 }
 
 .now-playing-bar span:first-child {
@@ -505,7 +589,8 @@
   border-radius: 16px;
   margin: 16px 16px 0 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  flex-shrink: 0; /* Prevent shrinking */
+  flex-shrink: 0;
+  /* Prevent shrinking */
 }
 
 .yt-api-key-configured {
@@ -518,7 +603,8 @@
   border-radius: 16px;
   margin: 16px 16px 0 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  flex-shrink: 0; /* Prevent shrinking */
+  flex-shrink: 0;
+  /* Prevent shrinking */
 }
 
 .yt-api-key-input-container {
@@ -607,7 +693,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Transcript content */
@@ -711,16 +799,16 @@
     max-width: 100%;
     max-height: 65vh;
   }
-  
+
   .yt-chat-container {
     min-height: 250px;
     max-height: 55vh;
   }
-  
+
   .yt-chat-input {
     padding: 16px;
   }
-  
+
   .yt-api-key-missing,
   .yt-api-key-configured {
     margin: 12px;
@@ -732,33 +820,33 @@
     max-height: 60vh;
     margin-bottom: 16px;
   }
-  
+
   .yt-chat-container {
     min-height: 200px;
     max-height: 50vh;
   }
-  
+
   .yt-chat-messages {
     padding: 12px 16px;
     min-height: 120px;
     max-height: 35vh;
   }
-  
+
   .yt-chat-input {
     padding: 16px;
     gap: 8px;
   }
-  
+
   .yt-chat-input textarea {
     font-size: 15px;
     padding: 12px 16px;
   }
-  
+
   .yt-sidebar-tab {
     padding: 16px 20px;
     font-size: 14px;
   }
-  
+
   .yt-api-key-missing,
   .yt-api-key-configured {
     margin: 12px;
@@ -771,46 +859,46 @@
     max-height: 55vh;
     border-radius: 8px;
   }
-  
+
   .yt-chat-container {
     min-height: 180px;
     max-height: 45vh;
   }
-  
+
   .yt-sidebar-header {
     border-radius: 8px 8px 0 0;
   }
-  
+
   .yt-sidebar-tab {
     padding: 12px 16px;
     font-size: 13px;
   }
-  
+
   .yt-chat-input {
     padding: 12px;
     flex-direction: column;
     gap: 12px;
   }
-  
+
   .yt-chat-input button {
     width: 100%;
     height: 44px;
     border-radius: 12px;
     margin-left: 0;
   }
-  
+
   .yt-chat-messages {
     padding: 12px;
     min-height: 100px;
     max-height: 30vh;
   }
-  
+
   .yt-api-key-missing,
   .yt-api-key-configured {
     margin: 8px;
     padding: 12px;
   }
-  
+
   .now-playing-bar {
     padding: 12px 16px;
     font-size: 13px;
