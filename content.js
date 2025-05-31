@@ -16,11 +16,12 @@ const YouTubeAIAIAssistant = {
 
   // Initialize the AI assistant
   init: async function() {
-    // Extract video ID and title from the page
-    this.extractVideoInfo();
+    // Extract video ID from the page
+    const urlParams = new URLSearchParams(window.location.search);
+    this.videoId = urlParams.get('v');
 
     if (!this.videoId) {
-      console.error("YouTube AI Assistant: Could not extract video IDs");
+      console.error("YouTube AI Assistant: Could not extract video ID");
       return;
     }
 
@@ -60,38 +61,82 @@ const YouTubeAIAIAssistant = {
       'h1.title.style-scope.ytd-video-primary-info-renderer',
       '#title h1',
       '#above-the-fold #title',
-      'ytd-watch-metadata h1.title'
+      'ytd-watch-metadata h1.title',
+      'h1.style-scope.ytd-video-primary-info-renderer',
+      '[data-content="title"] h1',
+      'ytd-video-primary-info-renderer h1'
     ];
 
     let titleFound = false;
 
-    // Try each selector
-    for (const selector of selectors) {
-      const titleElement = document.querySelector(selector);
-      if (titleElement && titleElement.textContent.trim()) {
-        this.videoTitle = titleElement.textContent.trim();
-        titleFound = true;
-        break;
+    // Try each selector with a retry mechanism
+    const attemptTitleExtraction = () => {
+      for (const selector of selectors) {
+        const titleElement = document.querySelector(selector);
+        if (titleElement && titleElement.textContent.trim()) {
+          const newTitle = titleElement.textContent.trim();
+          if (newTitle && newTitle !== this.videoTitle) {
+            this.videoTitle = newTitle;
+            titleFound = true;
+            console.log(`Video title found with selector "${selector}": ${this.videoTitle}`);
+            break;
+          }
+        }
       }
-    }
 
-    // If we still don't have a title, fall back to document title
-    if (!titleFound) {
-      const docTitle = document.title;
-      if (docTitle && docTitle.includes(' - YouTube')) {
-        this.videoTitle = docTitle.replace(' - YouTube', '');
-      } else {
-        this.videoTitle = 'YouTube Video';
+      // If we still don't have a title, fall back to document title
+      if (!titleFound) {
+        const docTitle = document.title;
+        if (docTitle && docTitle.includes(' - YouTube')) {
+          this.videoTitle = docTitle.replace(' - YouTube', '').trim();
+          if (this.videoTitle) {
+            titleFound = true;
+            console.log(`Video title extracted from document title: ${this.videoTitle}`);
+          }
+        }
       }
+
+      // Last resort fallback
+      if (!titleFound || !this.videoTitle) {
+        this.videoTitle = 'YouTube Video';
+        console.warn('Could not extract video title, using fallback');
+      }
+
+      return titleFound;
+    };
+
+    // Try immediate extraction
+    attemptTitleExtraction();
+
+    // If title not found, try again after a short delay for YouTube's dynamic loading
+    if (!titleFound) {
+      setTimeout(() => {
+        if (attemptTitleExtraction()) {
+          this.updateVideoTitleInSidebar();
+        }
+      }, 1000);
+
+      // Try one more time after a longer delay
+      setTimeout(() => {
+        if (attemptTitleExtraction()) {
+          this.updateVideoTitleInSidebar();
+        }
+      }, 3000);
     }
 
     console.log(`Video ID: ${this.videoId}, Title: ${this.videoTitle}`);
 
     // Update video title in the sidebar if it exists
-    if (this.sidebarContainer) {
+    this.updateVideoTitleInSidebar();
+  },
+
+  // Helper method to update video title in sidebar
+  updateVideoTitleInSidebar: function() {
+    if (this.sidebarContainer && this.videoTitle) {
       const titleElement = this.sidebarContainer.querySelector('#current-video-title');
-      if (titleElement && this.videoTitle) {
+      if (titleElement) {
         titleElement.textContent = this.videoTitle;
+        console.log(`Updated sidebar title to: ${this.videoTitle}`);
       }
 
       // Also notify sidebar frame about the title update
@@ -107,6 +152,9 @@ const YouTubeAIAIAssistant = {
 
   // Create integrated card container and inject HTML
   createSidebar: function() {
+    // Extract video info first to get the title
+    this.extractVideoInfo();
+
     // Create container
     this.sidebarContainer = document.createElement('div');
     this.sidebarContainer.id = 'yt-ai-assistant-container';
