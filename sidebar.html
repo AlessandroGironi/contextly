@@ -1,16 +1,309 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>YouTube AI Assistant</title>
-  <link rel="stylesheet" href="sidebar.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube AI Assistant</title>
+    <link rel="stylesheet" href="sidebar.css">
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 16px;
+            background: #f9f9f9;
+            color: #030303;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .yt-sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .yt-sidebar-tabs {
+            display: flex;
+            gap: 8px;
+        }
+        .yt-sidebar-tab {
+            padding: 8px 16px;
+            border: none;
+            background: #e0e0e0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background-color 0.2s;
+        }
+        .yt-sidebar-tab.active {
+            background: #065fd4;
+            color: white;
+        }
+        .yt-sidebar-controls {
+            display: flex;
+            gap: 4px;
+        }
+        .yt-sidebar-button {
+            padding: 4px 8px;
+            border: none;
+            background: #e0e0e0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .yt-video-info {
+            margin-bottom: 16px;
+            padding: 8px;
+            background: #fff;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #606060;
+        }
+        .yt-sidebar-section {
+            display: none;
+        }
+        .yt-sidebar-section.active {
+            display: block;
+        }
+        .yt-chat-container {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+        .yt-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 16px;
+            padding-right: 8px;
+        }
+        .yt-chat-message {
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            max-width: 85%;
+        }
+        .yt-chat-message.user {
+            background: #065fd4;
+            color: white;
+            margin-left: auto;
+        }
+        .yt-chat-message.assistant {
+            background: #f1f3f4;
+            color: #030303;
+        }
+        .yt-chat-message.system {
+            background: #fff3cd;
+            color: #856404;
+            font-size: 12px;
+            text-align: center;
+        }
+        .yt-chat-message.loading {
+            background: #f1f3f4;
+            color: #606060;
+        }
+        .yt-chat-input {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+        .yt-chat-input textarea {
+            flex: 1;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            resize: vertical;
+            min-height: 36px;
+            max-height: 100px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        .yt-chat-input button {
+            padding: 8px 12px;
+            border: none;
+            background: #065fd4;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            height: 36px;
+        }
+        .yt-chat-input button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .yt-api-key-missing, .yt-api-key-configured {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #e8f0fe;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .yt-api-key-input-container {
+            display: flex;
+            gap: 8px;
+            margin: 8px 0;
+        }
+        .yt-api-key-input {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .yt-api-key-save, .yt-change-api-key {
+            padding: 6px 12px;
+            border: none;
+            background: #065fd4;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .loading-dots {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+        }
+        .loading-dots span {
+            width: 6px;
+            height: 6px;
+            background: #606060;
+            border-radius: 50%;
+            animation: loading 1.4s infinite ease-in-out;
+        }
+        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes loading {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        .yt-transcript-loading {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+        }
+        .yt-transcript-spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #e0e0e0;
+            border-top: 2px solid #065fd4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .yt-transcript-text-content {
+            max-height: 400px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .yt-transcript-segments {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .yt-transcript-segment {
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .yt-transcript-segment:hover {
+            background: #f1f3f4;
+        }
+        .yt-transcript-segment.active {
+            background: #e8f0fe;
+            border-left: 3px solid #065fd4;
+        }
+        .yt-transcript-time {
+            font-weight: bold;
+            color: #065fd4;
+            margin-right: 8px;
+        }
+        .yt-transcript-text {
+            color: #030303;
+        }
+        .yt-transcript-error {
+            text-align: center;
+            color: #d32f2f;
+            padding: 20px;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
-  <div id="sidebar-root">
-    <div class="loading">Loading AI Assistant...</div>
-  </div>
-  <script src="openai_client.js"></script>
-  <script src="sidebar.js"></script>
+    <div class="yt-sidebar-header">
+        <div class="yt-sidebar-tabs">
+            <button id="chat-tab" class="yt-sidebar-tab active">ChatBot</button>
+            <button id="transcript-tab" class="yt-sidebar-tab" style="display: none;">Transcript</button>
+        </div>
+        <div class="yt-sidebar-controls">
+            <button id="yt-sidebar-minimize" class="yt-sidebar-button" title="Minimize sidebar">−</button>
+        </div>
+    </div>
+    
+    <div id="current-video-info" class="yt-video-info">
+        <span id="current-video-title">Loading...</span>
+    </div>
+
+    <!-- Chat Section -->
+    <div id="chat-section" class="yt-sidebar-section active">
+        <div id="chat-container" class="yt-chat-container">
+            <div class="yt-chat-messages" id="chat-messages">
+                <div class="yt-chat-message system">
+                    <div class="message-content">
+                        I'm your YouTube assistant. Ask me anything about this video!
+                    </div>
+                </div>
+            </div>
+
+            <div id="api-key-missing" class="yt-api-key-missing" style="display: none;">
+                <p>Please enter your OpenAI API key to use the AI assistant:</p>
+                <div class="yt-api-key-input-container">
+                    <input type="password" id="api-key-input" placeholder="sk-..." class="yt-api-key-input">
+                    <button id="save-api-key" class="yt-api-key-save">Save</button>
+                </div>
+                <p class="yt-api-key-info">Your API key is stored locally and only used to communicate with OpenAI.</p>
+            </div>
+
+            <div id="api-key-configured" class="yt-api-key-configured">
+                <p>Ready to answer questions about this video!</p>
+                <button id="change-api-key" class="yt-change-api-key" style="display: none;">Change key</button>
+            </div>
+
+            <div class="yt-chat-input">
+                <textarea id="question-input" placeholder="Ask about this video..."></textarea>
+                <button id="send-question">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transcript Section -->
+    <div id="transcript-section" class="yt-sidebar-section">
+        <div id="yt-transcript-loading" class="yt-transcript-loading">
+            <div class="yt-transcript-spinner"></div>
+            <p>Loading transcript...</p>
+        </div>
+        <div id="yt-transcript-content" class="yt-transcript-text-content">
+            <!-- Transcript content will be loaded here -->
+        </div>
+    </div>
+
+    <script src="sidebar.js"></script>
 </body>
 </html>
