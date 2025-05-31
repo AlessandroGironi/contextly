@@ -77,21 +77,14 @@ document.addEventListener('DOMContentLoaded', function() {
       questionInput.addEventListener('focus', handleTypingStart);
       questionInput.addEventListener('blur', handleTypingEnd);
 
-      // Alternative approach using keydown and keyup
-      questionInput.addEventListener('keydown', () => {
-        if (!isTyping) {
+      // Start smart pause when user starts typing
+      questionInput.addEventListener('keydown', (e) => {
+        if (!isSmartPauseEnabled) return;
+        
+        // Don't trigger smart pause for Enter key (since that sends the message)
+        if (e.key !== 'Enter') {
           handleTypingStart();
         }
-        // Reset the typing timeout on each keydown
-        if (typingTimeout) {
-            clearTimeout(typingTimeout);
-        }
-        typingTimeout = setTimeout(handleTypingEnd, 2000);
-      });
-
-      questionInput.addEventListener('keyup', () => {
-        // This event might be redundant with the keydown approach's timeout
-        // Consider removing if the keydown approach works reliably
       });
     }
 
@@ -375,6 +368,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (!question || isProcessing) {
       return;
+    }
+
+    // Resume video if smart pause was active
+    if (isTyping) {
+      handleTypingEnd();
     }
 
     // Add user message to chat
@@ -721,15 +719,11 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
 
-    // Clear any existing timeout
+    // Clear any existing timeout (we don't want auto-resume anymore)
     if (typingTimeout) {
       clearTimeout(typingTimeout);
+      typingTimeout = null;
     }
-
-    // Set new timeout to detect end of typing
-    typingTimeout = setTimeout(() => {
-      handleTypingEnd();
-    }, 2000); // 2 seconds of inactivity
   }
 
   function handleTypingEnd() {

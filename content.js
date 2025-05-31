@@ -488,15 +488,11 @@ const YouTubeAIAIAssistant = {
       console.log('User started typing - pausing video');
       this.pauseVideo('smartPause');
 
-      // Clear any existing timeout
+      // Clear any existing timeout (we don't want auto-resume)
       if (typingTimeout) {
         clearTimeout(typingTimeout);
+        typingTimeout = null;
       }
-
-      // Set timeout to detect end of typing
-      typingTimeout = setTimeout(() => {
-        handleTypingEnd();
-      }, 2000); // 2 seconds of inactivity
     };
 
     const handleTypingEnd = () => {
@@ -522,11 +518,15 @@ const YouTubeAIAIAssistant = {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
           if (questionInput.value.trim() !== '' && !questionInput.disabled) {
+            // Resume video before handling question
+            if (isTyping) {
+              handleTypingEnd();
+            }
             this.handleQuestion(questionInput.value.trim());
             questionInput.value = '';
           }
         } else {
-          // Handle Smart Pause typing detection
+          // Handle Smart Pause typing detection (but not for Enter key)
           handleTypingStart();
         }
       });
@@ -535,19 +535,12 @@ const YouTubeAIAIAssistant = {
       questionInput.addEventListener('focus', handleTypingStart);
       questionInput.addEventListener('blur', handleTypingEnd);
 
-      // Add additional keyup event to reset timeout
-      questionInput.addEventListener('keyup', () => {
-        if (isSmartPauseEnabled && isTyping) {
-          // Reset the typing timeout on each keyup
-          if (typingTimeout) {
-            clearTimeout(typingTimeout);
-          }
-          typingTimeout = setTimeout(handleTypingEnd, 2000);
-        }
-      });
-
       sendQuestionBtn.addEventListener('click', () => {
         if (questionInput.value.trim() !== '' && !questionInput.disabled) {
+          // Resume video before handling question
+          if (isTyping) {
+            handleTypingEnd();
+          }
           this.handleQuestion(questionInput.value.trim());
           questionInput.value = '';
         }
