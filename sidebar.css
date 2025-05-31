@@ -61,7 +61,6 @@ body {
 .yt-sidebar-header {
   background: var(--bg-secondary);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border-color);
   padding: var(--spacing-sm) var(--spacing-md);
   display: flex;
   align-items: center;

@@ -90,8 +90,8 @@ const YouTubeAIAssistant = {
     // Update video title in the sidebar if it exists
     if (this.sidebarContainer) {
       const titleElement = this.sidebarContainer.querySelector('#current-video-title');
-      if (titleElement) {
-        titleElement.textContent = this.videoTitle || 'Loading video...';
+      if (titleElement && this.videoTitle) {
+        titleElement.textContent = this.videoTitle;
       }
 
       // Also notify sidebar frame about the title update
@@ -124,7 +124,7 @@ const YouTubeAIAssistant = {
         </div>
       </div>
       <div id="current-video-info" class="yt-video-info">
-        <span id="current-video-title" data-i18n="loading_video"></span>
+        <span id="current-video-title" data-i18n="loading_video">${this.videoTitle || 'Loading...'}</span>
       </div>
 
       <!-- Chat Section -->
@@ -975,8 +975,8 @@ const YouTubeAIAssistant = {
   // Update video info in the sidebar
   updateVideoInfo: function() {
     const titleElement = document.getElementById('current-video-title');
-    if (titleElement) {
-      titleElement.textContent = this.videoTitle || 'Loading video...';
+    if (titleElement && this.videoTitle) {
+      titleElement.textContent = this.videoTitle;
     }
   },
 
