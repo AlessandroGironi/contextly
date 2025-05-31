@@ -4,7 +4,7 @@
  */
 
 // Main object to handle AI assistant functionality
-const YouTubeAIAssistant = {
+const YouTubeAIAIAssistant = {
   sidebarContainer: null,
   sidebarVisible: false,
   videoId: null,
@@ -225,7 +225,7 @@ const YouTubeAIAssistant = {
 
     // Set up event listeners and message handlers
     this.setupEventListeners();
-    
+
     // Initialize localization after creating sidebar
     this.initializeLocalization();
   },
@@ -1587,7 +1587,7 @@ const YouTubeAIAssistant = {
       localizationScript.src = chrome.runtime.getURL('localization.js');
       localizationScript.onload = () => {
         console.log('Localization script loaded successfully');
-        
+
         // Apply translations to the sidebar
         if (window.LocalizationManager) {
           window.LocalizationManager.translatePage();
@@ -1732,12 +1732,6 @@ const YouTubeAIAssistant = {
             this.extractVideoInfo();
             console.log(`Updated video info: ID=${this.videoId}, Title="${this.videoTitle}"`);
 
-            // Update the video title in the UI right away
-            const titleElement = document.getElementById('current-video-title');
-            if (titleElement) {
-              titleElement.textContent = this.videoTitle || 'Unknown video';
-            }
-
             // Reset transcript state and reload it
             this.transcript = [];
             this.loadTranscript();
@@ -1778,12 +1772,6 @@ const YouTubeAIAssistant = {
     this.extractVideoInfo();
     console.log(`New video title: "${this.videoTitle}"`);
 
-    // Update title in the actual sidebar container 
-    const titleElement = document.getElementById('current-video-title');
-    if (titleElement) {
-      titleElement.textContent = this.videoTitle || 'YouTube Video';
-    }
-
     // CRITICAL FIX: Destroy and recreate the iframe to force a clean state
     const oldIframe = document.getElementById('yt-ai-assistant-sidebar');
     if (oldIframe) {
@@ -1808,7 +1796,7 @@ const YouTubeAIAssistant = {
         this.transcript = [];
         this.currentPlaybackTime = 0;
 
-        // Clear chat messages in our view (iframe will start fresh)
+        // Clear chat messages in our view (iframe// Clear chat messages in our view (iframe will start fresh)
         this.clearChatMessages();
 
         // Load transcript for the new video
@@ -1865,7 +1853,7 @@ window.addEventListener('load', () => {
         assistantButton.innerHTML = '<svg width="100%" height="100%" viewBox="0 0 36 36"><path fill="white" d="M18,4C9.16,4,2,11.16,2,20c0,3.21,0.95,6.2,2.58,8.7C4.04,30.07,3,31.89,3,34h2c0-2.14,1.23-3.98,3.03-4.87 C10.92,31.51,14.32,33,18,33c8.84,0,16-7.16,16-16C34,11.16,26.84,4,18,4z M18,31c-3.23,0-6.17-1.3-8.32-3.4 c1.36-0.65,2.86-1.1,4.47-1.1c1.61,0,3.11,0.45,4.47,1.1C20.17,29.7,21.27,31,18,31z M18,6c7.73,0,14,6.27,14,14 c0,7.73-6.27,14-14,14c-7.73,0-14-6.27-14-14C4,12.27,10.27,6,18,6z M13,15c0-1.1,0.9-2,2-2s2,0.9,2,2s-0.9,2-2,2S13,16.1,13,15z M21,15c0-1.1,0.9-2,2-2s2,0.9,2,2s-0.9,2-2,2S21,16.1,21,15z M18,24c-3.31,0-6-2.69-6-6h2c0,2.21,1.79,4,4,4s4-1.79,4-4h2 C24,21.31,21.31,24,18,24z"></path></svg>';
 
         assistantButton.addEventListener('click', () => {
-          YouTubeAIAssistant.toggleSidebar();
+          YouTubeAIAIAssistant.toggleSidebar();
         });
 
         ytpRightControls.insertBefore(assistantButton, ytpRightControls.firstChild);
@@ -1879,8 +1867,9 @@ window.addEventListener('load', () => {
         clearInterval(checkForYouTubeUI);
 
         // Initialize the AI assistant
-        YouTubeAIAssistant.init();
+        YouTubeAIAIAssistant.init();
       }
     }, 1000);
   }
 });
+/**This code removes the video title update during video change handling and removes the video info section.*/

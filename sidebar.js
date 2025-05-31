@@ -700,11 +700,7 @@ document.addEventListener('DOMContentLoaded', function() {
           currentVideoId = data.videoId;
           currentVideoTitle = data.videoTitle;
 
-          // Update current video title in sidebar header if it exists
-          const currentVideoTitleEl = document.getElementById('current-video-title');
-          if (currentVideoTitleEl) {
-            currentVideoTitleEl.textContent = data.videoTitle;
-          }
+          
 
           console.log(`Video title updated to: ${data.videoTitle}`);
         }
@@ -740,11 +736,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         }
 
-        // Update current video title in sidebar header if it exists
-        const currentVideoTitleEl = document.getElementById('current-video-title');
-        if (currentVideoTitleEl) {
-          currentVideoTitleEl.textContent = data.videoTitle;
-        }
+        
 
         // Always clear chat history when switching videos to prevent context contamination
         clearChatHistory();
