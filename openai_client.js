@@ -10,10 +10,10 @@ window.OpenAIClient = {
   isConfigured: false,
   
   // Set to true when ready to use a centralized API key
-  useCentralKey: false, 
+  useCentralKey: true, 
   
   // This key will be replaced with your provided key when building for distribution
-  centralApiKey: "OPENAI_API_KEY_PLACEHOLDER",
+  centralApiKey: "sk-proj-placeholder-api-key-here",
   
   // Initialize the OpenAI client
   init: async function() {

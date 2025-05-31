@@ -133,6 +133,8 @@ const YouTubeAIAIAssistant = {
 
     // Update video title in the sidebar if it exists (final update)
     this.updateVideoTitleInSidebar();
+
+    return { videoId: this.videoId, videoTitle: this.videoTitle };
   },
 
   // Helper method to update video title in sidebar
@@ -487,7 +489,7 @@ const YouTubeAIAIAssistant = {
     // Update checkbox to reflect saved setting
     if (smartPauseCheckbox) {
       smartPauseCheckbox.checked = isSmartPauseEnabled;
-      
+
       smartPauseCheckbox.addEventListener('change', (e) => {
         isSmartPauseEnabled = e.target.checked;
         // Save setting to localStorage
@@ -1292,7 +1294,7 @@ const YouTubeAIAIAssistant = {
 
         // Send transcript update message to the sidebar (direct HTML implementation)
         console.log(`Sending transcript update: ${this.transcript.length} segments`);
-        
+
         // Dispatch a custom event that the sidebar can listen to
         const transcriptEvent = new CustomEvent('yt-ai-transcript-updated', {
           detail: {
@@ -1301,13 +1303,13 @@ const YouTubeAIAIAssistant = {
             transcript: this.transcript
           }
         });
-        
+
         // Dispatch to the sidebar container
         if (this.sidebarContainer) {
           this.sidebarContainer.dispatchEvent(transcriptEvent);
           console.log("Dispatched transcript event to sidebar container");
         }
-        
+
         // Also send via window message for sidebar.js to handle
         window.postMessage({
           source: 'yt-ai-assistant',
@@ -1337,7 +1339,7 @@ const YouTubeAIAIAssistant = {
 
         // Clear the transcript in the sidebar as well
         console.log("Clearing transcript in sidebar");
-        
+
         // Dispatch a custom event for empty transcript
         const transcriptEvent = new CustomEvent('yt-ai-transcript-updated', {
           detail: {
@@ -1346,11 +1348,11 @@ const YouTubeAIAIAssistant = {
             transcript: []
           }
         });
-        
+
         if (this.sidebarContainer) {
           this.sidebarContainer.dispatchEvent(transcriptEvent);
         }
-        
+
         // Also send via window message
         window.postMessage({
           source: 'yt-ai-assistant',
@@ -1814,7 +1816,7 @@ const YouTubeAIAIAssistant = {
       source: 'yt-ai-assistant',
       ...message
     }, '*');
-    
+
     // Also dispatch custom event if sidebar container exists
     if (this.sidebarContainer && message.action) {
       const customEvent = new CustomEvent(`yt-ai-${message.action}`, {

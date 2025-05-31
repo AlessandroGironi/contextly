@@ -52,9 +52,13 @@ const TranscriptFetcher = {
   // Helper to check if video exists
   videoExists: async function(videoId) {
     try {
-      const response = await fetch(`https://www.youtube.com/watch?v=${videoId}`);
+      const response = await fetch(`https://www.youtube.com/watch?v=${videoId}`, {
+        method: 'HEAD', // Use HEAD for efficiency
+        timeout: 5000   // Add timeout
+      });
       return response.status === 200;
     } catch (error) {
+      console.warn(`Error checking video existence for ${videoId}:`, error);
       return false;
     }
   },

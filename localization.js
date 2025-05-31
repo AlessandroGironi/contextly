@@ -170,6 +170,67 @@ class LocalizationManager {
         'no_transcript_available': 'No transcript available for this video.',
         'transcript_load_error': 'Error loading transcript: {{error}}',
 
+        // Settings section
+        'smart_pause_mode': 'Smart Pause Mode',
+        'smart_pause_description': 'Automatically pauses video when typing in chat',
+
+        // General
+        'youtube_video': 'YouTube Video'
+      }
+    }
+  };
+
+  // Localization Manager
+  window.LocalizationManager = {
+    currentLanguage: 'en',
+    
+    init: function() {
+      // Detect browser language
+      const browserLang = navigator.language.split('-')[0];
+      if (LOCALIZATION_DATA.translations[browserLang]) {
+        this.currentLanguage = browserLang;
+      }
+    },
+
+    t: function(key, params = {}) {
+      const translation = LOCALIZATION_DATA.translations[this.currentLanguage][key] || key;
+      
+      // Replace parameters in translation
+      let result = translation;
+      Object.keys(params).forEach(param => {
+        result = result.replace(new RegExp(`{{${param}}}`, 'g'), params[param]);
+      });
+      
+      return result;
+    },
+
+    translatePage: function() {
+      // Find all elements with data-i18n attribute and translate them
+      const elements = document.querySelectorAll('[data-i18n]');
+      elements.forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        element.textContent = this.t(key);
+      });
+
+      // Find all elements with data-i18n-title attribute and translate their titles
+      const titleElements = document.querySelectorAll('[data-i18n-title]');
+      titleElements.forEach(element => {
+        const key = element.getAttribute('data-i18n-title');
+        element.title = this.t(key);
+      });
+
+      // Find all elements with data-i18n-placeholder attribute and translate their placeholders
+      const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+      placeholderElements.forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        element.placeholder = this.t(key);
+      });
+    }
+  };
+
+  // Initialize localization
+  window.LocalizationManager.init();
+
         // Error messages
         'error_prefix': 'Error: ',
         'rate_limit_error': 'OpenAI API rate limit exceeded. Please try again in a few minutes or use the transcript tab to read directly.',
