@@ -187,6 +187,10 @@ const YouTubeAIAssistant = {
       cardWrapper.style.width = '100%';
       cardWrapper.style.marginBottom = '16px';
       cardWrapper.style.position = 'relative';
+      cardWrapper.style.display = 'flex';
+      cardWrapper.style.flexDirection = 'column';
+      cardWrapper.style.justifyContent = 'flex-end';
+      cardWrapper.style.minHeight = '50vh';
 
       // Insert the card container into the wrapper
       cardWrapper.appendChild(this.sidebarContainer);
