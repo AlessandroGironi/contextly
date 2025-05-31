@@ -116,15 +116,15 @@ const YouTubeAIAssistant = {
     this.sidebarContainer.innerHTML = `
       <div class="yt-sidebar-header">
         <div class="yt-sidebar-tabs">
-          <button id="chat-tab" class="yt-sidebar-tab active">ChatBot</button>
-          <button id="transcript-tab" class="yt-sidebar-tab">Transcript</button>
+          <button id="chat-tab" class="yt-sidebar-tab active" data-i18n="chat_tab">ChatBot</button>
+          <button id="transcript-tab" class="yt-sidebar-tab" data-i18n="transcript_tab">Transcript</button>
         </div>
         <div class="yt-sidebar-controls">
-          <button id="yt-sidebar-minimize" class="yt-sidebar-button" title="Minimize sidebar">−</button>
+          <button id="yt-sidebar-minimize" class="yt-sidebar-button" data-i18n-title="minimize_sidebar" title="Minimize sidebar">−</button>
         </div>
       </div>
       <div id="current-video-info" class="yt-video-info">
-        <span id="current-video-title"></span>
+        <span id="current-video-title" data-i18n="loading_video"></span>
       </div>
 
       <!-- Chat Section -->
@@ -132,28 +132,28 @@ const YouTubeAIAssistant = {
         <div id="chat-container" class="yt-chat-container">
           <div class="yt-chat-messages" id="chat-messages">
             <div class="yt-chat-message system">
-              <div class="message-content">
+              <div class="message-content" data-i18n="welcome_message">
                 I'm your YouTube assistant. Ask me anything about this video!!!
               </div>
             </div>
           </div>
 
           <div id="api-key-missing" class="yt-api-key-missing">
-            <p>Please enter your OpenAI API key to use the AI assistant:</p>
+            <p data-i18n="api_key_prompt">Please enter your OpenAI API key to use the AI assistant:</p>
             <div class="yt-api-key-input-container">
-              <input type="password" id="api-key-input" placeholder="sk-..." class="yt-api-key-input">
-              <button id="save-api-key" class="yt-api-key-save">Save</button>
+              <input type="password" id="api-key-input" data-i18n="api_key_placeholder" placeholder="sk-..." class="yt-api-key-input">
+              <button id="save-api-key" class="yt-api-key-save" data-i18n="save_key">Save</button>
             </div>
-            <p class="yt-api-key-info">Your API key is stored locally and only used to communicate with OpenAI.</p>
+            <p class="yt-api-key-info" data-i18n="api_key_info">Your API key is stored locally and only used to communicate with OpenAI.</p>
           </div>
 
           <div id="api-key-configured" class="yt-api-key-configured" style="display: none;">
-            <p>OpenAI API key configured</p>
-            <button id="change-api-key" class="yt-change-api-key">Change key</button>
+            <p data-i18n="api_ready">OpenAI API key configured</p>
+            <button id="change-api-key" class="yt-change-api-key" data-i18n="change_key">Change key</button>
           </div>
 
           <div class="yt-chat-input">
-            <textarea id="question-input" placeholder="Ask about this video..." disabled></textarea>
+            <textarea id="question-input" data-i18n="question_placeholder" placeholder="Ask about this video..." disabled></textarea>
             <button id="send-question" disabled>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"/>
@@ -167,7 +167,7 @@ const YouTubeAIAssistant = {
       <div id="transcript-section" class="yt-sidebar-section">
         <div id="yt-transcript-loading" class="yt-transcript-loading">
           <div class="yt-transcript-spinner"></div>
-          <p>Loading transcript...</p>
+          <p data-i18n="loading_transcript">Loading transcript...</p>
         </div>
         <div id="yt-transcript-content" class="yt-transcript-text-content">
           <!-- Transcript content will be loaded here -->
@@ -225,6 +225,9 @@ const YouTubeAIAssistant = {
 
     // Set up event listeners and message handlers
     this.setupEventListeners();
+    
+    // Initialize localization after creating sidebar
+    this.initializeLocalization();
   },
 
   // Set up event listeners and message handlers
@@ -1574,6 +1577,34 @@ const YouTubeAIAssistant = {
     if (videoPlayer) {
       videoPlayer.currentTime = seconds;
     }
+  },
+
+  // Initialize localization system
+  initializeLocalization: function() {
+    try {
+      // Create and load localization script
+      const localizationScript = document.createElement('script');
+      localizationScript.src = chrome.runtime.getURL('localization.js');
+      localizationScript.onload = () => {
+        console.log('Localization script loaded successfully');
+        
+        // Apply translations to the sidebar
+        if (window.LocalizationManager) {
+          window.LocalizationManager.translatePage();
+        }
+      };
+      document.head.appendChild(localizationScript);
+    } catch (error) {
+      console.error('Error initializing localization:', error);
+    }
+  },
+
+  // Get localized text
+  t: function(key, params = {}) {
+    if (window.LocalizationManager) {
+      return window.LocalizationManager.t(key, params);
+    }
+    return key; // Fallback to key if localization not available
   },
 
   // Send message to sidebar iframe
