@@ -407,22 +407,41 @@ const YouTubeAIAIAssistant = {
     // Tab switching
     const chatTab = document.getElementById('chat-tab');
     const transcriptTab = document.getElementById('transcript-tab');
+    const settingsTab = document.getElementById('settings-tab');
     const chatSection = document.getElementById('chat-section');
     const transcriptSection = document.getElementById('transcript-section');
+    const settingsSection = document.getElementById('settings-section');
 
-    if (chatTab && transcriptTab) {
+    if (chatTab) {
       chatTab.addEventListener('click', () => {
         chatTab.classList.add('active');
-        transcriptTab.classList.remove('active');
+        if (transcriptTab) transcriptTab.classList.remove('active');
+        if (settingsTab) settingsTab.classList.remove('active');
         chatSection.classList.add('active');
-        transcriptSection.classList.remove('active');
+        if (transcriptSection) transcriptSection.classList.remove('active');
+        if (settingsSection) settingsSection.classList.remove('active');
       });
+    }
 
+    if (transcriptTab) {
       transcriptTab.addEventListener('click', () => {
-        chatTab.classList.remove('active');
+        if (chatTab) chatTab.classList.remove('active');
         transcriptTab.classList.add('active');
-        chatSection.classList.remove('active');
+        if (settingsTab) settingsTab.classList.remove('active');
+        if (chatSection) chatSection.classList.remove('active');
         transcriptSection.classList.add('active');
+        if (settingsSection) settingsSection.classList.remove('active');
+      });
+    }
+
+    if (settingsTab) {
+      settingsTab.addEventListener('click', () => {
+        if (chatTab) chatTab.classList.remove('active');
+        if (transcriptTab) transcriptTab.classList.remove('active');
+        settingsTab.classList.add('active');
+        if (chatSection) chatSection.classList.remove('active');
+        if (transcriptSection) transcriptSection.classList.remove('active');
+        settingsSection.classList.add('active');
       });
     }
 
@@ -448,11 +467,57 @@ const YouTubeAIAIAssistant = {
       });
     }
 
+    // Smart Pause Mode handling
+    const smartPauseCheckbox = document.getElementById('smart-pause-checkbox');
+    let isSmartPauseEnabled = true; // Default enabled
+    let isTyping = false;
+    let typingTimeout = null;
+
+    if (smartPauseCheckbox) {
+      smartPauseCheckbox.addEventListener('change', (e) => {
+        isSmartPauseEnabled = e.target.checked;
+        console.log(`Smart Pause Mode ${isSmartPauseEnabled ? 'enabled' : 'disabled'}`);
+      });
+    }
+
+    // Smart Pause helper functions
+    const handleTypingStart = () => {
+      if (!isSmartPauseEnabled || isTyping) return;
+      
+      isTyping = true;
+      console.log('User started typing - pausing video');
+      this.pauseVideo('smartPause');
+      
+      // Clear any existing timeout
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+      }
+      
+      // Set timeout to detect end of typing
+      typingTimeout = setTimeout(() => {
+        handleTypingEnd();
+      }, 2000); // 2 seconds of inactivity
+    };
+
+    const handleTypingEnd = () => {
+      if (!isTyping) return;
+      
+      isTyping = false;
+      console.log('User stopped typing - resuming video');
+      this.resumeVideo('smartPause');
+      
+      // Clear timeout
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+        typingTimeout = null;
+      }
+    };
+
     // Question input handling
     const questionInput = document.getElementById('question-input');
     const sendQuestionBtn = document.getElementById('send-question');
 
-    if (questionInput && sendQuestionBtn) {
+    if (questionInput && sendQuestionBtn) {</old_str>
       questionInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
@@ -460,6 +525,24 @@ const YouTubeAIAIAssistant = {
             this.handleQuestion(questionInput.value.trim());
             questionInput.value = '';
           }
+        } else {
+          // Handle Smart Pause typing detection
+          handleTypingStart();
+        }
+      });
+
+      // Add focus and blur events for Smart Pause
+      questionInput.addEventListener('focus', handleTypingStart);
+      questionInput.addEventListener('blur', handleTypingEnd);
+      
+      // Add additional keyup event to reset timeout
+      questionInput.addEventListener('keyup', () => {
+        if (isSmartPauseEnabled && isTyping) {
+          // Reset the typing timeout on each keyup
+          if (typingTimeout) {
+            clearTimeout(typingTimeout);
+          }
+          typingTimeout = setTimeout(handleTypingEnd, 2000);
         }
       });
 
