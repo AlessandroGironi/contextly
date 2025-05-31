@@ -174,6 +174,7 @@ const YouTubeAIAIAssistant = {
         <div class="yt-sidebar-tabs">
           <button id="chat-tab" class="yt-sidebar-tab active" data-i18n="chat_tab">ChatBot</button>
           <button id="transcript-tab" class="yt-sidebar-tab" data-i18n="transcript_tab">Transcript</button>
+          <button id="settings-tab" class="yt-sidebar-tab" data-i18n="settings_tab">Settings</button>
         </div>
         <div class="yt-sidebar-controls">
           <button id="yt-sidebar-minimize" class="yt-sidebar-button" data-i18n-title="minimize_sidebar" title="Minimize sidebar">−</button>
@@ -227,6 +228,20 @@ const YouTubeAIAIAssistant = {
         </div>
         <div id="yt-transcript-content" class="yt-transcript-text-content">
           <!-- Transcript content will be loaded here -->
+        </div>
+      </div>
+
+      <!-- Settings Section -->
+      <div id="settings-section" class="yt-sidebar-section">
+        <div class="yt-settings-container">
+          <div class="yt-settings-option">
+            <label class="yt-settings-label">
+              <input type="checkbox" id="smart-pause-checkbox" checked>
+              <span class="yt-settings-checkmark"></span>
+              <span class="yt-settings-text" data-i18n="smart_pause_mode">Smart Pause Mode</span>
+            </label>
+            <p class="yt-settings-description" data-i18n="smart_pause_description">Automatically pauses video when typing in chat</p>
+          </div>
         </div>
       </div>
     `;
