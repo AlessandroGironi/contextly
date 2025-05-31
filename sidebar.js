@@ -88,6 +88,17 @@ document.addEventListener('DOMContentLoaded', function() {
       return; // Ignore messages from other sources
     }
 
+    // Additional safety check for malformed messages
+    try {
+      if (typeof event.data !== 'object') {
+        console.warn('Received non-object message:', event.data);
+        return;
+      }
+    } catch (error) {
+      console.error('Error processing message:', error);
+      return;
+    }
+
     const { action, data } = event.data;
     console.log("Sidebar received message:", action, data);
 
