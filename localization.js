@@ -27,15 +27,27 @@ class LocalizationManager {
 
   // Detect user's preferred language from browser settings
   detectLanguage() {
-    // Get browser language preferences
-    const browserLanguages = navigator.languages || [navigator.language || navigator.userLanguage];
+    // Get browser language preferences with better fallback handling
+    let browserLanguages = [];
+    
+    if (navigator.languages && navigator.languages.length > 0) {
+      browserLanguages = navigator.languages;
+    } else if (navigator.language) {
+      browserLanguages = [navigator.language];
+    } else if (navigator.userLanguage) {
+      browserLanguages = [navigator.userLanguage];
+    } else {
+      browserLanguages = ['en'];
+    }
 
     console.log('Browser languages detected:', browserLanguages);
 
     // Find the first supported language
     for (const lang of browserLanguages) {
+      if (!lang) continue;
+      
       // Extract language code (e.g., 'en' from 'en-US')
-      const langCode = lang.split('-')[0].toLowerCase();
+      const langCode = lang.toLowerCase().split('-')[0];
 
       if (this.supportedLanguages.includes(langCode)) {
         this.currentLanguage = langCode;
