@@ -96,20 +96,20 @@
                 <p class="yt-settings-description" data-i18n="smart_pause_description">Automatically pauses video when typing in chat</p>
             </div>
             
-            <div class="yt-settings-option">
-                <label class="yt-settings-label">
-                    <input type="checkbox" id="voice-input-checkbox" checked>
+            <div class="yt-settings-option" id="voice-input-option" style="display: block !important; visibility: visible !important;">
+                <label class="yt-settings-label" for="voice-input-checkbox">
+                    <input type="checkbox" id="voice-input-checkbox" checked style="display: block !important;">
                     <span class="yt-settings-checkmark"></span>
                     <span class="yt-settings-text" data-i18n="voice_input_mode">Enable Voice Input</span>
                 </label>
                 <p class="yt-settings-description" data-i18n="voice_input_description">Use voice to ask questions about the video</p>
             </div>
 
-            <div class="yt-settings-option">
+            <div class="yt-settings-option" id="voice-language-option" style="display: block !important; visibility: visible !important;">
                 <label class="yt-settings-label">
                     <span class="yt-settings-text" data-i18n="voice_language_label">Voice Recognition Language</span>
                 </label>
-                <select id="voice-language-select" class="yt-voice-language-select">
+                <select id="voice-language-select" class="yt-voice-language-select" style="display: block !important; visibility: visible !important;">
                     <option value="en-US">English (US)</option>
                     <option value="en-GB">English (UK)</option>
                     <option value="es-ES">Español (España)</option>

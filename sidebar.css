@@ -149,9 +149,19 @@ body {
   background: var(--bg-secondary);
   border-radius: var(--radius-small);
   border: 1px solid var(--border-color);
-  display: block;
-  visibility: visible;
-  opacity: 1;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Force voice input specific elements to be visible */
+#voice-input-checkbox,
+.yt-settings-option:has(#voice-input-checkbox),
+#voice-language-select,
+.yt-settings-option:has(#voice-language-select) {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .yt-settings-label {

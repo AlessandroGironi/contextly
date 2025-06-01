@@ -794,17 +794,40 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Settings container found:', !!settingsContainer);
     console.log('Settings options found:', settingsOptions.length);
     
+    // Debug: Log all settings options content
+    settingsOptions.forEach((option, index) => {
+      console.log(`Settings option ${index}:`, option.innerHTML);
+    });
+    
     // Force settings section to be visible
     if (settingsContainer) {
-      settingsContainer.style.display = 'block';
-      settingsContainer.style.visibility = 'visible';
+      settingsContainer.style.display = 'block !important';
+      settingsContainer.style.visibility = 'visible !important';
+      settingsContainer.style.opacity = '1 !important';
     }
     
-    // Force all settings options to be visible
+    // Force all settings options to be visible with !important
     settingsOptions.forEach((option, index) => {
-      option.style.display = 'block';
-      option.style.visibility = 'visible';
-      console.log(`Settings option ${index} made visible`);
+      option.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
+      console.log(`Settings option ${index} forced visible with cssText`);
+    });
+    
+    // Specifically target voice input elements
+    const voiceElements = [
+      document.getElementById('voice-input-checkbox'),
+      document.getElementById('voice-language-select'),
+      document.querySelector('label[for="voice-input-checkbox"]'),
+      document.querySelector('.yt-settings-option:nth-child(2)'), // Second settings option should be voice input
+      document.querySelector('.yt-settings-option:nth-child(3)')  // Third settings option should be voice language
+    ];
+    
+    voiceElements.forEach((element, index) => {
+      if (element) {
+        element.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
+        console.log(`Voice element ${index} forced visible:`, element.tagName, element.id || element.className);
+      } else {
+        console.error(`Voice element ${index} not found!`);
+      }
     });
     
     // Load voice input settings
