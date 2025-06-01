@@ -32,7 +32,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["sidebar.html", "sidebar.js", "sidebar.css", "options.html", "options.js", "openai_client.js", "localization.js"],
+      "resources": ["sidebar.html", "sidebar.js", "sidebar.css", "options.html", "options.js", "openai_client.js", "localization.js", "voice_input_manager.js"],
       "matches": ["*://*.youtube.com/*"]
     }
   ]

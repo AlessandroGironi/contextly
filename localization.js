@@ -181,6 +181,16 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'Smart Pause Mode',
         'smart_pause_description': 'Automatically pauses video when typing in chat',
+        'voice_input_mode': 'Enable Voice Input',
+        'voice_input_description': 'Ask questions using your microphone',
+
+        // Voice input
+        'voice_input_tooltip': 'Voice input',
+        'listening': 'Listening...',
+        'voice_not_supported': 'Voice input is not available in this browser',
+        'voice_permission_denied': 'Microphone permission denied',
+        'voice_error': 'Voice input error occurred',
+        'processing_speech': 'Processing speech...',
 
         // Error messages
         'error_prefix': 'Error: ',
@@ -248,6 +258,16 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'Modo Pausa Inteligente',
         'smart_pause_description': 'Pausa automáticamente el video al escribir en el chat',
+        'voice_input_mode': 'Habilitar Entrada de Voz',
+        'voice_input_description': 'Haz preguntas usando tu micrófono',
+
+        // Voice input
+        'voice_input_tooltip': 'Entrada de voz',
+        'listening': 'Escuchando...',
+        'voice_not_supported': 'La entrada de voz no está disponible en este navegador',
+        'voice_permission_denied': 'Permiso de micrófono denegado',
+        'voice_error': 'Ocurrió un error de entrada de voz',
+        'processing_speech': 'Procesando voz...',
 
         // Error messages
         'error_prefix': 'Error: ',
@@ -315,6 +335,16 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'Mode Pause Intelligente',
         'smart_pause_description': 'Met automatiquement en pause la vidéo lors de la saisie dans le chat',
+        'voice_input_mode': 'Activer l\'Entrée Vocale',
+        'voice_input_description': 'Posez des questions avec votre microphone',
+
+        // Voice input
+        'voice_input_tooltip': 'Entrée vocale',
+        'listening': 'Écoute...',
+        'voice_not_supported': 'L\'entrée vocale n\'est pas disponible dans ce navigateur',
+        'voice_permission_denied': 'Permission du microphone refusée',
+        'voice_error': 'Une erreur d\'entrée vocale s\'est produite',
+        'processing_speech': 'Traitement de la parole...',
 
         // Error messages
         'error_prefix': 'Erreur : ',
@@ -382,6 +412,16 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'Intelligenter Pausenmodus',
         'smart_pause_description': 'Pausiert automatisch das Video beim Tippen im Chat',
+        'voice_input_mode': 'Spracheingabe Aktivieren',
+        'voice_input_description': 'Stellen Sie Fragen mit Ihrem Mikrofon',
+
+        // Voice input
+        'voice_input_tooltip': 'Spracheingabe',
+        'listening': 'Höre zu...',
+        'voice_not_supported': 'Spracheingabe ist in diesem Browser nicht verfügbar',
+        'voice_permission_denied': 'Mikrofon-Berechtigung verweigert',
+        'voice_error': 'Spracheingabe-Fehler aufgetreten',
+        'processing_speech': 'Verarbeite Sprache...',
 
         // Error messages
         'error_prefix': 'Fehler: ',
@@ -449,6 +489,16 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'Modalità Pausa Intelligente',
         'smart_pause_description': 'Mette automaticamente in pausa il video quando si digita nella chat',
+        'voice_input_mode': 'Abilita Input Vocale',
+        'voice_input_description': 'Fai domande usando il tuo microfono',
+
+        // Voice input
+        'voice_input_tooltip': 'Input vocale',
+        'listening': 'In ascolto...',
+        'voice_not_supported': 'L\'input vocale non è disponibile in questo browser',
+        'voice_permission_denied': 'Permesso microfono negato',
+        'voice_error': 'Si è verificato un errore di input vocale',
+        'processing_speech': 'Elaborazione vocale...',
 
         // Error messages
         'error_prefix': 'Errore: ',
@@ -516,6 +566,16 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'Modo Pausa Inteligente',
         'smart_pause_description': 'Pausa automaticamente o vídeo ao digitar no chat',
+        'voice_input_mode': 'Ativar Entrada de Voz',
+        'voice_input_description': 'Faça perguntas usando seu microfone',
+
+        // Voice input
+        'voice_input_tooltip': 'Entrada de voz',
+        'listening': 'Ouvindo...',
+        'voice_not_supported': 'Entrada de voz não está disponível neste navegador',
+        'voice_permission_denied': 'Permissão do microfone negada',
+        'voice_error': 'Ocorreu um erro de entrada de voz',
+        'processing_speech': 'Processando fala...',
 
         // Error messages
         'error_prefix': 'Erro: ',
@@ -583,6 +643,16 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'Умная пауза',
         'smart_pause_description': 'Автоматически ставит видео на паузу при наборе текста в чате',
+        'voice_input_mode': 'Включить Голосовой Ввод',
+        'voice_input_description': 'Задавайте вопросы с помощью микрофона',
+
+        // Voice input
+        'voice_input_tooltip': 'Голосовой ввод',
+        'listening': 'Слушаю...',
+        'voice_not_supported': 'Голосовой ввод недоступен в этом браузере',
+        'voice_permission_denied': 'Разрешение на микрофон отклонено',
+        'voice_error': 'Произошла ошибка голосового ввода',
+        'processing_speech': 'Обработка речи...',
 
         // Error messages
         'error_prefix': 'Ошибка: ',
@@ -650,6 +720,16 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': '智能暂停模式',
         'smart_pause_description': '在聊天中输入时自动暂停视频',
+        'voice_input_mode': '启用语音输入',
+        'voice_input_description': '使用麦克风提问',
+
+        // Voice input
+        'voice_input_tooltip': '语音输入',
+        'listening': '正在聆听...',
+        'voice_not_supported': '此浏览器不支持语音输入',
+        'voice_permission_denied': '麦克风权限被拒绝',
+        'voice_error': '语音输入发生错误',
+        'processing_speech': '正在处理语音...',
 
         // Error messages
         'error_prefix': '错误：',
@@ -717,6 +797,16 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'スマートポーズモード',
         'smart_pause_description': 'チャットで入力中に動画を自動的に一時停止',
+        'voice_input_mode': '音声入力を有効にする',
+        'voice_input_description': 'マイクを使って質問する',
+
+        // Voice input
+        'voice_input_tooltip': '音声入力',
+        'listening': '聞いています...',
+        'voice_not_supported': 'このブラウザでは音声入力が利用できません',
+        'voice_permission_denied': 'マイクの許可が拒否されました',
+        'voice_error': '音声入力エラーが発生しました',
+        'processing_speech': '音声を処理中...',
 
         // Error messages
         'error_prefix': 'エラー：',
@@ -784,6 +874,16 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': '스마트 일시정지 모드',
         'smart_pause_description': '채팅 입력 시 비디오를 자동으로 일시정지',
+        'voice_input_mode': '음성 입력 활성화',
+        'voice_input_description': '마이크를 사용하여 질문하기',
+
+        // Voice input
+        'voice_input_tooltip': '음성 입력',
+        'listening': '듣고 있습니다...',
+        'voice_not_supported': '이 브라우저에서는 음성 입력을 사용할 수 없습니다',
+        'voice_permission_denied': '마이크 권한이 거부되었습니다',
+        'voice_error': '음성 입력 오류가 발생했습니다',
+        'processing_speech': '음성 처리 중...',
 
         // Error messages
         'error_prefix': '오류: ',
@@ -851,6 +951,16 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'وضع الإيقاف الذكي',
         'smart_pause_description': 'يوقف الفيديو تلقائياً عند الكتابة في الدردشة',
+        'voice_input_mode': 'تفعيل الإدخال الصوتي',
+        'voice_input_description': 'اطرح الأسئلة باستخدام الميكروفون',
+
+        // Voice input
+        'voice_input_tooltip': 'إدخال صوتي',
+        'listening': 'يستمع...',
+        'voice_not_supported': 'الإدخال الصوتي غير متوفر في هذا المتصفح',
+        'voice_permission_denied': 'تم رفض إذن الميكروفون',
+        'voice_error': 'حدث خطأ في الإدخال الصوتي',
+        'processing_speech': 'معالجة الكلام...',
 
         // Error messages
         'error_prefix': 'خطأ: ',
@@ -918,6 +1028,16 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'स्मार्ट पॉज़ मोड',
         'smart_pause_description': 'चैट में टाइप करते समय वीडियो को स्वचालित रूप से रोक देता है',
+        'voice_input_mode': 'वॉयस इनपुट सक्षम करें',
+        'voice_input_description': 'अपने माइक्रोफ़ोन का उपयोग करके सवाल पूछें',
+
+        // Voice input
+        'voice_input_tooltip': 'वॉयस इनपुट',
+        'listening': 'सुन रहा है...',
+        'voice_not_supported': 'इस ब्राउज़र में वॉयस इनपुट उपलब्ध नहीं है',
+        'voice_permission_denied': 'माइक्रोफ़ोन की अनुमति मना कर दी गई',
+        'voice_error': 'वॉयस इनपुट त्रुटि हुई',
+        'processing_speech': 'भाषण प्रसंस्करण...',
 
         // Error messages
         'error_prefix': 'त्रुटि: ',

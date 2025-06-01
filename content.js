@@ -370,12 +370,16 @@ const YouTubeAIAIAssistant = {
           break;
 
         case 'pauseVideo':
-          this.pauseVideo(data.reason);
-          break;
+        if (data.reason === 'smartPause' || data.reason === 'voiceInput') {
+          this.pauseVideo();
+        }
+        break;
 
-        case 'resumeVideo':
-          this.resumeVideo(data.reason);
-          break;
+      case 'resumeVideo':
+        if (data.reason === 'smartPause' || data.reason === 'voiceInput') {
+          this.resumeVideo();
+        }
+        break;
 
         case 'apiKeyFound':
           // Update OpenAIClient if sidebar found a key
@@ -1988,6 +1992,14 @@ const YouTubeAIAIAssistant = {
       newIframe.id = 'yt-ai-assistant-sidebar';
       newIframe.src = chrome.runtime.getURL(`sidebar.html?v=${newVideoId}&t=${Date.now()}`);
       newIframe.classList.add('yt-sidebar-iframe');
+
+      // Load voice input manager script
+      const voiceScript = document.createElement('script');
+      voiceScript.src = chrome.runtime.getURL('voice_input_manager.js');
+      voiceScript.onload = () => {
+        console.log('Voice input manager loaded');
+      };
+      document.head.appendChild(voiceScript);
 
       // Replace the old iframe with the new one
       if (oldIframe.parentNode) {

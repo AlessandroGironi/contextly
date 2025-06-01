@@ -35,6 +35,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const apiKeyInput = document.getElementById('api-key-input');
   const saveApiKeyBtn = document.getElementById('save-api-key');
   const changeApiKeyBtn = document.getElementById('change-api-key');
+  const voiceInputBtn = document.getElementById('voice-input-btn');
+  const voiceStatus = document.getElementById('voice-status');
+  const voiceStatusText = document.getElementById('voice-status-text');
 
   // Initialize UI
   initUI();
@@ -116,6 +119,9 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       console.warn('Smart Pause checkbox not found in sidebar');
     }
+
+    // Initialize Voice Input functionality
+    initializeVoiceInput();
   }
 
   // Handle messages from content script
@@ -711,6 +717,11 @@ document.addEventListener('DOMContentLoaded', function() {
   let isTyping = false;
   let typingTimeout = null;
 
+  // Voice Input Manager
+  let voiceInputManager = null;
+  let isVoiceInputEnabled = true; // Enabled by default
+  let isVoiceListening = false;
+
   // Load Smart Pause setting from localStorage
   const savedSmartPauseSetting = localStorage.getItem('yt-ai-smart-pause-enabled');
   if (savedSmartPauseSetting !== null) {
@@ -763,6 +774,195 @@ document.addEventListener('DOMContentLoaded', function() {
       window.parent.postMessage({
         action: 'resumeVideo',
         reason: 'smartPause'
+      }, '*');
+    }
+  }
+
+  // Initialize Voice Input
+  function initializeVoiceInput() {
+    // Load voice input setting
+    const savedVoiceInputSetting = localStorage.getItem('yt-ai-voice-input-enabled');
+    if (savedVoiceInputSetting !== null) {
+      isVoiceInputEnabled = savedVoiceInputSetting === 'true';
+    } else {
+      isVoiceInputEnabled = true;
+      localStorage.setItem('yt-ai-voice-input-enabled', 'true');
+    }
+
+    // Initialize voice input manager
+    if (window.VoiceInputManager) {
+      voiceInputManager = new window.VoiceInputManager();
+      
+      // Set callbacks
+      voiceInputManager.setCallbacks(
+        handleVoiceResult,
+        handleVoiceError,
+        handleVoiceStatus
+      );
+
+      // Update UI based on support and settings
+      updateVoiceInputUI();
+    }
+
+    // Set up voice input checkbox
+    const voiceInputCheckbox = document.getElementById('voice-input-checkbox');
+    if (voiceInputCheckbox) {
+      voiceInputCheckbox.checked = isVoiceInputEnabled;
+      
+      voiceInputCheckbox.addEventListener('change', (e) => {
+        isVoiceInputEnabled = e.target.checked;
+        localStorage.setItem('yt-ai-voice-input-enabled', isVoiceInputEnabled.toString());
+        
+        if (voiceInputManager) {
+          voiceInputManager.setEnabled(isVoiceInputEnabled);
+        }
+        
+        updateVoiceInputUI();
+        console.log(`Voice Input ${isVoiceInputEnabled ? 'enabled' : 'disabled'}`);
+      });
+    }
+
+    // Set up voice input button
+    if (voiceInputBtn) {
+      voiceInputBtn.addEventListener('click', handleVoiceInputClick);
+    }
+  }
+
+  // Update voice input UI visibility and state
+  function updateVoiceInputUI() {
+    if (!voiceInputBtn) return;
+
+    const state = voiceInputManager ? voiceInputManager.getState() : { isSupported: false };
+    
+    // Show/hide voice button based on support and enabled setting
+    if (state.isSupported && isVoiceInputEnabled) {
+      voiceInputBtn.style.display = 'flex';
+    } else {
+      voiceInputBtn.style.display = 'none';
+    }
+
+    // Update button state
+    if (isVoiceListening) {
+      voiceInputBtn.classList.add('listening');
+    } else {
+      voiceInputBtn.classList.remove('listening');
+    }
+  }
+
+  // Handle voice input button click
+  function handleVoiceInputClick() {
+    if (!voiceInputManager) return;
+
+    if (isVoiceListening) {
+      // Stop listening
+      voiceInputManager.stopListening();
+    } else {
+      // Start listening
+      const success = voiceInputManager.startListening();
+      if (success) {
+        // Start voice pause (similar to smart pause)
+        handleVoiceStart();
+      }
+    }
+  }
+
+  // Handle voice recognition result
+  function handleVoiceResult(transcript) {
+    if (!transcript || !transcript.trim()) return;
+
+    console.log('Voice input received:', transcript);
+
+    // Set the transcript in the input field
+    if (questionInput) {
+      questionInput.value = transcript;
+    }
+
+    // Hide voice status
+    hideVoiceStatus();
+
+    // End voice pause
+    handleVoiceEnd();
+
+    // Send the question automatically
+    if (!isProcessing && transcript.trim() !== '') {
+      sendQuestion();
+    }
+  }
+
+  // Handle voice recognition error
+  function handleVoiceError(errorKey) {
+    console.error('Voice input error:', errorKey);
+    
+    // Show error message
+    showVoiceStatus(t(errorKey), 'error');
+    
+    // Hide after 3 seconds
+    setTimeout(() => {
+      hideVoiceStatus();
+    }, 3000);
+
+    // End voice pause
+    handleVoiceEnd();
+  }
+
+  // Handle voice status changes
+  function handleVoiceStatus(status) {
+    switch (status) {
+      case 'listening':
+        isVoiceListening = true;
+        showVoiceStatus(t('listening'));
+        updateVoiceInputUI();
+        break;
+      case 'ended':
+      case 'error':
+        isVoiceListening = false;
+        hideVoiceStatus();
+        updateVoiceInputUI();
+        break;
+    }
+  }
+
+  // Show voice status indicator
+  function showVoiceStatus(message, type = 'normal') {
+    if (!voiceStatus || !voiceStatusText) return;
+
+    voiceStatusText.textContent = message;
+    voiceStatus.className = `yt-voice-status ${type}`;
+    voiceStatus.style.display = 'block';
+  }
+
+  // Hide voice status indicator
+  function hideVoiceStatus() {
+    if (!voiceStatus) return;
+    voiceStatus.style.display = 'none';
+  }
+
+  // Handle voice start (smart pause for voice)
+  function handleVoiceStart() {
+    if (!isSmartPauseEnabled) return;
+
+    console.log('Voice input started - pausing video');
+
+    // Send message to parent window to pause video
+    if (window.parent) {
+      window.parent.postMessage({
+        action: 'pauseVideo',
+        reason: 'voiceInput'
+      }, '*');
+    }
+  }
+
+  // Handle voice end (resume video)
+  function handleVoiceEnd() {
+    if (!isSmartPauseEnabled) return;
+
+    console.log('Voice input ended - resuming video');
+
+    // Send message to parent window to resume video
+    if (window.parent) {
+      window.parent.postMessage({
+        action: 'resumeVideo',
+        reason: 'voiceInput'
       }, '*');
     }
   }
