@@ -792,7 +792,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Always show the voice button first, then initialize manager
     if (voiceInputBtn) {
       voiceInputBtn.style.display = 'flex';
+      voiceInputBtn.style.visibility = 'visible';
+      voiceInputBtn.style.opacity = '1';
       console.log('Voice button made visible');
+    } else {
+      console.error('Voice input button element not found!');
     }
 
     // Initialize voice input manager with a delay to ensure DOM is ready
