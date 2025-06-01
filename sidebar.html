@@ -51,23 +51,11 @@
 
             <div class="yt-chat-input">
                 <textarea id="question-input" data-i18n="question_placeholder" placeholder="Ask about this video..." disabled></textarea>
-                <button id="voice-input-btn" class="yt-voice-input-btn" data-i18n-title="voice_input_tooltip" title="Voice input">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z" fill="currentColor"/>
-                    </svg>
-                </button>
                 <button id="send-question" disabled>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"/>
                     </svg>
                 </button>
-            </div>
-
-            <div id="voice-status" class="yt-voice-status" style="display: none;">
-                <div class="yt-voice-indicator">
-                    <div class="yt-voice-spinner"></div>
-                    <span id="voice-status-text" data-i18n="listening">Listening...</span>
-                </div>
             </div>
         </div>
     </div>
@@ -94,20 +82,10 @@
                 </label>
                 <p class="yt-settings-description" data-i18n="smart_pause_description">Automatically pauses video when typing in chat</p>
             </div>
-            
-            <div class="yt-settings-option">
-                <label class="yt-settings-label">
-                    <input type="checkbox" id="voice-input-checkbox" checked>
-                    <span class="yt-settings-checkmark"></span>
-                    <span class="yt-settings-text" data-i18n="voice_input_mode">Enable Voice Input</span>
-                </label>
-                <p class="yt-settings-description" data-i18n="voice_input_description">Ask questions using your microphone</p>
-            </div>
         </div>
     </div>
 </body></html></div>
     <script src="localization.js"></script>
-    <script src="voice_input_manager.js"></script>
     <script src="sidebar.js"></script>
 </body>
 </html>

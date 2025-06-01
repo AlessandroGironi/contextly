@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const settingsTab = document.getElementById('settings-tab');
   const chatSection = document.getElementById('chat-section');
   const transcriptSection = document.getElementById('transcript-section');
+  const settingsSection = document.getElementById('settings-section');
   const questionInput = document.getElementById('question-input');
   const sendQuestionBtn = document.getElementById('send-question');
   const chatMessages = document.getElementById('chat-messages');
@@ -34,9 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const apiKeyInput = document.getElementById('api-key-input');
   const saveApiKeyBtn = document.getElementById('save-api-key');
   const changeApiKeyBtn = document.getElementById('change-api-key');
-  const voiceInputBtn = document.getElementById('voice-input-btn');
-  const voiceStatus = document.getElementById('voice-status');
-  const voiceStatusText = document.getElementById('voice-status-text');
 
   // Initialize UI
   initUI();
@@ -82,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Start smart pause when user starts typing
       questionInput.addEventListener('keydown', (e) => {
         if (!isSmartPauseEnabled) return;
-
+        
         // Don't trigger smart pause for Enter key (since that sends the message)
         if (e.key !== 'Enter') {
           handleTypingStart();
@@ -108,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Set checkbox to reflect saved setting
       smartPauseCheckbox.checked = isSmartPauseEnabled;
       console.log(`Sidebar checkbox set to: ${isSmartPauseEnabled}`);
-
+      
       smartPauseCheckbox.addEventListener('change', (e) => {
         isSmartPauseEnabled = e.target.checked;
         // Save setting to localStorage
@@ -118,12 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       console.warn('Smart Pause checkbox not found in sidebar');
     }
-
-    // Initialize Voice Input functionality - ensure button is visible first
-    // Add a small delay to ensure all scripts are loaded in extension context
-    setTimeout(() => {
-      initializeVoiceInput();
-    }, 1000);
   }
 
   // Handle messages from content script
@@ -256,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const preciseTime = data.currentTime;
         currentPlaybackTime = preciseTime; // Update our stored time
 
-        console.log(`Received precise timestamp: ${${preciseTime}}s, processing question: "${data.question}"`);
+        console.log(`Received precise timestamp: ${preciseTime}s, processing question: "${data.question}"`);
 
         // Get relevant transcript section using the precise timestamp
         const relevantTranscript = getRelevantTranscript(data.question);
@@ -286,7 +278,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Switch between tabs
   function switchTab(tab) {
     console.log(`Switching to tab: ${tab}`);
-
+    
     // Remove active class from all tabs and sections
     if (chatTab) chatTab.classList.remove('active');
     if (transcriptTab) transcriptTab.classList.remove('active');
@@ -719,11 +711,6 @@ document.addEventListener('DOMContentLoaded', function() {
   let isTyping = false;
   let typingTimeout = null;
 
-  // Voice Input Manager
-  let voiceInputManager = null;
-  let isVoiceInputEnabled = true; // Enabled by default
-  let isVoiceListening = false;
-
   // Load Smart Pause setting from localStorage
   const savedSmartPauseSetting = localStorage.getItem('yt-ai-smart-pause-enabled');
   if (savedSmartPauseSetting !== null) {
@@ -778,316 +765,6 @@ document.addEventListener('DOMContentLoaded', function() {
         reason: 'smartPause'
       }, '*');
     }
-  }
-
-  // Initialize Voice Input
-  function initializeVoiceInput() {
-    console.log('Starting voice input initialization...');
-    
-    // Load voice input setting
-    const savedVoiceInputSetting = localStorage.getItem('yt-ai-voice-input-enabled');
-    if (savedVoiceInputSetting !== null) {
-      isVoiceInputEnabled = savedVoiceInputSetting === 'true';
-    } else {
-      isVoiceInputEnabled = true;
-      localStorage.setItem('yt-ai-voice-input-enabled', 'true');
-    }
-
-    // First, ensure the voice button exists in DOM
-    let voiceButton = document.getElementById('voice-input-btn');
-    
-    if (!voiceButton) {
-      console.warn('Voice button not found in DOM, creating it...');
-      voiceButton = createVoiceButton();
-    }
-    
-    if (voiceButton) {
-      // Force show the voice button
-      voiceButton.style.display = 'flex';
-      voiceButton.style.visibility = 'visible';
-      voiceButton.style.opacity = '1';
-      console.log('Voice button made visible:', voiceButton.id);
-      
-      // Update the global reference
-      voiceInputBtn = voiceButton;
-    } else {
-      console.error('Failed to create or find voice input button!');
-      return;
-    }
-
-    // Initialize voice input manager with retries for extension context
-    let retryCount = 0;
-    const maxRetries = 10;
-    
-    const tryInitialize = () => {
-      if (window.VoiceInputManager) {
-        voiceInputManager = new window.VoiceInputManager();
-
-        // Set callbacks
-        voiceInputManager.setCallbacks(
-          handleVoiceResult,
-          handleVoiceError,
-          handleVoiceStatus
-        );
-
-        // Update UI based on support and settings
-        updateVoiceInputUI();
-
-        console.log('Voice input manager initialized, supported:', voiceInputManager.getState().isSupported);
-      } else if (retryCount < maxRetries) {
-        retryCount++;
-        console.log(`VoiceInputManager not available, retry ${retryCount}/${maxRetries}`);
-        setTimeout(tryInitialize, 200);
-      } else {
-        console.warn('VoiceInputManager not available after retries, but button is still visible');
-      }
-    };
-
-    setTimeout(tryInitialize, 100);
-
-    // Set up voice input checkbox
-    const voiceInputCheckbox = document.getElementById('voice-input-checkbox');
-    if (voiceInputCheckbox) {
-      voiceInputCheckbox.checked = isVoiceInputEnabled;
-
-      voiceInputCheckbox.addEventListener('change', (e) => {
-        isVoiceInputEnabled = e.target.checked;
-        localStorage.setItem('yt-ai-voice-input-enabled', isVoiceInputEnabled.toString());
-
-        if (voiceInputManager) {
-          voiceInputManager.setEnabled(isVoiceInputEnabled);
-        }
-
-        updateVoiceInputUI();
-        console.log(`Voice Input ${isVoiceInputEnabled ? 'enabled' : 'disabled'}`);
-      });
-    }
-
-    // Set up voice input button
-    if (voiceInputBtn) {
-      voiceInputBtn.addEventListener('click', handleVoiceInputClick);
-      // Force show the button initially for debugging
-      voiceInputBtn.style.display = 'flex';
-      console.log('Voice input button found and event listener added');
-    } else {
-      console.warn('Voice input button not found in DOM');
-    }
-  }
-
-  // Update voice input UI visibility and state
-  function updateVoiceInputUI() {
-    if (!voiceInputBtn) {
-      console.warn('Voice input button not found for UI update');
-      return;
-    }
-
-    const state = voiceInputManager ? voiceInputManager.getState() : { isSupported: false };
-
-    console.log('Updating voice UI - supported:', state.isSupported, 'enabled:', isVoiceInputEnabled);
-
-    // For debugging: always keep the button visible
-    voiceInputBtn.style.display = 'flex';
-
-    // If not supported, add a visual indicator
-    if (!state.isSupported) {
-      voiceInputBtn.style.opacity = '0.5';
-      voiceInputBtn.title = 'Voice input not supported in this browser';
-      console.log('Voice button shown but disabled - not supported');
-    } else if (!isVoiceInputEnabled) {
-      voiceInputBtn.style.opacity = '0.5';
-      voiceInputBtn.title = 'Voice input disabled in settings';
-      console.log('Voice button shown but disabled - disabled in settings');
-    } else {
-      voiceInputBtn.style.opacity = '1';
-      voiceInputBtn.title = 'Voice input';
-      console.log('Voice button shown and enabled');
-    }
-
-    // Update button state
-    if (isVoiceListening) {
-      voiceInputBtn.classList.add('listening');
-    } else {
-      voiceInputBtn.classList.remove('listening');
-    }
-  }
-
-  // Handle voice input button click
-  function handleVoiceInputClick() {
-    console.log('Voice button clicked');
-
-    if (!voiceInputManager) {
-      console.warn('Voice input manager not available');
-      addChatMessage('system', 'Voice input is not available. Please check console for details.');
-      return;
-    }
-
-    const state = voiceInputManager.getState();
-    if (!state.isSupported) {
-      addChatMessage('system', 'Voice input is not supported in this browser. Please use Chrome, Edge, or Safari.');
-      return;
-    }
-
-    if (!isVoiceInputEnabled) {
-      addChatMessage('system', 'Voice input is disabled. Enable it in Settings.');
-      return;
-    }
-
-    if (isVoiceListening) {
-      // Stop listening
-      voiceInputManager.stopListening();
-    } else {
-      // Start listening
-      const success = voiceInputManager.startListening();
-      if (success) {
-        // Start voice pause (similar to smart pause)
-        handleVoiceStart();
-      }
-    }
-  }
-
-  // Handle voice recognition result
-  function handleVoiceResult(transcript) {
-    if (!transcript || !transcript.trim()) return;
-
-    console.log('Voice input received:', transcript);
-
-    // Set the transcript in the input field
-    if (questionInput) {
-      questionInput.value = transcript;
-    }
-
-    // Hide voice status
-    hideVoiceStatus();
-
-    // End voice pause
-    handleVoiceEnd();
-
-    // Send the question automatically
-    if (!isProcessing && transcript.trim() !== '') {
-      sendQuestion();
-    }
-  }
-
-  // Handle voice recognition error
-  function handleVoiceError(errorKey) {
-    console.error('Voice input error:', errorKey);
-
-    // Show error message
-    showVoiceStatus(t(errorKey), 'error');
-
-    // Hide after 3 seconds
-    setTimeout(() => {
-      hideVoiceStatus();
-    }, 3000);
-
-    // End voice pause
-    handleVoiceEnd();
-  }
-
-  // Handle voice status changes
-  function handleVoiceStatus(status) {
-    switch (status) {
-      case 'listening':
-        isVoiceListening = true;
-        showVoiceStatus(t('listening'));
-        updateVoiceInputUI();
-        break;
-      case 'ended':
-      case 'error':
-        isVoiceListening = false;
-        hideVoiceStatus();
-        updateVoiceInputUI();
-        break;
-    }
-  }
-
-  // Show voice status indicator
-  function showVoiceStatus(message, type = 'normal') {
-    if (!voiceStatus || !voiceStatusText) return;
-
-    voiceStatusText.textContent = message;
-    voiceStatus.className = `yt-voice-status ${type}`;
-    voiceStatus.style.display = 'block';
-  }
-
-  // Hide voice status indicator
-  function hideVoiceStatus() {
-    if (!voiceStatus) return;
-    voiceStatus.style.display = 'none';
-  }
-
-  // Handle voice start (smart pause for voice)
-  function handleVoiceStart() {
-    if (!isSmartPauseEnabled) return;
-
-    console.log('Voice input started - pausing video');
-
-    // Send message to parent window to pause video
-    if (window.parent) {
-      window.parent.postMessage({
-        action: 'pauseVideo',
-        reason: 'voiceInput'
-      }, '*');
-    }
-  }
-
-  // Handle voice end (resume video)
-  function handleVoiceEnd() {
-    if (!isSmartPauseEnabled) return;
-
-    console.log('Voice input ended - resuming video');
-
-    // Send message to parent window to resume video
-    if (window.parent) {
-      window.parent.postMessage({
-        action: 'resumeVideo',
-        reason: 'voiceInput'
-      }, '*');
-    }
-  }
-
-  // Create voice button if it doesn't exist in the DOM
-  function createVoiceButton() {
-    console.log('Attempting to create voice button...');
-    
-    // Try multiple selectors to find the chat input container
-    const chatInput = document.querySelector('.yt-chat-input') || 
-                     document.querySelector('[id*="chat-input"]') ||
-                     document.querySelector('.yt-sidebar-section.active .yt-chat-input');
-    const sendButton = document.getElementById('send-question');
-    
-    console.log('Chat input found:', !!chatInput);
-    console.log('Send button found:', !!sendButton);
-    
-    if (chatInput && sendButton && !document.getElementById('voice-input-btn')) {
-      const voiceButton = document.createElement('button');
-      voiceButton.id = 'voice-input-btn';
-      voiceButton.className = 'yt-voice-input-btn';
-      voiceButton.title = 'Voice input';
-      voiceButton.style.display = 'flex';
-      voiceButton.style.visibility = 'visible';
-      voiceButton.style.opacity = '1';
-      voiceButton.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z" fill="currentColor"/>
-        </svg>
-      `;
-      
-      // Insert before send button
-      chatInput.insertBefore(voiceButton, sendButton);
-      
-      // Add event listener
-      voiceButton.addEventListener('click', handleVoiceInputClick);
-      
-      console.log('Voice button created dynamically and added to DOM');
-      return voiceButton;
-    } else {
-      console.warn('Could not create voice button - missing required elements');
-      console.log('chatInput:', chatInput);
-      console.log('sendButton:', sendButton);
-      console.log('existing voice button:', document.getElementById('voice-input-btn'));
-    }
-    return null;
   }
 
   // Get localized text

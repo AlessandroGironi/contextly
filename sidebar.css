@@ -401,14 +401,15 @@ body {
 
 /* Chat input */
 .yt-chat-input {
-  display: flex;
-  gap: var(--spacing-xs);
   padding: var(--spacing-md);
-  background: var(--bg-secondary);
   border-top: 1px solid var(--border-color);
+  background: var(--bg-secondary);
   backdrop-filter: blur(20px);
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
   flex-shrink: 0;
-  align-items: flex-end;
+  margin-top: auto;
 }
 
 .yt-chat-input textarea {
@@ -462,82 +463,6 @@ body {
   color: var(--text-muted);
   cursor: not-allowed;
   transform: none;
-}
-
-/* Voice input button specific styles */
-.yt-voice-input-btn {
-  background: var(--accent-blue) !important;
-  margin-right: var(--spacing-xs);
-  width: 36px !important;
-  height: 36px !important;
-  border-radius: 10px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border: none !important;
-  cursor: pointer !important;
-  color: white !important;
-  transition: all 0.2s ease !important;
-}
-
-.yt-voice-input-btn:hover {
-  background: #0056cc !important;
-  transform: scale(1.05) !important;
-}
-
-.yt-voice-input-btn.listening {
-  background: #ff6b6b !important;
-  animation: pulse-red 1.5s infinite;
-}
-
-.yt-voice-input-btn.listening:hover {
-  background: #ff5252 !important;
-}
-
-@keyframes pulse-red {
-  0% {
-    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
-  }
-}
-
-/* Voice status indicator */
-.yt-voice-status {
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border-color);
-  backdrop-filter: blur(20px);
-  flex-shrink: 0;
-}
-
-.yt-voice-indicator {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  color: var(--text-secondary);
-  font-size: 12px;
-}
-
-.yt-voice-spinner {
-  width: 12px;
-  height: 12px;
-  border: 2px solid var(--bg-tertiary);
-  border-top: 2px solid #ff6b6b;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-.yt-voice-status.error .yt-voice-indicator {
-  color: #ff6b6b;
-}
-
-.yt-voice-status.error .yt-voice-spinner {
-  border-top-color: #ff6b6b;
 }
 
 /* API Key sections */
@@ -894,55 +819,4 @@ input:focus,
 textarea:focus {
   outline: 2px solid var(--accent-blue);
   outline-offset: 2px;
-}
-
-/* Voice input button */
-.yt-voice-input-btn {
-  background: transparent !important;
-  border: none !important;
-  color: var(--text-secondary) !important;
-  cursor: pointer !important;
-  padding: var(--spacing-sm) !important;
-  border-radius: var(--radius-small) !important;
-  transition: all 0.2s ease !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex-shrink: 0 !important;
-  min-width: 40px !important;
-  min-height: 40px !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-.yt-voice-input-btn:hover {
-  background: var(--bg-tertiary) !important;
-  color: var(--text-primary) !important;
-}
-
-.yt-voice-input-btn.listening {
-  background: #ff6b6b !important;
-  color: white !important;
-}
-
-.yt-voice-input-btn.listening:hover {
-  background: #ff5252 !important;
-}
-
-/* Ensure voice button is visible in extension context */
-#voice-input-btn {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  position: relative !important;
-  z-index: 1000 !important;
-}
-
-/* Force visibility for any voice input button */
-.yt-voice-input-btn,
-button[id*="voice"],
-button[class*="voice"] {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
 }
