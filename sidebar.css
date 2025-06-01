@@ -895,3 +895,43 @@ textarea:focus {
   outline: 2px solid var(--accent-blue);
   outline-offset: 2px;
 }
+
+/* Voice input button */
+.yt-voice-input-btn {
+  background: transparent !important;
+  border: none !important;
+  color: var(--text-secondary) !important;
+  cursor: pointer !important;
+  padding: var(--spacing-sm) !important;
+  border-radius: var(--radius-small) !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.yt-voice-input-btn:hover {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+}
+
+.yt-voice-input-btn.listening {
+  background: #ff6b6b !important;
+  color: white !important;
+}
+
+.yt-voice-input-btn.listening:hover {
+  background: #ff5252 !important;
+}
+
+/* Ensure voice button is visible in extension context */
+#voice-input-btn {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}

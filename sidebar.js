@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const settingsTab = document.getElementById('settings-tab');
   const chatSection = document.getElementById('chat-section');
   const transcriptSection = document.getElementById('transcript-section');
-  const settingsSection = document.getElementById('settings-section');
   const questionInput = document.getElementById('question-input');
   const sendQuestionBtn = document.getElementById('send-question');
   const chatMessages = document.getElementById('chat-messages');
@@ -121,7 +120,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Initialize Voice Input functionality - ensure button is visible first
-    initializeVoiceInput();
+    // Add a small delay to ensure all scripts are loaded in extension context
+    setTimeout(() => {
+      initializeVoiceInput();
+    }, 200);
   }
 
   // Handle messages from content script
@@ -254,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const preciseTime = data.currentTime;
         currentPlaybackTime = preciseTime; // Update our stored time
 
-        console.log(`Received precise timestamp: ${preciseTime}s, processing question: "${data.question}"`);
+        console.log(`Received precise timestamp: ${${preciseTime}}s, processing question: "${data.question}"`);
 
         // Get relevant transcript section using the precise timestamp
         const relevantTranscript = getRelevantTranscript(data.question);
