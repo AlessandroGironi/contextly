@@ -37,7 +37,14 @@ class VoiceInputManager {
 
   // Check if speech recognition is supported
   checkSupport() {
-    return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+    const hasAPI = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+    console.log('Speech recognition support check:', {
+      SpeechRecognition: !!window.SpeechRecognition,
+      webkitSpeechRecognition: !!window.webkitSpeechRecognition,
+      supported: hasAPI,
+      userAgent: navigator.userAgent
+    });
+    return hasAPI;
   }
 
   // Load settings from storage
