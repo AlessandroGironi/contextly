@@ -1,3 +1,4 @@
+
 /**
  * YouTube AI Assistant - Localization System
  * Handles automatic language detection and UI translations
@@ -126,6 +127,13 @@ class LocalizationManager {
       element.title = this.t(key);
     });
 
+    // Translate placeholder attributes
+    const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+    placeholderElements.forEach(element => {
+      const key = element.getAttribute('data-i18n-placeholder');
+      element.placeholder = this.t(key);
+    });
+
     console.log('Page translations applied');
   }
 
@@ -174,63 +182,6 @@ class LocalizationManager {
         'smart_pause_mode': 'Smart Pause Mode',
         'smart_pause_description': 'Automatically pauses video when typing in chat',
 
-        // General
-        'youtube_video': 'YouTube Video'
-      }
-    }
-  };
-
-  // Localization Manager
-  window.LocalizationManager = {
-    currentLanguage: 'en',
-    
-    init: function() {
-      // Detect browser language
-      const browserLang = navigator.language.split('-')[0];
-      if (LOCALIZATION_DATA.translations[browserLang]) {
-        this.currentLanguage = browserLang;
-      }
-    },
-
-    t: function(key, params = {}) {
-      const translation = LOCALIZATION_DATA.translations[this.currentLanguage][key] || key;
-      
-      // Replace parameters in translation
-      let result = translation;
-      Object.keys(params).forEach(param => {
-        result = result.replace(new RegExp(`{{${param}}}`, 'g'), params[param]);
-      });
-      
-      return result;
-    },
-
-    translatePage: function() {
-      // Find all elements with data-i18n attribute and translate them
-      const elements = document.querySelectorAll('[data-i18n]');
-      elements.forEach(element => {
-        const key = element.getAttribute('data-i18n');
-        element.textContent = this.t(key);
-      });
-
-      // Find all elements with data-i18n-title attribute and translate their titles
-      const titleElements = document.querySelectorAll('[data-i18n-title]');
-      titleElements.forEach(element => {
-        const key = element.getAttribute('data-i18n-title');
-        element.title = this.t(key);
-      });
-
-      // Find all elements with data-i18n-placeholder attribute and translate their placeholders
-      const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
-      placeholderElements.forEach(element => {
-        const key = element.getAttribute('data-i18n-placeholder');
-        element.placeholder = this.t(key);
-      });
-    }
-  };
-
-  // Initialize localization
-  window.LocalizationManager.init();
-
         // Error messages
         'error_prefix': 'Error: ',
         'rate_limit_error': 'OpenAI API rate limit exceeded. Please try again in a few minutes or use the transcript tab to read directly.',
@@ -250,10 +201,6 @@ class LocalizationManager {
 
         // Time format
         'timestamp_at': 'Timestamp at {{time}}',
-
-        // Settings
-        'smart_pause_mode': 'Smart Pause Mode',
-        'smart_pause_description': 'Automatically pauses video when typing in chat',
 
         // General
         'unknown_video': 'Unknown video',
@@ -298,6 +245,10 @@ class LocalizationManager {
         'no_transcript_available': 'No hay transcripción disponible para este video.',
         'transcript_load_error': 'Error cargando transcripción: {{error}}',
 
+        // Settings section
+        'smart_pause_mode': 'Modo Pausa Inteligente',
+        'smart_pause_description': 'Pausa automáticamente el video al escribir en el chat',
+
         // Error messages
         'error_prefix': 'Error: ',
         'rate_limit_error': 'Límite de velocidad de la API de OpenAI excedido. Por favor, inténtalo de nuevo en unos minutos o usa la pestaña de transcripción para leer directamente.',
@@ -317,10 +268,6 @@ class LocalizationManager {
 
         // Time format
         'timestamp_at': 'Marca de tiempo en {{time}}',
-
-        // Settings
-        'smart_pause_mode': 'Modo Pausa Inteligente',
-        'smart_pause_description': 'Pausa automáticamente el video al escribir en el chat',
 
         // General
         'unknown_video': 'Video desconocido',
@@ -365,6 +312,10 @@ class LocalizationManager {
         'no_transcript_available': 'Aucune transcription disponible pour cette vidéo.',
         'transcript_load_error': 'Erreur lors du chargement de la transcription : {{error}}',
 
+        // Settings section
+        'smart_pause_mode': 'Mode Pause Intelligente',
+        'smart_pause_description': 'Met automatiquement en pause la vidéo lors de la saisie dans le chat',
+
         // Error messages
         'error_prefix': 'Erreur : ',
         'rate_limit_error': 'Limite de débit de l\'API OpenAI dépassée. Veuillez réessayer dans quelques minutes ou utilisez l\'onglet transcription pour lire directement.',
@@ -384,10 +335,6 @@ class LocalizationManager {
 
         // Time format
         'timestamp_at': 'Horodatage à {{time}}',
-
-        // Settings
-        'smart_pause_mode': 'Mode Pause Intelligente',
-        'smart_pause_description': 'Met automatiquement en pause la vidéo lors de la saisie dans le chat',
 
         // General
         'unknown_video': 'Vidéo inconnue',
@@ -432,6 +379,10 @@ class LocalizationManager {
         'no_transcript_available': 'Kein Transkript für dieses Video verfügbar.',
         'transcript_load_error': 'Fehler beim Laden des Transkripts: {{error}}',
 
+        // Settings section
+        'smart_pause_mode': 'Intelligenter Pausenmodus',
+        'smart_pause_description': 'Pausiert automatisch das Video beim Tippen im Chat',
+
         // Error messages
         'error_prefix': 'Fehler: ',
         'rate_limit_error': 'OpenAI API-Rate-Limit überschritten. Bitte versuchen Sie es in ein paar Minuten erneut oder verwenden Sie den Transkript-Tab zum direkten Lesen.',
@@ -451,10 +402,6 @@ class LocalizationManager {
 
         // Time format
         'timestamp_at': 'Zeitstempel bei {{time}}',
-
-        // Settings
-        'smart_pause_mode': 'Intelligenter Pausenmodus',
-        'smart_pause_description': 'Pausiert automatisch das Video beim Tippen im Chat',
 
         // General
         'unknown_video': 'Unbekanntes Video',
@@ -499,6 +446,10 @@ class LocalizationManager {
         'no_transcript_available': 'Nessuna trascrizione disponibile per questo video.',
         'transcript_load_error': 'Errore caricamento trascrizione: {{error}}',
 
+        // Settings section
+        'smart_pause_mode': 'Modalità Pausa Intelligente',
+        'smart_pause_description': 'Mette automaticamente in pausa il video quando si digita nella chat',
+
         // Error messages
         'error_prefix': 'Errore: ',
         'rate_limit_error': 'Limite di velocità API OpenAI superato. Riprova tra qualche minuto o usa la scheda trascrizione per leggere direttamente.',
@@ -518,10 +469,6 @@ class LocalizationManager {
 
         // Time format
         'timestamp_at': 'Timestamp a {{time}}',
-
-        // Settings
-        'smart_pause_mode': 'Modalità Pausa Intelligente',
-        'smart_pause_description': 'Mette automaticamente in pausa il video quando si digita nella chat',
 
         // General
         'unknown_video': 'Video sconosciuto',
@@ -566,6 +513,10 @@ class LocalizationManager {
         'no_transcript_available': 'Nenhuma transcrição disponível para este vídeo.',
         'transcript_load_error': 'Erro ao carregar transcrição: {{error}}',
 
+        // Settings section
+        'smart_pause_mode': 'Modo Pausa Inteligente',
+        'smart_pause_description': 'Pausa automaticamente o vídeo ao digitar no chat',
+
         // Error messages
         'error_prefix': 'Erro: ',
         'rate_limit_error': 'Limite de taxa da API OpenAI excedido. Tente novamente em alguns minutos ou use a aba transcrição para ler diretamente.',
@@ -585,10 +536,6 @@ class LocalizationManager {
 
         // Time format
         'timestamp_at': 'Timestamp em {{time}}',
-
-        // Settings
-        'smart_pause_mode': 'Modo Pausa Inteligente',
-        'smart_pause_description': 'Pausa automaticamente o vídeo ao digitar no chat',
 
         // General
         'unknown_video': 'Vídeo desconhecido',
@@ -633,6 +580,10 @@ class LocalizationManager {
         'no_transcript_available': 'Транскрипция недоступна для этого видео.',
         'transcript_load_error': 'Ошибка загрузки транскрипции: {{error}}',
 
+        // Settings section
+        'smart_pause_mode': 'Умная пауза',
+        'smart_pause_description': 'Автоматически ставит видео на паузу при наборе текста в чате',
+
         // Error messages
         'error_prefix': 'Ошибка: ',
         'rate_limit_error': 'Превышен лимит скорости API OpenAI. Попробуйте снова через несколько минут или используйте вкладку транскрипции для прямого чтения.',
@@ -653,10 +604,6 @@ class LocalizationManager {
         // Time format
         'timestamp_at': 'Временная метка в {{time}}',
 
-        // Settings
-        'smart_pause_mode': 'Умная пауза',
-        'smart_pause_description': 'Автоматически ставит видео на паузу при наборе текста в чате',
-
         // General
         'unknown_video': 'Неизвестное видео',
         'youtube_video': 'Видео YouTube'
@@ -672,7 +619,6 @@ class LocalizationManager {
 
         // Video info
         'loading_video': '加载中...',
-        ```text
         'now_playing': '正在播放：',
 
         // Chat messages
@@ -701,6 +647,10 @@ class LocalizationManager {
         'no_transcript_available': '此视频没有可用的转录。',
         'transcript_load_error': '加载转录时出错：{{error}}',
 
+        // Settings section
+        'smart_pause_mode': '智能暂停模式',
+        'smart_pause_description': '在聊天中输入时自动暂停视频',
+
         // Error messages
         'error_prefix': '错误：',
         'rate_limit_error': 'OpenAI API速率限制已超出。请几分钟后重试或使用转录标签直接阅读。',
@@ -720,10 +670,6 @@ class LocalizationManager {
 
         // Time format
         'timestamp_at': '时间戳在{{time}}',
-
-        // Settings
-        'smart_pause_mode': '智能暂停模式',
-        'smart_pause_description': '在聊天中输入时自动暂停视频',
 
         // General
         'unknown_video': '未知视频',
@@ -768,6 +714,10 @@ class LocalizationManager {
         'no_transcript_available': 'この動画の転写は利用できません。',
         'transcript_load_error': '転写の読み込みエラー：{{error}}',
 
+        // Settings section
+        'smart_pause_mode': 'スマートポーズモード',
+        'smart_pause_description': 'チャットで入力中に動画を自動的に一時停止',
+
         // Error messages
         'error_prefix': 'エラー：',
         'rate_limit_error': 'OpenAI APIレート制限を超過しました。数分後に再試行するか、転写タブを使用して直接読んでください。',
@@ -787,10 +737,6 @@ class LocalizationManager {
 
         // Time format
         'timestamp_at': '{{time}}のタイムスタンプ',
-
-        // Settings
-        'smart_pause_mode': 'スマートポーズモード',
-        'smart_pause_description': 'チャットで入力中に動画を自動的に一時停止',
 
         // General
         'unknown_video': '不明な動画',
@@ -835,10 +781,14 @@ class LocalizationManager {
         'no_transcript_available': '이 비디오에 사용 가능한 전사가 없습니다.',
         'transcript_load_error': '전사 로딩 오류: {{error}}',
 
+        // Settings section
+        'smart_pause_mode': '스마트 일시정지 모드',
+        'smart_pause_description': '채팅 입력 시 비디오를 자동으로 일시정지',
+
         // Error messages
         'error_prefix': '오류: ',
         'rate_limit_error': 'OpenAI API 속도 제한을 초과했습니다. 몇 분 후에 다시 시도하거나 전사 탭을 사용하여 직접 읽어보세요.',
-        'invalid_api_key': '당신의 API 키가 유효하지 않은 것 같습니다。 설정에서 OpenAI API 키를 업데이트하세요.',
+        'invalid_api_key': '당신의 API 키가 유효하지 않은 것 같습니다. 설정에서 OpenAI API 키를 업데이트하세요.',
         'insufficient_quota': '당신의 OpenAI 계정의 할당량이 부족합니다. openai.com에서 청구 세부 정보를 확인하세요.',
         'api_key_save_error': '오류: {{error}}',
         'api_key_saved': 'API 키가 성공적으로 저장되었습니다',
@@ -854,10 +804,6 @@ class LocalizationManager {
 
         // Time format
         'timestamp_at': '{{time}}의 타임스탬프',
-
-        // Settings
-        'smart_pause_mode': '스마트 일시정지 모드',
-        'smart_pause_description': '채팅 입력 시 비디오를 자동으로 일시정지',
 
         // General
         'unknown_video': '알 수 없는 비디오',
@@ -902,6 +848,10 @@ class LocalizationManager {
         'no_transcript_available': 'لا توجد نسخة مكتوبة متاحة لهذا الفيديو.',
         'transcript_load_error': 'خطأ في تحميل النسخة المكتوبة: {{error}}',
 
+        // Settings section
+        'smart_pause_mode': 'وضع الإيقاف الذكي',
+        'smart_pause_description': 'يوقف الفيديو تلقائياً عند الكتابة في الدردشة',
+
         // Error messages
         'error_prefix': 'خطأ: ',
         'rate_limit_error': 'تم تجاوز حد معدل OpenAI API. يرجى المحاولة مرة أخرى بعد بضع دقائق أو استخدام تبويب النسخة المكتوبة للقراءة مباشرة.',
@@ -921,10 +871,6 @@ class LocalizationManager {
 
         // Time format
         'timestamp_at': 'الطابع الزمني في {{time}}',
-
-        // Settings
-        'smart_pause_mode': 'وضع الإيقاف الذكي',
-        'smart_pause_description': 'يوقف الفيديو تلقائياً عند الكتابة في الدردشة',
 
         // General
         'unknown_video': 'فيديو غير معروف',
@@ -969,6 +915,10 @@ class LocalizationManager {
         'no_transcript_available': 'इस वीडियो के लिए कोई ट्रांसक्रिप्ट उपलब्ध नहीं है।',
         'transcript_load_error': 'ट्रांसक्रिप्ट लोडिंग त्रुटि: {{error}}',
 
+        // Settings section
+        'smart_pause_mode': 'स्मार्ट पॉज़ मोड',
+        'smart_pause_description': 'चैट में टाइप करते समय वीडियो को स्वचालित रूप से रोक देता है',
+
         // Error messages
         'error_prefix': 'त्रुटि: ',
         'rate_limit_error': 'OpenAI API दर सीमा पार हो गई। कृपया कुछ मिनट बाद फिर कोशिश करें या सीधे पढ़ने के लिए ट्रांसक्रिप्ट टैब का उपयोग करें।',
@@ -988,10 +938,6 @@ class LocalizationManager {
 
         // Time format
         'timestamp_at': '{{time}} पर टाइमस्टैम्प',
-
-        // Settings
-        'smart_pause_mode': 'स्मार्ट पॉज़ मोड',
-        'smart_pause_description': 'चैट में टाइप करते समय वीडियो को स्वचालित रूप से रोक देता है',
 
         // General
         'unknown_video': 'अज्ञात वीडियो',
