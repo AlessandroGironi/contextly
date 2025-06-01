@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add a small delay to ensure all scripts are loaded in extension context
     setTimeout(() => {
       initializeVoiceInput();
-    }, 200);
+    }, 500);
   }
 
   // Handle messages from content script
@@ -799,10 +799,15 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('Voice button made visible');
     } else {
       console.error('Voice input button element not found!');
+      // Try to create the button if it doesn't exist
+      createVoiceButton();
     }
 
-    // Initialize voice input manager with a delay to ensure DOM is ready
-    setTimeout(() => {
+    // Initialize voice input manager with retries for extension context
+    let retryCount = 0;
+    const maxRetries = 10;
+    
+    const tryInitialize = () => {
       if (window.VoiceInputManager) {
         voiceInputManager = new window.VoiceInputManager();
 
@@ -817,10 +822,16 @@ document.addEventListener('DOMContentLoaded', function() {
         updateVoiceInputUI();
 
         console.log('Voice input manager initialized, supported:', voiceInputManager.getState().isSupported);
+      } else if (retryCount < maxRetries) {
+        retryCount++;
+        console.log(`VoiceInputManager not available, retry ${retryCount}/${maxRetries}`);
+        setTimeout(tryInitialize, 200);
       } else {
-        console.warn('VoiceInputManager not available, but button is still visible');
+        console.warn('VoiceInputManager not available after retries, but button is still visible');
       }
-    }, 100);
+    };
+
+    setTimeout(tryInitialize, 100);
 
     // Set up voice input checkbox
     const voiceInputCheckbox = document.getElementById('voice-input-checkbox');
@@ -1021,6 +1032,37 @@ document.addEventListener('DOMContentLoaded', function() {
         reason: 'voiceInput'
       }, '*');
     }
+  }
+
+  // Create voice button if it doesn't exist in the DOM
+  function createVoiceButton() {
+    const chatInput = document.querySelector('.yt-chat-input');
+    const sendButton = document.getElementById('send-question');
+    
+    if (chatInput && sendButton && !document.getElementById('voice-input-btn')) {
+      const voiceButton = document.createElement('button');
+      voiceButton.id = 'voice-input-btn';
+      voiceButton.className = 'yt-voice-input-btn';
+      voiceButton.title = 'Voice input';
+      voiceButton.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z" fill="currentColor"/>
+        </svg>
+      `;
+      
+      // Insert before send button
+      chatInput.insertBefore(voiceButton, sendButton);
+      
+      // Update reference
+      const voiceInputBtn = voiceButton;
+      
+      // Add event listener
+      voiceButton.addEventListener('click', handleVoiceInputClick);
+      
+      console.log('Voice button created dynamically');
+      return voiceButton;
+    }
+    return null;
   }
 
   // Get localized text
