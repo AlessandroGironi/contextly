@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Start smart pause when user starts typing
       questionInput.addEventListener('keydown', (e) => {
         if (!isSmartPauseEnabled) return;
-        
+
         // Don't trigger smart pause for Enter key (since that sends the message)
         if (e.key !== 'Enter') {
           handleTypingStart();
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Set checkbox to reflect saved setting
       smartPauseCheckbox.checked = isSmartPauseEnabled;
       console.log(`Sidebar checkbox set to: ${isSmartPauseEnabled}`);
-      
+
       smartPauseCheckbox.addEventListener('change', (e) => {
         isSmartPauseEnabled = e.target.checked;
         // Save setting to localStorage
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.warn('Smart Pause checkbox not found in sidebar');
     }
 
-    // Initialize Voice Input functionality
+    // Initialize Voice Input functionality - ensure button is visible first
     initializeVoiceInput();
   }
 
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Switch between tabs
   function switchTab(tab) {
     console.log(`Switching to tab: ${tab}`);
-    
+
     // Remove active class from all tabs and sections
     if (chatTab) chatTab.classList.remove('active');
     if (transcriptTab) transcriptTab.classList.remove('active');
@@ -799,7 +799,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
       if (window.VoiceInputManager) {
         voiceInputManager = new window.VoiceInputManager();
-        
+
         // Set callbacks
         voiceInputManager.setCallbacks(
           handleVoiceResult,
@@ -809,7 +809,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Update UI based on support and settings
         updateVoiceInputUI();
-        
+
         console.log('Voice input manager initialized, supported:', voiceInputManager.getState().isSupported);
       } else {
         console.warn('VoiceInputManager not available, but button is still visible');
@@ -820,15 +820,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const voiceInputCheckbox = document.getElementById('voice-input-checkbox');
     if (voiceInputCheckbox) {
       voiceInputCheckbox.checked = isVoiceInputEnabled;
-      
+
       voiceInputCheckbox.addEventListener('change', (e) => {
         isVoiceInputEnabled = e.target.checked;
         localStorage.setItem('yt-ai-voice-input-enabled', isVoiceInputEnabled.toString());
-        
+
         if (voiceInputManager) {
           voiceInputManager.setEnabled(isVoiceInputEnabled);
         }
-        
+
         updateVoiceInputUI();
         console.log(`Voice Input ${isVoiceInputEnabled ? 'enabled' : 'disabled'}`);
       });
@@ -853,12 +853,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const state = voiceInputManager ? voiceInputManager.getState() : { isSupported: false };
-    
+
     console.log('Updating voice UI - supported:', state.isSupported, 'enabled:', isVoiceInputEnabled);
-    
+
     // For debugging: always keep the button visible
     voiceInputBtn.style.display = 'flex';
-    
+
     // If not supported, add a visual indicator
     if (!state.isSupported) {
       voiceInputBtn.style.opacity = '0.5';
@@ -885,7 +885,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Handle voice input button click
   function handleVoiceInputClick() {
     console.log('Voice button clicked');
-    
+
     if (!voiceInputManager) {
       console.warn('Voice input manager not available');
       addChatMessage('system', 'Voice input is not available. Please check console for details.');
@@ -942,10 +942,10 @@ document.addEventListener('DOMContentLoaded', function() {
   // Handle voice recognition error
   function handleVoiceError(errorKey) {
     console.error('Voice input error:', errorKey);
-    
+
     // Show error message
     showVoiceStatus(t(errorKey), 'error');
-    
+
     // Hide after 3 seconds
     setTimeout(() => {
       hideVoiceStatus();
