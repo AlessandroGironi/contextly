@@ -181,6 +181,20 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'Smart Pause Mode',
         'smart_pause_description': 'Automatically pauses video when typing in chat',
+        'voice_input_mode': 'Enable Voice Input',
+        'voice_input_description': 'Use voice to ask questions about the video',
+        'voice_language_label': 'Voice Recognition Language',
+        'voice_language_description': 'Choose the language for speech recognition',
+
+        // Voice input
+        'voice_listening': 'Listening...',
+        'voice_start_listening': 'Start voice input',
+        'voice_stop_listening': 'Stop listening',
+        'voice_not_supported': 'Voice input is not available in this browser. Please use a Chromium-based browser (Chrome, Edge, Brave).',
+        'voice_error_generic': 'Voice recognition error occurred. Please try again.',
+        'voice_error_permission': 'Microphone permission denied. Please allow microphone access and try again.',
+        'voice_error_no_speech': 'No speech was detected. Please try speaking again.',
+        'voice_error_network': 'Network error during voice recognition. Please check your connection.',
 
         // Error messages
         'error_prefix': 'Error: ',
@@ -248,6 +262,20 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'Modo Pausa Inteligente',
         'smart_pause_description': 'Pausa automáticamente el video al escribir en el chat',
+        'voice_input_mode': 'Habilitar Entrada de Voz',
+        'voice_input_description': 'Usar voz para hacer preguntas sobre el video',
+        'voice_language_label': 'Idioma de Reconocimiento de Voz',
+        'voice_language_description': 'Elegir el idioma para el reconocimiento de voz',
+
+        // Voice input
+        'voice_listening': 'Escuchando...',
+        'voice_start_listening': 'Iniciar entrada de voz',
+        'voice_stop_listening': 'Dejar de escuchar',
+        'voice_not_supported': 'La entrada de voz no está disponible en este navegador. Por favor usa un navegador basado en Chromium (Chrome, Edge, Brave).',
+        'voice_error_generic': 'Ocurrió un error de reconocimiento de voz. Por favor inténtalo de nuevo.',
+        'voice_error_permission': 'Permiso de micrófono denegado. Por favor permite el acceso al micrófono e inténtalo de nuevo.',
+        'voice_error_no_speech': 'No se detectó voz. Por favor intenta hablar de nuevo.',
+        'voice_error_network': 'Error de red durante el reconocimiento de voz. Por favor verifica tu conexión.',
 
         // Error messages
         'error_prefix': 'Error: ',
@@ -315,6 +343,20 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'Mode Pause Intelligente',
         'smart_pause_description': 'Met automatiquement en pause la vidéo lors de la saisie dans le chat',
+        'voice_input_mode': 'Activer l\'Entrée Vocale',
+        'voice_input_description': 'Utiliser la voix pour poser des questions sur la vidéo',
+        'voice_language_label': 'Langue de Reconnaissance Vocale',
+        'voice_language_description': 'Choisir la langue pour la reconnaissance vocale',
+
+        // Voice input
+        'voice_listening': 'Écoute...',
+        'voice_start_listening': 'Démarrer l\'entrée vocale',
+        'voice_stop_listening': 'Arrêter d\'écouter',
+        'voice_not_supported': 'L\'entrée vocale n\'est pas disponible dans ce navigateur. Veuillez utiliser un navigateur basé sur Chromium (Chrome, Edge, Brave).',
+        'voice_error_generic': 'Une erreur de reconnaissance vocale s\'est produite. Veuillez réessayer.',
+        'voice_error_permission': 'Permission du microphone refusée. Veuillez autoriser l\'accès au microphone et réessayer.',
+        'voice_error_no_speech': 'Aucune parole détectée. Veuillez essayer de parler à nouveau.',
+        'voice_error_network': 'Erreur réseau lors de la reconnaissance vocale. Veuillez vérifier votre connexion.',
 
         // Error messages
         'error_prefix': 'Erreur : ',
@@ -382,6 +424,20 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'Intelligenter Pausenmodus',
         'smart_pause_description': 'Pausiert automatisch das Video beim Tippen im Chat',
+        'voice_input_mode': 'Spracheingabe Aktivieren',
+        'voice_input_description': 'Stimme verwenden, um Fragen zum Video zu stellen',
+        'voice_language_label': 'Spracherkennungssprache',
+        'voice_language_description': 'Sprache für die Spracherkennung wählen',
+
+        // Voice input
+        'voice_listening': 'Hört zu...',
+        'voice_start_listening': 'Spracheingabe starten',
+        'voice_stop_listening': 'Aufhören zuzuhören',
+        'voice_not_supported': 'Spracheingabe ist in diesem Browser nicht verfügbar. Bitte verwenden Sie einen Chromium-basierten Browser (Chrome, Edge, Brave).',
+        'voice_error_generic': 'Spracherkennungsfehler aufgetreten. Bitte versuchen Sie es erneut.',
+        'voice_error_permission': 'Mikrofon-Berechtigung verweigert. Bitte erlauben Sie Mikrofonzugriff und versuchen Sie es erneut.',
+        'voice_error_no_speech': 'Keine Sprache erkannt. Bitte versuchen Sie erneut zu sprechen.',
+        'voice_error_network': 'Netzwerkfehler während der Spracherkennung. Bitte überprüfen Sie Ihre Verbindung.',
 
         // Error messages
         'error_prefix': 'Fehler: ',
@@ -449,6 +505,20 @@ class LocalizationManager {
         // Settings section
         'smart_pause_mode': 'Modalità Pausa Intelligente',
         'smart_pause_description': 'Mette automaticamente in pausa il video quando si digita nella chat',
+        'voice_input_mode': 'Abilita Input Vocale',
+        'voice_input_description': 'Usa la voce per fare domande sul video',
+        'voice_language_label': 'Lingua Riconoscimento Vocale',
+        'voice_language_description': 'Scegli la lingua per il riconoscimento vocale',
+
+        // Voice input
+        'voice_listening': 'In ascolto...',
+        'voice_start_listening': 'Avvia input vocale',
+        'voice_stop_listening': 'Smetti di ascoltare',
+        'voice_not_supported': 'L\'input vocale non è disponibile in questo browser. Si prega di utilizzare un browser basato su Chromium (Chrome, Edge, Brave).',
+        'voice_error_generic': 'Si è verificato un errore di riconoscimento vocale. Riprova.',
+        'voice_error_permission': 'Permesso microfono negato. Consenti l\'accesso al microfono e riprova.',
+        'voice_error_no_speech': 'Nessuna voce rilevata. Prova a parlare di nuovo.',
+        'voice_error_network': 'Errore di rete durante il riconoscimento vocale. Controlla la connessione.',
 
         // Error messages
         'error_prefix': 'Errore: ',

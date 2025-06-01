@@ -51,11 +51,24 @@
 
             <div class="yt-chat-input">
                 <textarea id="question-input" data-i18n="question_placeholder" placeholder="Ask about this video..." disabled></textarea>
+                <button id="voice-input-btn" class="yt-voice-input-btn" style="display: none;" title="Voice input">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" fill="currentColor"/>
+                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" fill="currentColor"/>
+                    </svg>
+                </button>
                 <button id="send-question" disabled>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"/>
                     </svg>
                 </button>
+            </div>
+
+            <div id="voice-status" class="yt-voice-status" style="display: none;">
+                <div class="yt-voice-indicator">
+                    <div class="yt-voice-spinner"></div>
+                    <span data-i18n="voice_listening">Listening...</span>
+                </div>
             </div>
         </div>
     </div>
@@ -81,6 +94,40 @@
                     <span class="yt-settings-text" data-i18n="smart_pause_mode">Smart Pause Mode</span>
                 </label>
                 <p class="yt-settings-description" data-i18n="smart_pause_description">Automatically pauses video when typing in chat</p>
+            </div>
+            
+            <div class="yt-settings-option">
+                <label class="yt-settings-label">
+                    <input type="checkbox" id="voice-input-checkbox" checked>
+                    <span class="yt-settings-checkmark"></span>
+                    <span class="yt-settings-text" data-i18n="voice_input_mode">Enable Voice Input</span>
+                </label>
+                <p class="yt-settings-description" data-i18n="voice_input_description">Use voice to ask questions about the video</p>
+            </div>
+
+            <div class="yt-settings-option">
+                <label class="yt-settings-label">
+                    <span class="yt-settings-text" data-i18n="voice_language_label">Voice Recognition Language</span>
+                </label>
+                <select id="voice-language-select" class="yt-voice-language-select">
+                    <option value="en-US">English (US)</option>
+                    <option value="en-GB">English (UK)</option>
+                    <option value="es-ES">Español (España)</option>
+                    <option value="es-MX">Español (México)</option>
+                    <option value="fr-FR">Français</option>
+                    <option value="de-DE">Deutsch</option>
+                    <option value="it-IT">Italiano</option>
+                    <option value="pt-BR">Português (Brasil)</option>
+                    <option value="pt-PT">Português (Portugal)</option>
+                    <option value="ru-RU">Русский</option>
+                    <option value="zh-CN">中文 (简体)</option>
+                    <option value="zh-TW">中文 (繁體)</option>
+                    <option value="ja-JP">日本語</option>
+                    <option value="ko-KR">한국어</option>
+                    <option value="ar-SA">العربية</option>
+                    <option value="hi-IN">हिन्दी</option>
+                </select>
+                <p class="yt-settings-description" data-i18n="voice_language_description">Choose the language for speech recognition</p>
             </div>
         </div>
     </div>

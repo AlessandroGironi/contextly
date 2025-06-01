@@ -12,6 +12,12 @@ document.addEventListener('DOMContentLoaded', function() {
   let isApiKeyConfigured = false;
   let isProcessing = false;
   let activeTranscriptSegment = null;
+  
+  // Voice input state
+  let isVoiceInputEnabled = true;
+  let isVoiceRecording = false;
+  let speechRecognition = null;
+  let voiceLanguage = 'en-US';
 
   // Extract video ID from URL if present (for direct communication)
   const urlParams = new URLSearchParams(window.location.search);
@@ -35,6 +41,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const apiKeyInput = document.getElementById('api-key-input');
   const saveApiKeyBtn = document.getElementById('save-api-key');
   const changeApiKeyBtn = document.getElementById('change-api-key');
+  
+  // Voice input elements
+  const voiceInputBtn = document.getElementById('voice-input-btn');
+  const voiceStatus = document.getElementById('voice-status');
+  const voiceInputCheckbox = document.getElementById('voice-input-checkbox');
+  const voiceLanguageSelect = document.getElementById('voice-language-select');
 
   // Initialize UI
   initUI();
@@ -116,6 +128,9 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       console.warn('Smart Pause checkbox not found in sidebar');
     }
+
+    // Initialize Voice Input functionality
+    initVoiceInput();
   }
 
   // Handle messages from content script
@@ -764,6 +779,222 @@ document.addEventListener('DOMContentLoaded', function() {
         action: 'resumeVideo',
         reason: 'smartPause'
       }, '*');
+    }
+  }
+
+  // Initialize voice input functionality
+  function initVoiceInput() {
+    // Load voice input settings
+    loadVoiceInputSettings();
+
+    // Initialize speech recognition
+    initSpeechRecognition();
+
+    // Voice input button event listener
+    if (voiceInputBtn) {
+      voiceInputBtn.addEventListener('click', toggleVoiceRecording);
+    }
+
+    // Voice input checkbox event listener
+    if (voiceInputCheckbox) {
+      voiceInputCheckbox.addEventListener('change', (e) => {
+        isVoiceInputEnabled = e.target.checked;
+        saveVoiceInputSettings();
+        updateVoiceInputVisibility();
+      });
+    }
+
+    // Voice language select event listener
+    if (voiceLanguageSelect) {
+      voiceLanguageSelect.addEventListener('change', (e) => {
+        voiceLanguage = e.target.value;
+        saveVoiceInputSettings();
+        // Reinitialize speech recognition with new language
+        initSpeechRecognition();
+      });
+    }
+
+    // Initial visibility update
+    updateVoiceInputVisibility();
+  }
+
+  // Load voice input settings from storage
+  function loadVoiceInputSettings() {
+    // Load voice input enabled setting
+    const savedVoiceInputSetting = localStorage.getItem('yt-ai-voice-input-enabled');
+    if (savedVoiceInputSetting !== null) {
+      isVoiceInputEnabled = savedVoiceInputSetting === 'true';
+    }
+
+    // Load voice language setting
+    const savedVoiceLanguage = localStorage.getItem('yt-ai-voice-language');
+    if (savedVoiceLanguage) {
+      voiceLanguage = savedVoiceLanguage;
+    } else {
+      // Auto-detect language based on UI language
+      const uiLanguage = window.LocalizationManager ? window.LocalizationManager.getCurrentLanguage() : 'en';
+      voiceLanguage = getVoiceLanguageFromUILanguage(uiLanguage);
+    }
+
+    // Update UI elements
+    if (voiceInputCheckbox) {
+      voiceInputCheckbox.checked = isVoiceInputEnabled;
+    }
+    if (voiceLanguageSelect) {
+      voiceLanguageSelect.value = voiceLanguage;
+    }
+  }
+
+  // Save voice input settings to storage
+  function saveVoiceInputSettings() {
+    localStorage.setItem('yt-ai-voice-input-enabled', isVoiceInputEnabled.toString());
+    localStorage.setItem('yt-ai-voice-language', voiceLanguage);
+  }
+
+  // Map UI language to voice recognition language
+  function getVoiceLanguageFromUILanguage(uiLang) {
+    const langMap = {
+      'en': 'en-US',
+      'es': 'es-ES',
+      'fr': 'fr-FR',
+      'de': 'de-DE',
+      'it': 'it-IT',
+      'pt': 'pt-BR',
+      'ru': 'ru-RU',
+      'zh': 'zh-CN',
+      'ja': 'ja-JP',
+      'ko': 'ko-KR',
+      'ar': 'ar-SA',
+      'hi': 'hi-IN'
+    };
+    return langMap[uiLang] || 'en-US';
+  }
+
+  // Initialize speech recognition
+  function initSpeechRecognition() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      console.warn('Speech recognition not supported in this browser');
+      return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    speechRecognition = new SpeechRecognition();
+
+    speechRecognition.continuous = false;
+    speechRecognition.interimResults = false;
+    speechRecognition.lang = voiceLanguage;
+
+    speechRecognition.onstart = () => {
+      console.log('Voice recognition started');
+      isVoiceRecording = true;
+      updateVoiceRecordingUI(true);
+      
+      // Pause video if smart pause is enabled
+      if (isSmartPauseEnabled) {
+        handleTypingStart();
+      }
+    };
+
+    speechRecognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      console.log('Voice recognition result:', transcript);
+      
+      if (transcript.trim()) {
+        // Set the transcript as input value
+        if (questionInput) {
+          questionInput.value = transcript;
+        }
+        
+        // Send the question automatically
+        setTimeout(() => {
+          sendQuestion();
+        }, 100);
+      }
+    };
+
+    speechRecognition.onerror = (event) => {
+      console.error('Voice recognition error:', event.error);
+      let errorMessage = t('voice_error_generic');
+      
+      switch (event.error) {
+        case 'not-allowed':
+          errorMessage = t('voice_error_permission');
+          break;
+        case 'no-speech':
+          errorMessage = t('voice_error_no_speech');
+          break;
+        case 'network':
+          errorMessage = t('voice_error_network');
+          break;
+      }
+      
+      addChatMessage('system', errorMessage);
+      isVoiceRecording = false;
+      updateVoiceRecordingUI(false);
+    };
+
+    speechRecognition.onend = () => {
+      console.log('Voice recognition ended');
+      isVoiceRecording = false;
+      updateVoiceRecordingUI(false);
+      
+      // Resume video if smart pause was active
+      if (isSmartPauseEnabled && isTyping) {
+        handleTypingEnd();
+      }
+    };
+  }
+
+  // Toggle voice recording
+  function toggleVoiceRecording() {
+    if (!speechRecognition) {
+      addChatMessage('system', t('voice_not_supported'));
+      return;
+    }
+
+    if (isVoiceRecording) {
+      speechRecognition.stop();
+    } else {
+      if (isProcessing) {
+        return; // Don't start recording if we're processing a question
+      }
+      speechRecognition.start();
+    }
+  }
+
+  // Update voice recording UI
+  function updateVoiceRecordingUI(recording) {
+    if (voiceInputBtn) {
+      if (recording) {
+        voiceInputBtn.classList.add('listening');
+        voiceInputBtn.title = t('voice_stop_listening');
+      } else {
+        voiceInputBtn.classList.remove('listening');
+        voiceInputBtn.title = t('voice_start_listening');
+      }
+    }
+
+    if (voiceStatus) {
+      voiceStatus.style.display = recording ? 'flex' : 'none';
+    }
+  }
+
+  // Update voice input visibility based on settings
+  function updateVoiceInputVisibility() {
+    const isSupported = ('webkitSpeechRecognition' in window) || ('SpeechRecognition' in window);
+    const shouldShow = isVoiceInputEnabled && isSupported;
+
+    if (voiceInputBtn) {
+      voiceInputBtn.style.display = shouldShow ? 'flex' : 'none';
+    }
+
+    // Show browser compatibility message if needed
+    if (isVoiceInputEnabled && !isSupported && voiceInputCheckbox && voiceInputCheckbox.checked) {
+      addChatMessage('system', t('voice_not_supported'));
+      // Uncheck the checkbox since it's not supported
+      voiceInputCheckbox.checked = false;
+      isVoiceInputEnabled = false;
+      saveVoiceInputSettings();
     }
   }
 
