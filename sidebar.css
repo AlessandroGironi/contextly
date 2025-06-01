@@ -421,12 +421,15 @@ body {
   border-radius: 10px;
   color: var(--text-primary);
   cursor: pointer;
-  display: flex !important;
+  display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
   flex-shrink: 0;
   order: 1; /* Ensure it appears before the send button */
+  opacity: 1;
+  visibility: visible;
+  z-index: 10;
 }
 
 .yt-voice-input-btn:hover {
@@ -446,6 +449,16 @@ body {
   background: #ff4757;
   color: white;
   animation: pulse-recording 1.5s infinite;
+}
+
+.yt-voice-input-btn.unsupported {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.yt-voice-input-btn.unsupported:hover {
+  background: var(--bg-tertiary);
+  transform: none;
 }
 
 @keyframes pulse-recording {

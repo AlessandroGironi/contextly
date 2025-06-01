@@ -129,8 +129,10 @@ document.addEventListener('DOMContentLoaded', function() {
       console.warn('Smart Pause checkbox not found in sidebar');
     }
 
-    // Initialize Voice Input functionality
-    initVoiceInput();
+    // Initialize Voice Input functionality with delay to ensure DOM is ready
+    setTimeout(() => {
+      initVoiceInput();
+    }, 200);
   }
 
   // Handle messages from content script
@@ -784,6 +786,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Initialize voice input functionality
   function initVoiceInput() {
+    console.log('Initializing voice input...');
+    
     // Load voice input settings
     loadVoiceInputSettings();
 
@@ -792,7 +796,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Voice input button event listener
     if (voiceInputBtn) {
+      console.log('Voice input button found, adding event listener');
       voiceInputBtn.addEventListener('click', toggleVoiceRecording);
+      
+      // Force button to be visible initially if voice input is enabled
+      if (isVoiceInputEnabled) {
+        voiceInputBtn.style.display = 'flex';
+      }
+    } else {
+      console.warn('Voice input button not found in DOM');
     }
 
     // Voice input checkbox event listener
@@ -814,8 +826,10 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
-    // Initial visibility update
-    updateVoiceInputVisibility();
+    // Initial visibility update with delay to ensure DOM is ready
+    setTimeout(() => {
+      updateVoiceInputVisibility();
+    }, 100);
   }
 
   // Load voice input settings from storage
@@ -956,18 +970,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Toggle voice recording
   function toggleVoiceRecording() {
+    console.log('Voice recording toggle clicked');
+    
+    const isSupported = ('webkitSpeechRecognition' in window) || ('SpeechRecognition' in window);
+    
+    if (!isSupported) {
+      addChatMessage('system', t('voice_not_supported') || 'Voice input is not supported in this browser. Please use Chrome, Edge, or Brave.');
+      return;
+    }
+
     if (!speechRecognition) {
-      addChatMessage('system', t('voice_not_supported'));
+      console.error('Speech recognition not initialized');
+      addChatMessage('system', 'Voice recognition is not available. Please try refreshing the page.');
       return;
     }
 
     if (isVoiceRecording) {
+      console.log('Stopping voice recording');
       speechRecognition.stop();
     } else {
       if (isProcessing) {
+        console.log('Cannot start recording while processing');
         return; // Don't start recording if we're processing a question
       }
-      speechRecognition.start();
+      console.log('Starting voice recording');
+      try {
+        speechRecognition.start();
+      } catch (error) {
+        console.error('Error starting speech recognition:', error);
+        addChatMessage('system', 'Could not start voice recording. Please check your microphone permissions.');
+      }
     }
   }
 
@@ -991,27 +1023,44 @@ document.addEventListener('DOMContentLoaded', function() {
   // Update voice input visibility based on settings
   function updateVoiceInputVisibility() {
     const isSupported = ('webkitSpeechRecognition' in window) || ('SpeechRecognition' in window);
-    const shouldShow = isVoiceInputEnabled && isSupported;
+    const shouldShow = isVoiceInputEnabled; // Show button if enabled, regardless of browser support
 
     console.log('Voice input visibility check:', {
       isVoiceInputEnabled,
       isSupported,
       shouldShow,
-      voiceInputBtn: !!voiceInputBtn
+      voiceInputBtn: !!voiceInputBtn,
+      userAgent: navigator.userAgent
     });
 
     if (voiceInputBtn) {
       voiceInputBtn.style.display = shouldShow ? 'flex' : 'none';
+      voiceInputBtn.style.visibility = shouldShow ? 'visible' : 'hidden';
+      
+      // If not supported, add a visual indicator and disable functionality
+      if (shouldShow && !isSupported) {
+        voiceInputBtn.style.opacity = '0.6';
+        voiceInputBtn.title = t('voice_not_supported_browser') || 'Voice input not supported in this browser';
+      } else if (shouldShow) {
+        voiceInputBtn.style.opacity = '1';
+        voiceInputBtn.title = t('voice_start_listening') || 'Voice input';
+      }
+      
       console.log('Voice button display set to:', shouldShow ? 'flex' : 'none');
+    } else {
+      console.error('Voice input button element not found!');
+      
+      // Try to find the button again
+      const btn = document.getElementById('voice-input-btn');
+      if (btn) {
+        console.log('Found voice button on retry');
+        btn.style.display = shouldShow ? 'flex' : 'none';
+      }
     }
 
-    // Show browser compatibility message if needed
-    if (isVoiceInputEnabled && !isSupported && voiceInputCheckbox && voiceInputCheckbox.checked) {
-      addChatMessage('system', t('voice_not_supported'));
-      // Uncheck the checkbox since it's not supported
-      voiceInputCheckbox.checked = false;
-      isVoiceInputEnabled = false;
-      saveVoiceInputSettings();
+    // Show browser compatibility message if needed (but don't disable the feature)
+    if (isVoiceInputEnabled && !isSupported) {
+      console.warn('Voice input enabled but not supported in this browser');
     }
   }
 
