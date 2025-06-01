@@ -789,6 +789,12 @@ document.addEventListener('DOMContentLoaded', function() {
       localStorage.setItem('yt-ai-voice-input-enabled', 'true');
     }
 
+    // Always show the voice button first, then initialize manager
+    if (voiceInputBtn) {
+      voiceInputBtn.style.display = 'flex';
+      console.log('Voice button made visible');
+    }
+
     // Initialize voice input manager with a delay to ensure DOM is ready
     setTimeout(() => {
       if (window.VoiceInputManager) {
@@ -806,11 +812,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         console.log('Voice input manager initialized, supported:', voiceInputManager.getState().isSupported);
       } else {
-        console.warn('VoiceInputManager not available');
-        // Still show the button for debugging - user can see if it works
-        if (voiceInputBtn) {
-          voiceInputBtn.style.display = 'flex';
-        }
+        console.warn('VoiceInputManager not available, but button is still visible');
       }
     }, 100);
 
@@ -854,20 +856,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('Updating voice UI - supported:', state.isSupported, 'enabled:', isVoiceInputEnabled);
     
-    // Show/hide voice button based on support and enabled setting
-    if (state.isSupported && isVoiceInputEnabled) {
-      voiceInputBtn.style.display = 'flex';
-      console.log('Voice button shown');
-    } else if (!state.isSupported) {
-      voiceInputBtn.style.display = 'none';
-      console.log('Voice button hidden - not supported');
-      // Show a message to user
-      if (!state.isSupported && isVoiceInputEnabled) {
-        addChatMessage('system', 'Voice input is not supported in this browser. Please use Chrome, Edge, or Safari.');
-      }
+    // For debugging: always keep the button visible
+    voiceInputBtn.style.display = 'flex';
+    
+    // If not supported, add a visual indicator
+    if (!state.isSupported) {
+      voiceInputBtn.style.opacity = '0.5';
+      voiceInputBtn.title = 'Voice input not supported in this browser';
+      console.log('Voice button shown but disabled - not supported');
+    } else if (!isVoiceInputEnabled) {
+      voiceInputBtn.style.opacity = '0.5';
+      voiceInputBtn.title = 'Voice input disabled in settings';
+      console.log('Voice button shown but disabled - disabled in settings');
     } else {
-      voiceInputBtn.style.display = 'none';
-      console.log('Voice button hidden - disabled in settings');
+      voiceInputBtn.style.opacity = '1';
+      voiceInputBtn.title = 'Voice input';
+      console.log('Voice button shown and enabled');
     }
 
     // Update button state
@@ -880,7 +884,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Handle voice input button click
   function handleVoiceInputClick() {
-    if (!voiceInputManager) return;
+    console.log('Voice button clicked');
+    
+    if (!voiceInputManager) {
+      console.warn('Voice input manager not available');
+      addChatMessage('system', 'Voice input is not available. Please check console for details.');
+      return;
+    }
+
+    const state = voiceInputManager.getState();
+    if (!state.isSupported) {
+      addChatMessage('system', 'Voice input is not supported in this browser. Please use Chrome, Edge, or Safari.');
+      return;
+    }
+
+    if (!isVoiceInputEnabled) {
+      addChatMessage('system', 'Voice input is disabled. Enable it in Settings.');
+      return;
+    }
 
     if (isVoiceListening) {
       // Stop listening
