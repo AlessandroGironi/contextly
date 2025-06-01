@@ -820,10 +820,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Load voice input settings from storage
   function loadVoiceInputSettings() {
-    // Load voice input enabled setting
+    // Load voice input enabled setting - default to true if not set
     const savedVoiceInputSetting = localStorage.getItem('yt-ai-voice-input-enabled');
     if (savedVoiceInputSetting !== null) {
       isVoiceInputEnabled = savedVoiceInputSetting === 'true';
+    } else {
+      // Default to enabled
+      isVoiceInputEnabled = true;
+      localStorage.setItem('yt-ai-voice-input-enabled', 'true');
     }
 
     // Load voice language setting
@@ -835,6 +839,11 @@ document.addEventListener('DOMContentLoaded', function() {
       const uiLanguage = window.LocalizationManager ? window.LocalizationManager.getCurrentLanguage() : 'en';
       voiceLanguage = getVoiceLanguageFromUILanguage(uiLanguage);
     }
+
+    console.log('Voice input settings loaded:', {
+      isVoiceInputEnabled,
+      voiceLanguage
+    });
 
     // Update UI elements
     if (voiceInputCheckbox) {
@@ -984,8 +993,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const isSupported = ('webkitSpeechRecognition' in window) || ('SpeechRecognition' in window);
     const shouldShow = isVoiceInputEnabled && isSupported;
 
+    console.log('Voice input visibility check:', {
+      isVoiceInputEnabled,
+      isSupported,
+      shouldShow,
+      voiceInputBtn: !!voiceInputBtn
+    });
+
     if (voiceInputBtn) {
       voiceInputBtn.style.display = shouldShow ? 'flex' : 'none';
+      console.log('Voice button display set to:', shouldShow ? 'flex' : 'none');
     }
 
     // Show browser compatibility message if needed

@@ -421,11 +421,12 @@ body {
   border-radius: 10px;
   color: var(--text-primary);
   cursor: pointer;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
   flex-shrink: 0;
+  order: 1; /* Ensure it appears before the send button */
 }
 
 .yt-voice-input-btn:hover {
@@ -543,6 +544,7 @@ body {
   justify-content: center;
   transition: all 0.2s ease;
   flex-shrink: 0;
+  order: 2; /* Ensure send button appears after voice button */
 }
 
 .yt-chat-input button:hover {
