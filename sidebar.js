@@ -788,6 +788,25 @@ document.addEventListener('DOMContentLoaded', function() {
   function initVoiceInput() {
     console.log('Initializing voice input...');
     
+    // Debug: Check if settings elements exist
+    const settingsContainer = document.querySelector('.yt-settings-container');
+    const settingsOptions = document.querySelectorAll('.yt-settings-option');
+    console.log('Settings container found:', !!settingsContainer);
+    console.log('Settings options found:', settingsOptions.length);
+    
+    // Force settings section to be visible
+    if (settingsContainer) {
+      settingsContainer.style.display = 'block';
+      settingsContainer.style.visibility = 'visible';
+    }
+    
+    // Force all settings options to be visible
+    settingsOptions.forEach((option, index) => {
+      option.style.display = 'block';
+      option.style.visibility = 'visible';
+      console.log(`Settings option ${index} made visible`);
+    });
+    
     // Load voice input settings
     loadVoiceInputSettings();
 
@@ -809,11 +828,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Voice input checkbox event listener
     if (voiceInputCheckbox) {
+      console.log('Voice input checkbox found and being initialized');
       voiceInputCheckbox.addEventListener('change', (e) => {
         isVoiceInputEnabled = e.target.checked;
         saveVoiceInputSettings();
         updateVoiceInputVisibility();
       });
+      
+      // Ensure the checkbox is visible
+      voiceInputCheckbox.style.display = 'block';
+      voiceInputCheckbox.style.visibility = 'visible';
+      
+      // Ensure parent elements are visible
+      let parent = voiceInputCheckbox.parentElement;
+      while (parent && parent.classList) {
+        if (parent.classList.contains('yt-settings-option')) {
+          parent.style.display = 'block';
+          parent.style.visibility = 'visible';
+          break;
+        }
+        parent = parent.parentElement;
+      }
+    } else {
+      console.error('Voice input checkbox not found in DOM!');
     }
 
     // Voice language select event listener
@@ -862,9 +899,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update UI elements
     if (voiceInputCheckbox) {
       voiceInputCheckbox.checked = isVoiceInputEnabled;
+      console.log('Voice input checkbox found and set to:', isVoiceInputEnabled);
+    } else {
+      console.error('Voice input checkbox element not found during settings load!');
     }
     if (voiceLanguageSelect) {
       voiceLanguageSelect.value = voiceLanguage;
+      console.log('Voice language select found and set to:', voiceLanguage);
+    } else {
+      console.error('Voice language select element not found during settings load!');
     }
   }
 

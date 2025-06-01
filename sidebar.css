@@ -137,8 +137,10 @@ body {
 .yt-settings-container {
   padding: var(--spacing-md);
   background: var(--bg-primary);
-  border-radius: var(--radius-medium);
+  border-radius: var(--radius);
   margin: var(--spacing-sm);
+  display: block;
+  visibility: visible;
 }
 
 .yt-settings-option {
@@ -147,6 +149,9 @@ body {
   background: var(--bg-secondary);
   border-radius: var(--radius-small);
   border: 1px solid var(--border-color);
+  display: block;
+  visibility: visible;
+  opacity: 1;
 }
 
 .yt-settings-label {
