@@ -934,4 +934,15 @@ textarea:focus {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
+  position: relative !important;
+  z-index: 1000 !important;
+}
+
+/* Force visibility for any voice input button */
+.yt-voice-input-btn,
+button[id*="voice"],
+button[class*="voice"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }

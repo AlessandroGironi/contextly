@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add a small delay to ensure all scripts are loaded in extension context
     setTimeout(() => {
       initializeVoiceInput();
-    }, 500);
+    }, 1000);
   }
 
   // Handle messages from content script
@@ -782,6 +782,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Initialize Voice Input
   function initializeVoiceInput() {
+    console.log('Starting voice input initialization...');
+    
     // Load voice input setting
     const savedVoiceInputSetting = localStorage.getItem('yt-ai-voice-input-enabled');
     if (savedVoiceInputSetting !== null) {
@@ -791,16 +793,26 @@ document.addEventListener('DOMContentLoaded', function() {
       localStorage.setItem('yt-ai-voice-input-enabled', 'true');
     }
 
-    // Always show the voice button first, then initialize manager
-    if (voiceInputBtn) {
-      voiceInputBtn.style.display = 'flex';
-      voiceInputBtn.style.visibility = 'visible';
-      voiceInputBtn.style.opacity = '1';
-      console.log('Voice button made visible');
+    // First, ensure the voice button exists in DOM
+    let voiceButton = document.getElementById('voice-input-btn');
+    
+    if (!voiceButton) {
+      console.warn('Voice button not found in DOM, creating it...');
+      voiceButton = createVoiceButton();
+    }
+    
+    if (voiceButton) {
+      // Force show the voice button
+      voiceButton.style.display = 'flex';
+      voiceButton.style.visibility = 'visible';
+      voiceButton.style.opacity = '1';
+      console.log('Voice button made visible:', voiceButton.id);
+      
+      // Update the global reference
+      voiceInputBtn = voiceButton;
     } else {
-      console.error('Voice input button element not found!');
-      // Try to create the button if it doesn't exist
-      createVoiceButton();
+      console.error('Failed to create or find voice input button!');
+      return;
     }
 
     // Initialize voice input manager with retries for extension context
@@ -1036,14 +1048,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Create voice button if it doesn't exist in the DOM
   function createVoiceButton() {
-    const chatInput = document.querySelector('.yt-chat-input');
+    console.log('Attempting to create voice button...');
+    
+    // Try multiple selectors to find the chat input container
+    const chatInput = document.querySelector('.yt-chat-input') || 
+                     document.querySelector('[id*="chat-input"]') ||
+                     document.querySelector('.yt-sidebar-section.active .yt-chat-input');
     const sendButton = document.getElementById('send-question');
+    
+    console.log('Chat input found:', !!chatInput);
+    console.log('Send button found:', !!sendButton);
     
     if (chatInput && sendButton && !document.getElementById('voice-input-btn')) {
       const voiceButton = document.createElement('button');
       voiceButton.id = 'voice-input-btn';
       voiceButton.className = 'yt-voice-input-btn';
       voiceButton.title = 'Voice input';
+      voiceButton.style.display = 'flex';
+      voiceButton.style.visibility = 'visible';
+      voiceButton.style.opacity = '1';
       voiceButton.innerHTML = `
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z" fill="currentColor"/>
@@ -1053,14 +1076,16 @@ document.addEventListener('DOMContentLoaded', function() {
       // Insert before send button
       chatInput.insertBefore(voiceButton, sendButton);
       
-      // Update reference
-      const voiceInputBtn = voiceButton;
-      
       // Add event listener
       voiceButton.addEventListener('click', handleVoiceInputClick);
       
-      console.log('Voice button created dynamically');
+      console.log('Voice button created dynamically and added to DOM');
       return voiceButton;
+    } else {
+      console.warn('Could not create voice button - missing required elements');
+      console.log('chatInput:', chatInput);
+      console.log('sendButton:', sendButton);
+      console.log('existing voice button:', document.getElementById('voice-input-btn'));
     }
     return null;
   }
